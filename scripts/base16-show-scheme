@@ -1,0 +1,14 @@
+#!/usr/bin/gawk -f
+
+@include "color.awk"
+
+BEGIN {
+    LINT="fatal"
+}
+
+/base[0-9A-F]{2}/ {
+    gsub(/"/, "", $2)
+    color_string = "0x" $2
+    color = strtonum(color_string)
+    print $1 " " color_string " " color::rgb_bg(color, "        ")
+}

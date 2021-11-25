@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+prog="$1"
+
+if [ -z "$prog" ]; then
+    echo usage "$0": prog
+    exit 1
+fi
+
+case "$prog" in
+    rust|cargo                      ) echo -n "" ;;
+    zsh|bash|sh                     ) echo -n "" ;;
+    [n]vim|vimdiff                  ) echo -n "" ;;
+    swipl                           ) echo -n "" ;;
+    man                             ) echo -n "" ;;
+    gdb|rr                          ) echo -n "" ;;
+    bat                             ) echo -n "" ;;
+    *python*|pip[23]                ) echo -n "" ;;
+    meson|cmake|make                ) echo -n "" ;;
+    ninja                           ) echo -n "ﱲ" ;;
+    docker*                         ) echo -n "" ;;
+    vagrant                         ) echo -n "" ;;
+    sqlite*                         ) echo -n "" ;;
+    *mysql*                         ) echo -n "" ;;
+    *postgres*                      ) echo -n "" ;;
+    git*                            ) echo -n "" ;;
+    *top                            ) echo -n "ﱨ" ;;
+    *pdf*|zathura|okular            ) echo -n "" ;;
+    lynx                            ) echo -n "" ;;
+    ssh                             ) echo -n "" ;;
+    scheme|petite                   ) echo -n "λ" ;;
+    ghc*|stack                      ) echo -n "" ;;
+    vifm                            ) echo -n "ﱮ" ;;
+    *emacs*                         ) echo -n "" ;;
+    julia                           ) echo -n "" ;;
+    *                               ) echo -n "" ;;
+esac
+

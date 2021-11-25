@@ -1,0 +1,22 @@
+[init]
+    defaultBranch = main
+
+[pager]
+    diff = delta --features=sides
+    log = delta --features=sides
+    show = delta --features=sides
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    dark = true
+
+[delta "sides"]
+    side-by-side = true
+
+[delta "forgit"]
+    side-by-side = false
+
+[include]
+    path = ~/.gitconfig.private

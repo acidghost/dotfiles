@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+if ($#ARGV + 1 != 1) {
+    print "usage: $0 seconds\n";
+    exit 1;
+}
+
+my $seconds = $ARGV[0];
+
+my $t = time();
+my $s = $t - int($seconds);
+my $hours = int ($s / (60 * 60));
+my $mins = ($s / 60) % 60;
+my $secs = $s % 60;
+printf("%02d:%02d:%02d\n", $hours, $mins, $secs);
+

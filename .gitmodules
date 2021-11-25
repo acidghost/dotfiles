@@ -1,0 +1,13 @@
+[submodule "dotbot"]
+	path = dotbot
+	url = https://github.com/anishathalye/dotbot
+	ignore = dirty
+[submodule "antigen"]
+	path = antigen
+	url = https://github.com/zsh-users/antigen.git
+[submodule "tmux/tpm"]
+	path = tmux/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule "asdf-vm"]
+	path = asdf-vm
+	url = https://github.com/asdf-vm/asdf.git

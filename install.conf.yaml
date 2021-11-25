@@ -1,0 +1,81 @@
+- defaults:
+    link:
+      relink: true
+
+- clean:
+    "~":
+    "~/.config":
+      recursive: true
+    "~/.vim":
+
+- create:
+    - ~/wa
+    - ~/.base16
+    - ~/.config/dotfiles-env
+    - ~/.log
+    - ~/.scripts
+    - ~/.tmux/plugins
+    - ~/.vim
+
+- shell:
+  - [git submodule update --init --recursive, "Updating submodules"]
+  - [rm ~/.config/dotfiles-env/* || true, "Cleaning dotfiles-env"]
+
+- link:
+    ~/.amethyst:
+      path: etc/amethyst.json
+      if: '[ $(uname) = Darwin ]'
+    ~/.awk:
+    ~/.base16/update_fzf.sh: fzf/base16_update.sh
+    ~/Brewfile:
+      path: etc/Brewfile
+      if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
+    ~/.config/dotfiles-env/with_apps:
+      path: dotfiles-env/with_apps
+      if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
+      force: true
+    ~/.config/dotfiles-env/with_asdf:
+      path: dotfiles-env/with_asdf
+      if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
+    ~/.config/dotfiles-env/with_lsp:
+      path: dotfiles-env/with_lsp
+      if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
+    ~/.config/dotfiles-env/with_virt:
+      path: dotfiles-env/with_virt
+      if: '[ "$DOTFILES_WITH_VIRT" = 1 ]'
+    ~/.config/fzf:
+    ~/.config/neofetch:
+    ~/.config/nvim:
+    ~/.gitconfig:
+    ~/.scripts:
+      glob: true
+      path: scripts/*
+    ~/.scripts/pprint-secs: tmux/scripts/pprint-secs
+    ~/.scripts/prog2ico: tmux/scripts/prog2ico
+    ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
+    ~/.shell:
+    ~/.p10k.zsh: zsh/p10k.zsh
+    ~/.tmux.conf: tmux/tmux.conf
+    ~/.tmux/plugins/tpm: tmux/tpm
+    ~/.tool-versions: asdf/tool-versions
+    ~/.vim/lsp.vim:
+      path: vim/lsp.vim
+      if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
+    ~/.vim/lsp_plugins.vim:
+      path: vim/lsp_plugins.vim
+      if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
+    ~/.vim/vimrc: vim/vimrc
+    ~/vusec.ascii:
+    ~/.zshrc: zsh/zshrc
+
+- shell:
+  -
+    command: |
+      if [ "$DOTFILES_WITH_BREW" = 1 ]
+      then cd ~ && brew bundle install
+      fi
+    description: Installing packages
+    stdout: true
+
+# - shell:
+#   - [base16_outrun-dark, "Setting base16 theme"]

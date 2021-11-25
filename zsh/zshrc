@@ -1,0 +1,127 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Homebrew
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+bindkey -v
+
+zstyle :compinstall filename "$HOME/.zshrc"
+
+if type brew &> /dev/null; then
+    fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+fi
+
+ASDF_DIR="$HOME/.dotfiles/asdf-vm"
+fpath=(${ASDF_DIR}/completions $fpath)
+
+autoload -Uz compinit
+compinit
+
+autoload -U zmv
+
+source "$ASDF_DIR/asdf.sh"
+
+forgit_log=fglo
+forgit_diff=fgd
+forgit_add=fga
+forgit_reset_head=fgrh
+forgit_ignore=fgi
+forgit_restore=fgcf
+forgit_clean=fgclean
+forgit_stash_show=fgss
+
+export ZSH_TMUX_FIXTERM=true
+export ZSH_TMUX_UNICODE=true
+
+export BASE16_SHELL_HOOKS="$HOME/.base16"
+
+# forgit
+export FORGIT_PAGER="delta --features=forgit"
+export FORGIT_SHOW_PAGER=$FORGIT_PAGER
+export FORGIT_DIFF_PAGER=$FORGIT_PAGER
+
+export ANTIGEN_LOG="$HOME/.log/antigen.log"
+source ~/.dotfiles/antigen/antigen.zsh
+
+antigen use oh-my-zsh
+
+antigen bundle battery
+antigen bundle colorize
+antigen bundle colored-man-pages
+antigen bundle docker
+antigen bundle emoji
+antigen bundle fancy-ctrl-z
+antigen bundle git
+antigen bundle gitignore
+[ hash thefuck >& /dev/null ] && antigen bundle thefuck
+antigen bundle themes
+antigen bundle tmux
+antigen bundle vagrant
+antigen bundle vi-mode
+antigen bundle virtualenv
+antigen bundle web-search
+antigen bundle z
+
+antigen bundle chriskempson/base16-shell
+antigen theme romkatv/powerlevel10k
+antigen bundle wfxr/forgit
+antigen bundle fnune/base16-fzf
+
+case $(uname) in
+    Linux)
+        antigen bundle jordiorlando/base16-rofi
+        antigen bundle HaoZeke/base16-zathura@main
+        antigen bundle khamer/base16-dunst
+        ;;
+esac
+
+antigen apply
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+
+[ -f ~/.cargo/env ] && source ~/.cargo/env
+
+[ -d ~/.awk ] && export AWKPATH="$HOME/.awk:$AWKPATH"
+[ -d ~/.scripts ] && export PATH="$HOME/.scripts:$PATH"
+[ -f ~/.shell/aliases.sh ] && source ~/.shell/aliases.sh
+[ -f ~/.shell/functions.sh ] && source ~/.shell/functions.sh
+
+[ -f ~/.shell/openrazer.sh ] && source ~/.shell/openrazer.sh
+
+export EDITOR=nvim
+export PAGER=less
+export LESS="R"
+
+# bat
+export BAT_THEME=base16-256
+export BAT_STYLE=numbers,grid
+# accomodate for "less -J"
+# alias bat="bat --terminal-width -2"
+
+# thefuck
+[ hash thefuck >& /dev/null ] && eval $(thefuck --alias)
+
+# FZF
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
+    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+
+# fix for okular icons
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# key binding to toggle all the additional prompt info
+function toggle-prompt {
+    p10k display '1/(right|left)'=hide,show;
+}
+zle -N toggle-prompt
+bindkey '^P' toggle-prompt

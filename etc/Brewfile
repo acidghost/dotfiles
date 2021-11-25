@@ -1,0 +1,66 @@
+def has?(s)
+    ENV["DOTFILES_#{s}"] == "1" || system("[ -f ~/.config/dotfiles-env/#{s.downcase} ]")
+end
+
+IS_DARWIN = system "[ $(uname) = Darwin ]"
+WITH_APPS = has? :WITH_APPS
+WITH_ASDF = has? :WITH_ASDF
+WITH_LSP  = has? :WITH_LSP
+WITH_VIRT = has? :WITH_VIRT
+
+tap "homebrew/core"
+tap "homebrew/cask"
+tap "homebrew/cask-drivers"
+tap "homebrew/cask-fonts"
+
+# Applications
+cask "amethyst"                 if WITH_APPS && IS_DARWIN
+cask "firefox"                  if WITH_APPS
+cask "obsidian"                 if WITH_APPS
+cask "slack"                    if WITH_APPS
+cask "spotify"                  if WITH_APPS
+cask "zoom"                     if WITH_APPS
+cask "zotero"                   if WITH_APPS
+
+# Fonts
+cask "font-hack-nerd-font"
+
+# Hardware support
+cask "1kc-razer"                if IS_DARWIN
+
+# Programming
+brew "gopls"                    if WITH_LSP
+brew "rust-analyzer"            if WITH_LSP
+brew "shellcheck"
+
+# Terminal
+brew "alacritty"                if !IS_DARWIN && WITH_APPS
+brew "bat"
+brew "fd"
+brew "gawk"
+brew "git-delta"
+brew "htop"
+brew "jq"
+brew "lynx"
+brew "neofetch"
+brew "neovim"
+brew "pandoc"
+brew "ripgrep"
+brew "thefuck"
+brew "tmux"
+brew "tree"
+
+# Virtualization / emulation
+if WITH_VIRT
+    brew "libvirt"
+    brew "qemu"
+    cask "utm"                  if IS_DARWIN
+end
+
+if WITH_ASDF
+    # asdf nodejs
+    brew "gpg"
+    # asdf ruby
+    brew "openssl"
+    brew "readline"
+end

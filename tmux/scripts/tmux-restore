@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if tmux list-sessions >/dev/null 2>&1; then
+    echo "tmux session already exists"
+    exit 1
+fi
+
+TMUX_PLUGINS="$HOME/.tmux/plugins"
+RESURRECT="$TMUX_PLUGINS/tmux-resurrect"
+RESTORE_SH="$RESURRECT/scripts/restore.sh"
+
+set -e
+[ -x "$RESTORE_SH" ]
+tmp=$(mktemp -d 'tmp-XXXXXXXXX')
+trap 'rm -r $tmp' EXIT
+tmux new-session -s "$(basename "$tmp")" -c "$tmp" "$RESTORE_SH"
