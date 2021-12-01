@@ -77,13 +77,13 @@ antigen theme romkatv/powerlevel10k
 antigen bundle wfxr/forgit
 antigen bundle fnune/base16-fzf
 
-case $(uname) in
-    Linux)
-        antigen bundle jordiorlando/base16-rofi
-        antigen bundle HaoZeke/base16-zathura@main
-        antigen bundle khamer/base16-dunst
-        ;;
-esac
+# case $(uname) in
+#     Linux)
+#         antigen bundle jordiorlando/base16-rofi
+#         antigen bundle HaoZeke/base16-zathura@main
+#         antigen bundle khamer/base16-dunst
+#         ;;
+# esac
 
 antigen apply
 
