@@ -571,8 +571,10 @@
 
   ##################################[ context: user@hostname ]##################################
   # Default context color.
-  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=3
-  typeset -g POWERLEVEL9K_CONTEXT_BACKGROUND=0
+  # typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=3
+  # typeset -g POWERLEVEL9K_CONTEXT_BACKGROUND=0
+  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=255
+  typeset -g POWERLEVEL9K_CONTEXT_BACKGROUND=177
   # Default context format: %n is username, %m is hostname.
   typeset -g POWERLEVEL9K_CONTEXT_TEMPLATE='%n@%m'
 
