@@ -39,6 +39,7 @@ unix-server-light: _dotfiles ## Setup UNIX server (light)
 check: ## Check shell scripts (requires shellcheck)
 	@shellcheck \
 		etc/macos \
-		fzf/base16_update.sh \
+		fzf/*.sh \
+		scripts/figlet-fonts-show \
 		shell/*.sh \
-		tmux/scripts/{prog2ico,tmux-restore}
+		tmux/scripts/{prog2ico,tmux-*}
