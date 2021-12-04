@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+tmux list-keys |
+    gawk '
+        match($0, /^bind-key\s+(-r )?-T ([a-z\-]+)\s+([[:graph:]]+)\s+(.+)$/, arr) {
+            all[NR][1] = arr[2]
+            all[NR][2] = arr[1] ? "repeat" : "norep"
+            all[NR][3] = arr[3]
+            all[NR][4] = arr[4]
+        }
+        END {
+            longest_table=0
+            longest_key = 0
+            for (i in all) {
+                len = length(all[i][1])
+                if (len > longest_table)
+                    longest_table = len
+                len = length(all[i][3])
+                if (len > longest_key)
+                    longest_key = len
+            }
+            longest_key += 2
+            for (i in all) {
+                printf("%-"longest_table"s %-8s   %-"longest_key"s %s\n",
+                    all[i][1], all[i][2], all[i][3], all[i][4])
+            }
+        }
+    ' |
+    fzf

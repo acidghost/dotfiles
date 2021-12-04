@@ -54,6 +54,7 @@
     ~/.scripts:
       glob: true
       path: scripts/*
+    ~/.scripts/tmux-list-keys: tmux/scripts/tmux-list-keys
     ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
     ~/.shell:
     ~/.p10k.zsh: zsh/p10k.zsh
