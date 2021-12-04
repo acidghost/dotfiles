@@ -6,6 +6,9 @@
     "~":
     "~/.config":
       recursive: true
+    "~/.scripts":
+    "~/.tmux/scripts":
+      force: true
     "~/.vim":
 
 - create:
@@ -14,6 +17,7 @@
     - ~/.config/dotfiles-env
     - ~/.log
     - ~/.scripts
+    - ~/.tmux/scripts
     - ~/.tmux/plugins
     - ~/.vim
 
@@ -50,12 +54,15 @@
     ~/.scripts:
       glob: true
       path: scripts/*
-    ~/.scripts/pprint-secs: tmux/scripts/pprint-secs
-    ~/.scripts/prog2ico: tmux/scripts/prog2ico
     ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
     ~/.shell:
     ~/.p10k.zsh: zsh/p10k.zsh
     ~/.tmux.conf: tmux/tmux.conf
+    ~/.tmux/scripts:
+      glob: true
+      path: tmux/scripts/*
+      exclude:
+        - tmux/scripts/tmux-*
     ~/.tmux/plugins/tpm: tmux/tpm
     ~/.tool-versions: asdf/tool-versions
     ~/.vim/lsp.vim:
