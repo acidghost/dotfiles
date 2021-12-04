@@ -57,7 +57,7 @@ BEGIN {
 
     # match fork or clone calls and parse new PID
     pid = $1
-    if (match($0, /(fork\(\))|(clone\(.+\))[[:blank:]]+=[[:blank:]]+([[:digit:]]+)$/, matches) > 0) {
+    if (match($0, /(fork\(\))|(clone[3]?\(.+\))[[:blank:]]+=[[:blank:]]+([[:digit:]]+)$/, matches) > 0) {
         child_pid = matches[3]
         colors[child_pid] = color_wheel[color_wheel_idx]
         color_wheel_idx = (color_wheel_idx + 1) % length(color_wheel)
