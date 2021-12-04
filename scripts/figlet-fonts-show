@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+progname=$(basename "$0")
+if [[ "$progname" =~ figlet* ]]; then
+    prog=figlet
+else
+    prog=toilet
+fi
+
+if ! command -v "$prog" &> /dev/null; then
+    echo "$prog not found"
+    exit 1
+fi
+
+if [ "$(uname)" = Darwin ]; then
+    fonts="$(brew --prefix figlet)/share/figlet/fonts"
+else
+    fonts=/usr/share/figlet
+fi
+
+for font in "$fonts"/*.{flf,tlf}; do
+    name=$(basename "$font")
+    echo "$name"
+    $prog -f "$name" "$@"
+    echo
+done
