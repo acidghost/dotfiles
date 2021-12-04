@@ -16,6 +16,7 @@ _dotfiles:
 	@./install $(DOTFILES_INSTALL_FLAGS)
 
 macos: _dotfiles ## Setup macOS
+	@./etc/macos
 
 fedora-server: DOTFILES_WITH_APPS=0
 fedora-server: DOTFILES_WITH_ASDF=0
@@ -37,6 +38,7 @@ unix-server-light: _dotfiles ## Setup UNIX server (light)
 
 check: ## Check shell scripts (requires shellcheck)
 	@shellcheck \
+		etc/macos \
 		fzf/base16_update.sh \
 		shell/*.sh \
 		tmux/scripts/{prog2ico,tmux-restore}
