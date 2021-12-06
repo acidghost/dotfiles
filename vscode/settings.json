@@ -1,0 +1,221 @@
+{
+    "telemetry.telemetryLevel": "crash",
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+    "vim.leader": ",",
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                "<down>"
+            ],
+            "after": [
+                "<C-e>"
+            ]
+        },
+        {
+            "before": [
+                "<up>"
+            ],
+            "after": [
+                "<C-y>"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "b"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "@"
+            ],
+            "commands": [
+                ":nohl"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "D"
+            ],
+            "commands": [
+                "editor.action.revealDeclaration"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "d"
+            ],
+            "commands": [
+                "editor.action.revealDefinition"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "h"
+            ],
+            "commands": [
+                "editor.action.showHover"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "i"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "k"
+            ],
+            "commands": [
+                "editor.action.peekDeclaration"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "t"
+            ],
+            "commands": [
+                "editor.action.goToTypeDefinition"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "r"
+            ],
+            "commands": [
+                "editor.action.rename"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "a"
+            ],
+            "commands": [
+                "editor.action.quickFix"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "x"
+            ],
+            "commands": [
+                "editor.action.goToReferences"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "f"
+            ],
+            "commands": [
+                "editor.action.formatDocument"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": [
+                "<leader>",
+                "l",
+                "f"
+            ],
+            "commands": [
+                "editor.action.formatSelection"
+            ]
+        }
+    ],
+    "vim.hlsearch": true,
+    "editor.lineNumbers": "relative",
+    "editor.fontFamily": "Hack Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.autoIndent": "full",
+    "editor.detectIndentation": true,
+    "editor.rulers": [
+        100
+    ],
+    "editor.cursorSurroundingLines": 3,
+    "editor.tokenColorCustomizations": {
+        "[Abyss]": {
+            "comments": "#99f",
+            "functions": "#0af",
+            "keywords": "#e6e",
+            "numbers": "#f90",
+            "strings": "#7e7",
+            "types": {
+                "fontStyle": ""
+            },
+            "variables": "#fff",
+            "textMateRules": [
+                {
+                    "scope": "keyword.operator",
+                    "settings": {
+                        "foreground": "#f0f"
+                    }
+                },
+                {
+                    "scope": "constant.character.escape",
+                    "settings": {
+                        "foreground": "#6df",
+                        "fontStyle": "bold"
+                    }
+                },
+                {
+                    "scope": "punctuation.separator",
+                    "settings": {
+                        "foreground": "#fff",
+                        "fontStyle": ""
+                    }
+                }
+            ]
+        }
+    },
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true,
+        "[Abyss]": {
+            "enabled": true,
+            "rules": {
+                "*.constant": "#f90",
+                "*.static": "#ff0",
+                "builtinConstant": "#f90",
+                "class": "#f0a",
+                "decorator": "#0af",
+                "formatSpecifier": "#fff",
+                "method.static": "#0af",
+                "module": {
+                    "foreground": "#fff",
+                    "fontStyle": ""
+                },
+                "parameter": "#6df"
+            }
+        }
+    },
+    "workbench.colorTheme": "Abyss"
+}

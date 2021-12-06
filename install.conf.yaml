@@ -24,6 +24,15 @@
 - shell:
   - [git submodule update --init --recursive, "Updating submodules"]
   - [rm ~/.config/dotfiles-env/* || true, "Cleaning dotfiles-env"]
+  -
+    command: |
+      if [ "$(uname)" = Darwin ]; then
+        if [ "$DOTFILES_WITH_APPS" = 1 ]; then
+          mkdir -p "~/Library/Application Support/Code/User"
+        fi
+      fi
+    description: Creating OS-specific folders
+    quiet: true
 
 - link:
     ~/.amethyst:
@@ -51,6 +60,10 @@
     ~/.config/neofetch:
     ~/.config/nvim:
     ~/.gitconfig:
+    ~/Library/Application Support/Code/User:
+      glob: true
+      path: vscode/*
+      if: '[ "$DOTFILES_WITH_APPS" = 1 ] && [ "$(uname)" = Darwin ]'
     ~/.scripts:
       glob: true
       path: scripts/*
