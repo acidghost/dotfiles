@@ -162,9 +162,27 @@
         100
     ],
     "editor.cursorSurroundingLines": 3,
+    "workbench.colorCustomizations": {
+        "[Abyss]": {
+            "editor.foreground": "#cacaff",
+            "editor.background": "#00002a",
+            "editor.selectionBackground": "#2a002a",
+            "editor.lineHighlightBackground": "#2a002a",
+            "sideBar.background": "#00002a",
+            "statusBar.background": "#00002a",
+            "tab.activeBackground": "#00003a",
+            "tab.activeForeground": "#cacaff",
+            "tab.inactiveBackground": "#00002a",
+            "list.activeSelectionBackground": "#e6e",
+            "list.inactiveSelectionBackground": "#939",
+            "list.focusBackground": "#2a002a",
+            "titleBar.activeBackground": "#00002a",
+            "titleBar.inactiveBackground": "#00002a"
+        }
+    },
     "editor.tokenColorCustomizations": {
         "[Abyss]": {
-            "comments": "#99f",
+            "comments": "#55c",
             "functions": "#0af",
             "keywords": "#e6e",
             "numbers": "#f90",
@@ -172,7 +190,7 @@
             "types": {
                 "fontStyle": ""
             },
-            "variables": "#fff",
+            "variables": "#cacaff",
             "textMateRules": [
                 {
                     "scope": "keyword.operator",
@@ -190,7 +208,7 @@
                 {
                     "scope": "punctuation.separator",
                     "settings": {
-                        "foreground": "#fff",
+                        "foreground": "#cacaff",
                         "fontStyle": ""
                     }
                 }
@@ -207,10 +225,10 @@
                 "builtinConstant": "#f90",
                 "class": "#f0a",
                 "decorator": "#0af",
-                "formatSpecifier": "#fff",
+                "formatSpecifier": "#cacaff",
                 "method.static": "#0af",
                 "module": {
-                    "foreground": "#fff",
+                    "foreground": "#cacaff",
                     "fontStyle": ""
                 },
                 "parameter": "#6df"
