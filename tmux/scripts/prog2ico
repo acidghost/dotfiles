@@ -33,6 +33,7 @@ case "$prog" in
     vifm                            ) echo -n "ﱮ" ;;
     *emacs*                         ) echo -n "" ;;
     julia                           ) echo -n "" ;;
+    delta                           ) echo -n "∆" ;;
     *                               ) echo -n "" ;;
 esac
 
