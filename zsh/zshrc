@@ -68,7 +68,7 @@ antigen bundle emoji
 antigen bundle fancy-ctrl-z
 antigen bundle git
 antigen bundle gitignore
-[ hash thefuck >& /dev/null ] && antigen bundle thefuck
+antigen bundle thefuck
 antigen bundle themes
 antigen bundle tmux
 antigen bundle vagrant
@@ -115,7 +115,19 @@ export BAT_STYLE=numbers,grid
 # alias bat="bat --terminal-width -2"
 
 # thefuck
-[ hash thefuck >& /dev/null ] && eval $(thefuck --alias)
+[ type thefuck >& /dev/null ] && eval $(thefuck --alias)
+bindkey -M emacs '^k' fuck-command-line
+bindkey -M vicmd '^k' fuck-command-line
+bindkey -M viins '^k' fuck-command-line
+
+fuck-command-line-ext() {
+    BUFFER="fuck"
+    zle accept-line
+}
+zle -N fuck-command-line-ext
+bindkey -M emacs '\ek' fuck-command-line-ext
+bindkey -M vicmd '\ek' fuck-command-line-ext
+bindkey -M viins '\ek' fuck-command-line-ext
 
 # FZF
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
