@@ -5,6 +5,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Add $HOME/.local/bin to PATH, if exists
+if [ -d "$HOME/.local/bin" ] && ! grep "$HOME/.local/bin" <<< "$PATH" &> /dev/null; then
+    export PATH="$PATH:$HOME/.local/bin"
+fi
+
 # Homebrew
 if [ -f /opt/homebrew/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
