@@ -19,9 +19,7 @@ macos: _dotfiles ## Setup macOS
 	@./etc/macos
 
 fedora-server: DOTFILES_WITH_APPS=0
-fedora-server: DOTFILES_WITH_ASDF=0
 fedora-server: DOTFILES_WITH_BREW=0
-fedora-server: DOTFILES_WITH_LSP=0
 fedora-server: _dotfiles ## Setup Fedora server
 
 unix-server: DOTFILES_WITH_APPS=0
