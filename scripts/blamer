@@ -7,7 +7,7 @@ import sys
 from collections import namedtuple
 from typing import Callable, Iterator, NoReturn, Tuple
 
-RE = re.compile(r"([a-f\d^]+) \(([\w ]+) (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+\-]\d{4})\s([\d\s]+)\)\s(.*)")
+RE = re.compile(r"^([a-f\d^]+)\s+.*\(([\w ]+)\s+(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+\-]\d{4})([\d\s]+)\)\s(.*)$")
 LineDat = namedtuple("LineDat", "commit,name,date,line")
 CLI = namedtuple("CLI", "lang,no_commit,no_shuffle,rgb")
 
