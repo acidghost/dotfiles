@@ -59,6 +59,7 @@
     ~/.config/fzf:
     ~/.config/neofetch:
     ~/.config/nvim:
+    ~/.config/vifm:
     ~/.gitconfig:
     ~/Library/Application Support/Code/User:
       glob: true
