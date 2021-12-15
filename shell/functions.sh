@@ -62,6 +62,44 @@ _editor-help() {
 alias vim-help="_editor-help vim"
 alias nvim-help="_editor-help nvim"
 
+# http://unix.stackexchange.com/a/269085/67282
+hex-to-256() {
+    local hex=$1 r g b
+    if [[ $hex == "#"* ]]; then
+        hex=$(echo "$1" | awk '{print substr($0,2)}')
+    fi
+    r=$(printf '0x%0.2s' "$hex")
+    g=$(printf '0x%0.2s' "${hex#??}")
+    b=$(printf '0x%0.2s' "${hex#????}")
+    echo -e "$(printf "%03d" "$(( (r < 75 ? 0 : (r - 35) / 40) * 6 *6 +
+                                  (g < 75 ? 0 : (g - 35) / 40) * 6    +
+                                  (b < 75 ? 0 : (b - 35) / 40)        + 16 ))")"
+}
+
+256-to-hex() {
+    local r g b gray
+    local dec=$(( $1 % 256 ))
+    if [ "$dec" -lt 16 ]; then
+        local bas=$(( dec % 16 ))
+        local mul=128
+        [ "$bas" -eq 7 ] && mul=192
+        [ "$bas" -eq 8 ] && bas=7
+        [ "$bas" -gt 8 ] && mul=255
+        printf '#%02x%02x%02x\n' \
+            "$((   (bas & 1)        * mul ))" \
+            "$(( ( (bas & 2) >> 1 ) * mul ))" \
+            "$(( ( (bas & 4) >> 2 ) * mul ))"
+    elif [ "$dec" -gt 15 ] && [ "$dec" -lt 232 ]; then
+        b=$(( (dec - 16) % 6    )); b=$(( b == 0 ? 0 : b * 40 + 55 ))
+        g=$(( (dec - 16) / 6 % 6)); g=$(( g == 0 ? 0 : g * 40 + 55 ))
+        r=$(( (dec - 16) / 36   )); r=$(( r == 0 ? 0 : r * 40 + 55 ))
+        printf '#%02x%02x%02x\n' "$r" "$g" "$b"
+    else
+        gray=$(( (dec - 232) * 10 + 8 ))
+        printf 'dec= %3s  gray= #%02x%02x%02x\n' "$dec" "$gray" "$gray" "$gray"
+    fi
+}
+
 # Platform specific
 case $(uname) in
     Linux)
