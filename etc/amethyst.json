@@ -3,8 +3,10 @@
         "tall",
         "column",
         "row",
-        "fullscreen",
-        "floating"
+        "3column-left",
+        "widescreen-tall",
+        "floating",
+        "fullscreen"
     ],
     "Valid modifiers are": [
         "option",
@@ -200,7 +202,7 @@
     },
     "toggle-focus-follows-mouse": {
         "mod": "mod2",
-        "key": "x"
+        "key": "m"
     },
     "relaunch-amethyst": {
         "mod": "mod2",
