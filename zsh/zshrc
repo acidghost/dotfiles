@@ -143,6 +143,9 @@ function toggle-prompt {
 zle -N toggle-prompt
 bindkey '^P' toggle-prompt
 
+bindkey '^w' forward-word
+bindkey '^b' backward-word
+
 if type brew &> /dev/null; then
     alias brew="env PATH=$(sed -e "s,$(asdf where python | tr -d '\n')/bin:,,g" \
                                -e "s,$HOME/.asdf/shims:,,g" <<< "$PATH") brew"
