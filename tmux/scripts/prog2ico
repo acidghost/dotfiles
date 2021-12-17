@@ -34,6 +34,7 @@ case "$prog" in
     *emacs*                         ) echo -n "" ;;
     julia                           ) echo -n "" ;;
     delta                           ) echo -n "∆" ;;
+    packer                          ) echo -n "" ;;
     *                               ) echo -n "" ;;
 esac
 
