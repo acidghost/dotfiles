@@ -15,15 +15,16 @@ tap "homebrew/cask-fonts"
 
 # Applications
 cask "amethyst"                 if WITH_APPS && IS_DARWIN
-cask "firefox"                  if WITH_APPS
-cask "obsidian"                 if WITH_APPS
-cask "slack"                    if WITH_APPS
-cask "spotify"                  if WITH_APPS
-cask "zoom"                     if WITH_APPS
-cask "zotero"                   if WITH_APPS
+cask "firefox"                  if WITH_APPS && IS_DARWIN
+cask "obsidian"                 if WITH_APPS && IS_DARWIN
+cask "owncloud"                 if WITH_APPS && IS_DARWIN
+cask "slack"                    if WITH_APPS && IS_DARWIN
+cask "spotify"                  if WITH_APPS && IS_DARWIN
+cask "zoom"                     if WITH_APPS && IS_DARWIN
+cask "zotero"                   if WITH_APPS && IS_DARWIN
 
 # Fonts
-cask "font-hack-nerd-font"
+cask "font-hack-nerd-font"      if IS_DARWIN
 
 # Hardware support
 cask "1kc-razer"                if IS_DARWIN
@@ -32,11 +33,13 @@ cask "1kc-razer"                if IS_DARWIN
 brew "gopls"                    if WITH_LSP
 brew "rust-analyzer"            if WITH_LSP
 brew "shellcheck"
+cask "visual-studio-code"       if WITH_APPS && IS_DARWIN
 
 # Terminal
 brew "alacritty"                if !IS_DARWIN && WITH_APPS
 brew "bat"
 brew "fd"
+brew "figlet"
 brew "gawk"
 brew "git-delta"
 brew "htop"
@@ -49,9 +52,11 @@ brew "ripgrep"
 brew "thefuck"
 brew "tmux"
 brew "tree"
+brew "vifm"
 
 # Virtualization / emulation
 if WITH_VIRT
+    cask "docker"               if IS_DARWIN
     brew "libvirt"
     brew "qemu"
     cask "utm"                  if IS_DARWIN
