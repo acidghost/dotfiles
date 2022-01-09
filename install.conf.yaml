@@ -43,6 +43,9 @@
     ~/Brewfile:
       path: etc/Brewfile
       if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
+    ~/.config/dotfiles-env/is_lightweight:
+      path: dotfiles-env/is_lightweight
+      if: '[ "$DOTFILES_IS_LIGHTWEIGHT" = 1 ]'
     ~/.config/dotfiles-env/with_apps:
       path: dotfiles-env/with_apps
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
