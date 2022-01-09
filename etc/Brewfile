@@ -2,11 +2,12 @@ def has?(s)
     ENV["DOTFILES_#{s}"] == "1" || system("[ -f ~/.config/dotfiles-env/#{s.downcase} ]")
 end
 
-IS_DARWIN = system "[ $(uname) = Darwin ]"
-WITH_APPS = has? :WITH_APPS
-WITH_ASDF = has? :WITH_ASDF
-WITH_LSP  = has? :WITH_LSP
-WITH_VIRT = has? :WITH_VIRT
+IS_DARWIN       = system "[ $(uname) = Darwin ]"
+IS_LIGHTWEIGHT  = has? :IS_LIGHTWEIGHT
+WITH_APPS       = has? :WITH_APPS
+WITH_ASDF       = has? :WITH_ASDF
+WITH_LSP        = has? :WITH_LSP
+WITH_VIRT       = has? :WITH_VIRT
 
 tap "homebrew/core"
 tap "homebrew/cask"
@@ -46,8 +47,8 @@ brew "htop"
 brew "jq"
 brew "lynx"
 brew "neofetch"
-brew "neovim"
-brew "pandoc"
+brew "neovim"                   unless IS_LIGHTWEIGHT
+brew "pandoc"                   unless IS_LIGHTWEIGHT
 brew "ripgrep"
 brew "thefuck"
 brew "tmux"

@@ -1,3 +1,4 @@
+export DOTFILES_IS_LIGHTWEIGHT=0
 export DOTFILES_WITH_APPS=1
 export DOTFILES_WITH_ASDF=1
 export DOTFILES_WITH_BREW=1
@@ -27,6 +28,7 @@ unix-server: DOTFILES_WITH_ASDF=0
 unix-server: DOTFILES_WITH_LSP=0
 unix-server: _dotfiles ## Setup UNIX server
 
+unix-server-light: DOTFILES_IS_LIGHTWEIGHT=1
 unix-server-light: DOTFILES_WITH_APPS=0
 unix-server-light: DOTFILES_WITH_ASDF=0
 unix-server-light: DOTFILES_WITH_BREW=0
