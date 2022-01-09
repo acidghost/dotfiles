@@ -82,7 +82,9 @@
       exclude:
         - tmux/scripts/tmux-*
     ~/.tmux/plugins/tpm: tmux/tpm
-    ~/.tool-versions: asdf/tool-versions
+    ~/.tool-versions:
+      path: asdf/tool-versions
+      if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
     ~/.vim/lsp.vim:
       path: vim/lsp.vim
       if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
