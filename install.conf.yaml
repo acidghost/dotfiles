@@ -63,6 +63,9 @@
     ~/.config/neofetch:
     ~/.config/nvim:
     ~/.config/vifm:
+    ~/.default-python-packages:
+      path: asdf/default-python-packages
+      if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
     ~/.gitconfig:
     ~/Library/Application Support/Code/User:
       glob: true
