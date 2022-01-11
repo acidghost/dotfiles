@@ -100,6 +100,23 @@ hex-to-256() {
     fi
 }
 
+# Create a local port forwarding on the remote server (i.e. you can access
+# remote host port as if it was local). Use aliases `ssh-ctrl-$cmd` to control
+# the session.
+ssh-forward-local() {
+    local host=$1 port=$2 hostport=$3
+    if [ -z "$host" ] || [ -z "$port" ]; then
+        echo "usage: ssh-forward-local host port [hostport]"
+        return 1
+    fi
+    [ -z "$hostport" ] && hostport=$port
+    if ! (ssh -G "$host" | grep -q "controlpath"); then
+        echo "Expected option ControlPath to be set for $host"
+        return 1
+    fi
+    ssh -fNTML "${port}:localhost:${hostport}" "$host"
+}
+
 # Platform specific
 case $(uname) in
     Linux)

@@ -18,6 +18,12 @@ alias rgrep='rgrep --color=auto -n'
 alias tabcsv='column -s, -t'
 alias tabtsv='column -s"\t" -t'
 
+for cmd in check exit; do
+    # shellcheck disable=SC2139
+    alias "ssh-ctrl-$cmd=ssh -TO $cmd"
+done
+unset cmd
+
 # Platform specific
 case $(uname) in
     Linux)
