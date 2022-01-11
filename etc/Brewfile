@@ -17,6 +17,8 @@ tap "homebrew/cask-fonts"
 # Applications
 cask "amethyst"                 if WITH_APPS && IS_DARWIN
 cask "firefox"                  if WITH_APPS && IS_DARWIN
+brew "mpv"                      if WITH_APPS
+cask "obs"                      if WITH_APPS
 cask "obsidian"                 if WITH_APPS && IS_DARWIN
 cask "owncloud"                 if WITH_APPS && IS_DARWIN
 cask "slack"                    if WITH_APPS && IS_DARWIN
@@ -54,6 +56,9 @@ brew "thefuck"
 brew "tmux"
 brew "tree"
 brew "vifm"
+
+# TeX
+cask "mactex-no-gui"            if IS_DARWIN
 
 # Virtualization / emulation
 if WITH_VIRT
