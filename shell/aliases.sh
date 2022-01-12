@@ -23,6 +23,7 @@ for cmd in check exit; do
     alias "ssh-ctrl-$cmd=ssh -TO $cmd"
 done
 unset cmd
+alias ssh-ctrl-list="ls -l ~/.ssh/*.ctl"
 
 # Platform specific
 case $(uname) in
