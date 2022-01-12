@@ -104,17 +104,21 @@ hex-to-256() {
 # remote host port as if it was local). Use aliases `ssh-ctrl-$cmd` to control
 # the session.
 ssh-forward-local() {
-    local host=$1 port=$2 hostport=$3
-    if [ -z "$host" ] || [ -z "$port" ]; then
-        echo "usage: ssh-forward-local host port [hostport]"
+    local host=$1 params=(-L "${2}:localhost:${2}")
+    if [ -z "$host" ] || [ -z "$2" ]; then
+        echo "usage: ssh-forward-local host port [port...]"
         return 1
     fi
-    [ -z "$hostport" ] && hostport=$port
     if ! (ssh -G "$host" | grep -q "controlpath"); then
         echo "Expected option ControlPath to be set for $host"
         return 1
     fi
-    ssh -fNTML "${port}:localhost:${hostport}" "$host"
+    shift 2
+    while [ -n "$1" ]; do
+        params+=(-L "${1}:localhost:${1}")
+        shift
+    done
+    ssh -fNTM "${params[@]}" "$host"
 }
 
 # Platform specific
