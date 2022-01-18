@@ -27,7 +27,7 @@ case "$prog" in
     *top                            ) echo -n "ﱨ" ;;
     *pdf*|zathura|okular            ) echo -n "" ;;
     lynx                            ) echo -n "" ;;
-    ssh                             ) echo -n "" ;;
+    ssh|mosh*                       ) echo -n "" ;;
     scheme|petite                   ) echo -n "λ" ;;
     ghc*|stack                      ) echo -n "" ;;
     vifm                            ) echo -n "ﱮ" ;;
