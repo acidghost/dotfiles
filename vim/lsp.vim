@@ -75,6 +75,11 @@ set completeopt=menu,menuone,noselect
 lua <<EOF
 local cmp = require'cmp'
 cmp.setup({
+    snippet = {
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
+    },
     mapping = {
         ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
         ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
@@ -88,11 +93,10 @@ cmp.setup({
     },
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
+        { name = 'vsnip' },
     }, {
         { name = 'buffer' },
-    }, {
         { name = 'path' },
-    }, {
         { name = 'cmdline' },
     })
 })

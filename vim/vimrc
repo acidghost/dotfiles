@@ -70,8 +70,22 @@ Plug 'JuliaEditorSupport/julia-vim'
 Plug 'souffle-lang/souffle.vim'
 Plug 'aliou/bats.vim'
 
+" Completions
+if has('nvim')
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+endif
+
 if filereadable(expand("~/.vim/lsp_plugins.vim"))
     source ~/.vim/lsp_plugins.vim
+endif
+
+" Snippets
+if has('nvim')
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 endif
 
 call plug#end()
