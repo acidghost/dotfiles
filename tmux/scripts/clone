@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+main() {
+    local orig copy i
+    orig=$(sed -E "s/^(.*)(-[0-9]+)?$/\1/g" <<< "$1")
+    i=$(($(tmux list-sessions -F '#S' | sed -nE "/^${orig}-[0-9]+$/{s/[^0-9]//g;p;}" | tail -n1 )+1))
+    copy="$orig-$i"
+    tmux new-session -d -t "$orig" -s "$copy"
+    tmux switch-client -t "$copy"
+    tmux set -q -t "$copy" destroy-unattached on
+}
+
+main "$1"

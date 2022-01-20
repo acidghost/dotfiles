@@ -40,4 +40,4 @@ check: ## Check shell scripts (requires shellcheck)
 		fzf/*.sh \
 		scripts/figlet-fonts-show \
 		shell/*.sh \
-		tmux/scripts/{prog2ico,tmux-*,yank}
+		tmux/scripts/{clone,prog2ico,tmux-*,yank}
