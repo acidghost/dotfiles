@@ -26,7 +26,7 @@ case "$prog" in
     git*                            ) echo -n "" ;;
     *top                            ) echo -n "ﱨ" ;;
     *pdf*|zathura|okular            ) echo -n "" ;;
-    lynx                            ) echo -n "" ;;
+    lynx|w3m                        ) echo -n "" ;;
     ssh|mosh*                       ) echo -n "" ;;
     scheme|petite                   ) echo -n "λ" ;;
     ghc*|stack                      ) echo -n "" ;;
