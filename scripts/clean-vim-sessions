@@ -1,0 +1,69 @@
+#!/usr/bin/env perl
+use strict;
+use Getopt::Std;
+use IPC::Open2;
+
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
+
+our $VERSION = "0.0.1";
+sub HELP_MESSAGE {
+    print "usage: $0 -hfa\n
+Clean VIM sessions linked to non-existent paths.
+    -h  print this help
+    -f  force removal w/o confirmation
+    -a  remove also selected sessions for existent paths\n"
+}
+
+my $RED="\e[31m";
+my $GREEN="\e[32m";
+my $YELLOW="\e[33m";
+my $RESET="\e[0m";
+
+my %opts;
+getopts('hfa', \%opts);
+HELP_MESSAGE and exit if $opts{h};
+
+my $base = "$ENV{HOME}/.vim/session/";
+my $ext = ".vim";
+my (%sessions, @oks, @noks);
+foreach(<$base*$ext>) {
+    my $f = $_;
+    s/$base(.*)$ext/$1/;
+    s,%,/,g;
+    next unless m,\A/,;
+    $sessions{$_} = $f;
+    my $arr = \@noks;
+    $arr = \@oks if -e;
+    push @$arr, $_;
+}
+
+sub delete_sessions {
+    return unless @_ > 0;
+    print "${GREEN}Deleting:${RESET}\n";
+    print "$_\n" for @_;
+    if (!$opts{f}) {
+        print "${YELLOW}Confirm deletion (y/N): ${RESET}";
+        print "${RED}Aborted${RESET}\n" and return if <STDIN> !~ /\Ay/i;
+    }
+    system 'rm', @_;
+}
+
+if (@noks > 0) {
+    print "${YELLOW}Following files not found:${RESET}\n";
+    print "$_\n" for @noks;
+    delete_sessions(map { $sessions{$_} } @noks);
+}
+
+exit unless $opts{a};
+if (@oks > 0) {
+    my @fzf_args = ('--multi', '--layout=reverse', '--height=75%',
+                    '--bind=ctrl-a:select-all,ctrl-e:deselect-all',
+                    '--header=Select sessions to delete:');
+    my $pid = open2 *FZF_RFH, *FZF_WFH, 'fzf', @fzf_args;
+    print FZF_WFH "$_\n" for @oks;
+    waitpid $pid, 0;
+    die "fzf: nonzero exit of $?" if $? && (($? >> 8) & 0xFF) != 130;
+    delete_sessions(map { chomp and $sessions{$_} } <FZF_RFH>);
+    exit;
+}
+print "${YELLOW}No additional sessions...${RESET}\n";
