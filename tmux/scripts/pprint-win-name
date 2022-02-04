@@ -1,34 +1,19 @@
-#!/usr/bin/env python3
-import os
-import sys
+#!/usr/bin/env perl
+use v5.10;
+use strict;
 
-def main(path: str, win: str):
-    win = win.replace(os.environ['HOME'], '~')
-    if '...' not in win and '/' not in win:
-        print(win)
-        return
+my ($path, $win) = @ARGV;
+$win =~ s/$ENV{HOME}/~/;
+say $win and exit if $win !~ /\.{3}|\//;
 
-    raw_parts = path.replace(os.environ['HOME'], '~').split('/')
-    parts = []
-    last_part_l = 0
-    for i, p in enumerate(raw_parts):
-        if i == len(raw_parts) - 1:
-            parts.append(p)
-            last_part_l = len(p)
-        else:
-            parts.append(p[0] if len(p) > 0 else "")
+my @raw_parts = split '/', $path =~ s/$ENV{HOME}/~/r;
+my @parts = pop @raw_parts;
+unshift @parts, substr($_,0,1) for reverse @raw_parts;
 
-    m = max(last_part_l, 16)
-    if m == last_part_l:
-        print(parts[-1])
-        return
+my $last_part_l = length $parts[$#parts];
+my $m = $last_part_l > 16 ? $last_part_l : 16;
+say $parts[$#parts] and exit if $m == $last_part_l;
 
-    out = ""
-    for i, p in enumerate(parts):
-        out += p
-        if i < len(parts) - 1:
-            out += "/"
-    print(out if len(out) < m else f"{out[-m:]}")
-
-if __name__ == '__main__':
-    main(*sys.argv[1:])
+my $out = join '/', @parts;
+say $out and exit if length($out) < $m;
+say "", substr $out, length($out) - $m;
