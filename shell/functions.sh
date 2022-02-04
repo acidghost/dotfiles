@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 show-off() {
-    clear && python3 -c "print('\n' * 6)" && neofetch "$@" && python3 -c "print('\n' * 6)"
+    clear && perl -e 'print "\n"x6' && neofetch "$@" && perl -e 'print "\n"x6'
 }
 
 vusec-show-off() {
