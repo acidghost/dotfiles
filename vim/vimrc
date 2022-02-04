@@ -179,7 +179,8 @@ nmap <Right> 20zr
 nmap <C-n> :NERDTreeToggle<CR>
 
 nmap <C-p> :FZF<CR>
-nmap <C-t> :Tags<CR>
+nmap <C-t>p :Tags<CR>
+nmap <C-t>b :BTags<CR>
 nmap <S-p> :FZF!<CR>
 nmap <Leader>f :RgPreview<Space>
 nmap <Leader>F :RgPreview!<Space>
