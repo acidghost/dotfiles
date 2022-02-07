@@ -35,6 +35,7 @@ case "$prog" in
     julia                           ) echo -n "" ;;
     delta                           ) echo -n "∆" ;;
     packer                          ) echo -n "" ;;
+    mpv                             ) echo -n "" ;;
     *                               ) echo -n "" ;;
 esac
 
