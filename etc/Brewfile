@@ -39,7 +39,7 @@ brew "shellcheck"
 cask "visual-studio-code"       if WITH_APPS && IS_DARWIN
 
 # Terminal
-brew "alacritty"                if !IS_DARWIN && WITH_APPS
+brew "alacritty"                if WITH_APPS
 brew "bat"
 brew "fd"
 brew "figlet"
