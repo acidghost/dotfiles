@@ -62,6 +62,8 @@
       path: dotfiles-env/with_virt
       if: '[ "$DOTFILES_WITH_VIRT" = 1 ]'
     ~/.config/fzf:
+    ~/.config/mpv:
+      if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/neofetch:
     ~/.config/nvim:
     ~/.config/vifm:
