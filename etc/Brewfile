@@ -37,6 +37,7 @@ brew "gopls"                    if WITH_LSP
 brew "rust-analyzer"            if WITH_LSP
 brew "shellcheck"
 cask "visual-studio-code"       if WITH_APPS && IS_DARWIN
+brew "universal-ctags"
 
 # Terminal
 brew "alacritty"                if WITH_APPS
@@ -56,6 +57,7 @@ brew "thefuck"
 brew "tmux"
 brew "tree"
 brew "vifm"
+brew "wakeonlan"
 
 # TeX
 cask "mactex-no-gui"            if IS_DARWIN
