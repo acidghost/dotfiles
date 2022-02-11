@@ -121,6 +121,25 @@ ssh-forward-local() {
     ssh -fNTM "${params[@]}" "$host"
 }
 
+twitch_search_vods() {
+  twitch-search -vod="$1" \
+    | fzf --ansi --height=50% --layout=reverse \
+    | awk '{print $1}' \
+    | xargs -I{} -o bash -c 'mpv --terminal=no {} & echo {}'
+    # | xargs -I{} -o bash -c 'nohup streamlink --player-passthrough hls {} best >/dev/null & echo {}'
+}
+
+twitch_search_live() {
+  twitch-search -live \
+    | fzf --ansi --height=50% --layout=reverse \
+    | awk '{print $1}' \
+    | xargs -I{} -o bash -c 'mpv --terminal=no https://twitch.tv/{} & vod-chat -live={}'
+    # | xargs -I{} -o bash -c 'nohup streamlink https://twitch.tv/{} best >/dev/null & \
+    #                          vod-chat -live={}'
+    # | xargs -I{} -o bash -c 'nohup streamlink https://twitch.tv/{} best >/dev/null & \
+    #                          nohup chatterino -c t:{} >/dev/null & echo {}'
+}
+
 # Platform specific
 case $(uname) in
     Linux)
