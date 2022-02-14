@@ -9,6 +9,8 @@ ifdef DOTFILES_DEBUG
 DOTFILES_INSTALL_FLAGS += -vv
 endif
 
+BASH_SCRIPTS := $(shell grep -lRE '^\#.*bash' scripts tmux/scripts)
+
 help: ## Print command list
 	@perl -nle'print $& if m{^[a-zA-Z0-9_-]+:.*?## .*$$}' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -38,6 +40,5 @@ check: ## Check shell scripts (requires shellcheck)
 	@shellcheck \
 		etc/macos \
 		fzf/*.sh \
-		scripts/figlet-fonts-show \
 		shell/*.sh \
-		tmux/scripts/{clone,prog2ico,tmux-*,yank}
+		$(BASH_SCRIPTS)
