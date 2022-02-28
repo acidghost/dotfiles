@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 use strict;
+use warnings;
+
 use Getopt::Std;
 use IPC::Open2;
 
@@ -7,11 +9,13 @@ $Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 our $VERSION = "0.0.1";
 sub HELP_MESSAGE {
-    print "usage: $0 -hfa\n
-Clean VIM sessions linked to non-existent paths.
-    -h  print this help
-    -f  force removal w/o confirmation
-    -a  remove also selected sessions for existent paths\n"
+    print "usage: $0 -hfa\n"
+        . "\n"
+        . "Clean VIM sessions linked to non-existent paths.\n"
+        . "    -h  print this help\n"
+        . "    -f  force removal w/o confirmation\n"
+        . "    -a  remove also selected sessions for existent paths\n";
+    return;
 }
 
 my $RED="\e[31m";
@@ -26,7 +30,7 @@ HELP_MESSAGE and exit if $opts{h};
 my $base = "$ENV{HOME}/.vim/session/";
 my $ext = ".vim";
 my (%sessions, @oks, @noks);
-foreach(<$base*$ext>) {
+foreach(<<$base*$ext>>) {
     my $f = $_;
     s/$base(.*)$ext/$1/;
     s,%,/,g;
@@ -38,14 +42,16 @@ foreach(<$base*$ext>) {
 }
 
 sub delete_sessions {
-    return unless @_ > 0;
+    my @todel = @_;
+    return if @todel == 0;
     print "${GREEN}Deleting:${RESET}\n";
-    print "$_\n" for @_;
+    print "$_\n" for @todel;
     if (!$opts{f}) {
         print "${YELLOW}Confirm deletion (y/N): ${RESET}";
         print "${RED}Aborted${RESET}\n" and return if <STDIN> !~ /\Ay/i;
     }
-    system 'rm', @_;
+    system 'rm', @todel;
+    return;
 }
 
 if (@noks > 0) {
@@ -63,7 +69,7 @@ if (@oks > 0) {
     print FZF_WFH "$_\n" for @oks;
     waitpid $pid, 0;
     die "fzf: nonzero exit of $?" if $? && (($? >> 8) & 0xFF) != 130;
-    delete_sessions(map { chomp and $sessions{$_} } <FZF_RFH>);
+    delete_sessions(map { chomp; $sessions{$_} } <FZF_RFH>);
     exit;
 }
 print "${YELLOW}No additional sessions...${RESET}\n";
