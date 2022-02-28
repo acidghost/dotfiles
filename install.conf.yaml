@@ -67,6 +67,9 @@
     ~/.config/neofetch:
     ~/.config/nvim:
     ~/.config/vifm:
+    ~/.default-perl-modules:
+      path: asdf/default-perl-modules
+      if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
     ~/.default-python-packages:
       path: asdf/default-python-packages
       if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
