@@ -10,6 +10,7 @@ DOTFILES_INSTALL_FLAGS += -vv
 endif
 
 BASH_SCRIPTS := $(shell grep -lRE '^\#.*bash' scripts tmux/scripts)
+PERL_SCRIPTS := $(shell grep -lRE '^\#.*perl' scripts tmux/scripts)
 
 help: ## Print command list
 	@perl -nle'print $& if m{^[a-zA-Z0-9_-]+:.*?## .*$$}' $(MAKEFILE_LIST) \
@@ -36,9 +37,10 @@ unix-server-light: DOTFILES_WITH_LSP=0
 unix-server-light: DOTFILES_WITH_VIRT=0
 unix-server-light: _dotfiles ## Setup UNIX server (light)
 
-check: ## Check shell scripts (requires shellcheck)
+check: ## Check shell/perl scripts (requires shellcheck and Perl::Critic)
 	@shellcheck \
 		etc/macos \
 		fzf/*.sh \
 		shell/*.sh \
 		$(BASH_SCRIPTS)
+	@perlcritic $(PERL_SCRIPTS)
