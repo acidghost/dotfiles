@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
-use v5.10;
+use 5.010;
 use strict;
+use warnings;
 
 my ($path, $win) = @ARGV;
 $win =~ s/$ENV{HOME}/~/;
@@ -10,9 +11,9 @@ my @raw_parts = split '/', $path =~ s/$ENV{HOME}/~/r;
 my @parts = pop @raw_parts;
 unshift @parts, substr($_,0,1) for reverse @raw_parts;
 
-my $last_part_l = length $parts[$#parts];
+my $last_part_l = length $parts[-1];
 my $m = $last_part_l > 16 ? $last_part_l : 16;
-say $parts[$#parts] and exit if $m == $last_part_l;
+say $parts[-1] and exit if $m == $last_part_l;
 
 my $out = join '/', @parts;
 say $out and exit if length($out) < $m;
