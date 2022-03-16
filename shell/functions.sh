@@ -121,23 +121,70 @@ ssh-forward-local() {
     ssh -fNTM "${params[@]}" "$host"
 }
 
-twitch_search_vods() {
-  twitch-search -vod="$1" \
-    | fzf --ansi --height=50% --layout=reverse \
-    | awk '{print $1}' \
-    | xargs -I{} -o bash -c 'mpv --terminal=no {} & echo {}'
-    # | xargs -I{} -o bash -c 'nohup streamlink --player-passthrough hls {} best >/dev/null & echo {}'
+twitch-search-vods() {
+    if [[ -z "$1" || "$1" = -h || "$1" = -help || "$1" = --help ]]; then
+        echo "$0 [fg | nochat] channel"
+        return 0
+    fi
+    local cmd='mpv --terminal=no {} &'
+    if [ "$1" = "fg" ]; then
+        cmd="mpv {}"
+        shift
+    elif [ "$1" = "nochat" ]; then
+        cmd="$cmd echo {}"
+        shift
+    else
+        cmd="$cmd vod-chat -mpv -vod={}"
+    fi
+    # shellcheck disable=SC2016
+    local preview='twitch api get videos -q id=$(sed -E "s,^.*/([0-9]+)$,\1," <<< {1}) | \
+        jq -c ".data[0]" | pprint-json-obj id duration view_count published_at title url user_name'
+    twitch-search -vod="$1" \
+        | fzf --ansi --height=50% --layout=reverse \
+              --preview="$preview" --preview-window='hidden,border-none' \
+              --bind='ctrl-p:toggle-preview' \
+        | awk '{print $1}' \
+        | xargs -I{} -o /bin/sh -c "$cmd"
 }
 
-twitch_search_live() {
-  twitch-search -live \
-    | fzf --ansi --height=50% --layout=reverse \
-    | awk '{print $1}' \
-    | xargs -I{} -o bash -c 'mpv --terminal=no https://twitch.tv/{} & vod-chat -live={}'
-    # | xargs -I{} -o bash -c 'nohup streamlink https://twitch.tv/{} best >/dev/null & \
-    #                          vod-chat -live={}'
-    # | xargs -I{} -o bash -c 'nohup streamlink https://twitch.tv/{} best >/dev/null & \
-    #                          nohup chatterino -c t:{} >/dev/null & echo {}'
+twitch-search-live() {
+    if [[ "$1" = -h || "$1" = -help || "$1" = --help ]]; then
+        echo "$0 [fg | nochat]"
+        return 0
+    fi
+    local cmd='mpv --terminal=no https://twitch.tv/{} &'
+    if [ "$1" = "fg" ]; then
+        cmd="mpv https://twitch.tv/{}"
+        shift
+    elif [ "$1" = "nochat" ]; then
+        cmd="$cmd echo {}"
+        shift
+    else
+        cmd="$cmd vod-chat -live={}"
+    fi
+    local preview='twitch api get search/channels -q query={1} -q first=1 | \
+        jq -c ".data[0]" | pprint-json-obj id display_name title game_name started_at'
+    twitch-search -live \
+        | fzf --ansi --height=50% --layout=reverse \
+              --preview="$preview" --preview-window='hidden,border-none' \
+              --bind='ctrl-p:toggle-preview' \
+        | awk '{print $1}' \
+        | xargs -I{} -o /bin/sh -c "$cmd"
+}
+
+# shellcheck disable=SC2032     # we don't want this to be used by xargs
+vgrep() {
+    local initial_query="$1" vgrep_prefix="vgrep --no-header "
+    # shellcheck disable=SC2016
+    local preview='
+        l={3} f={2}
+        [ "$l" -gt 3 ] && ll=$((l - 3))
+        exec bat --color always -n -H "$l" -r "$ll:" "$f"'
+    # shellcheck disable=SC2033     # we don't want the function but the binary
+    FZF_DEFAULT_COMMAND="$vgrep_prefix '$initial_query'" \
+        fzf --bind "change:reload:$vgrep_prefix {q} || true" --preview "$preview" \
+            --ansi --phony --tac --query "$initial_query" \
+        | awk '{print $1}' | xargs -I{} -o vgrep --show {}
 }
 
 # Platform specific
