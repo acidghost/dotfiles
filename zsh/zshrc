@@ -208,3 +208,7 @@ else
     #        1 2 3 4 5 6 7 8 9 0 1
     LSCOLORS=ExGxFxdaCxDaDahaadacad
 fi
+
+# Locale settings
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
