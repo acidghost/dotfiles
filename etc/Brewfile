@@ -56,6 +56,7 @@ brew "ripgrep"
 brew "thefuck"
 brew "tmux"
 brew "tree"
+brew "vgrep"
 brew "vifm"
 brew "wakeonlan"
 
