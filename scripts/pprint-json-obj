@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use JSON qw( decode_json );
+
+my %d = %{decode_json <STDIN>};
+
+my @ks;
+my $has_args = 0;
+if (@ARGV) {
+    @ks = @ARGV;
+    $has_args = 1;
+} else {
+    @ks = keys %d;
+}
+
+my @ks_out;
+my $max_l = 0;
+for (@ks) {
+    next if ref $d{$_};
+    my $l = length;
+    $max_l = $l if $l > $max_l;
+    push @ks_out, $_;
+}
+
+$max_l+=2;
+@ks_out = sort @ks_out unless $has_args;
+printf "%${max_l}s : %s\n", $_, $d{$_} for @ks_out;
