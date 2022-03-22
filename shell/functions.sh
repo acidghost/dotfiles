@@ -38,7 +38,7 @@ picshow() {
 }
 
 _editor-help() {
-    local ed=$1 init_q=$2 tags selection
+    local ed=$1 init_q=$2 tags selection f
     case ${ed} in
         vim)
             tags="/usr/share/vim/vim82/doc/tags"
@@ -52,11 +52,12 @@ _editor-help() {
             ;;
     esac
     [ -r "$tags" ] || { eecho "File $tags is not valid for $ed!"; return 1; }
+    f=$(mktemp) || { eecho "Cannot create temp file"; return 1; }
     selection=$(awk '{printf "%-40s\t%s\n", $2, $1}' "$tags" \
         | fzf --height=50% --layout=reverse --query="$init_q" \
         | cut -d$'\t' -f2)
-    [ -n "$selection" ] || return 0
-    "$ed" "+:vert :help $selection" "+:vert resize" -
+    [ -n "$selection" ] && "$ed" "+:vert :help $selection" "+:vert resize" "$f"
+    rm "$f"
 }
 
 alias vim-help="_editor-help vim"
