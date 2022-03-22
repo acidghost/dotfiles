@@ -30,7 +30,7 @@ HELP_MESSAGE and exit if $opts{h};
 my $base = "$ENV{HOME}/.vim/session/";
 my $ext = ".vim";
 my (%sessions, @oks, @noks);
-foreach(<<$base*$ext>>) {
+foreach(glob "$base*$ext") {
     my $f = $_;
     s/$base(.*)$ext/$1/;
     s,%,/,g;
