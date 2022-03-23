@@ -101,6 +101,17 @@ hex-to-256() {
     fi
 }
 
+hex-to-rgb() {
+    local hex=$1 join=$2 hr hg hb
+    [[ "$hex" =~ ^# ]] && hex=$(cut -c2- <<< "$hex")
+    [ "${#hex}" -lt 6 ] && { >&2 echo "invalid hex color"; return 1; }
+    [ -z "$join" ] && join=' '
+    hr=$(cut -c1-2 <<< "$hex")
+    hg=$(cut -c3-4 <<< "$hex")
+    hb=$(cut -c5-6 <<< "$hex")
+    printf '%d%s%d%s%d' "0x$hr" "$join" "0x$hg" "$join" "0x$hb"
+}
+
 # Create a local port forwarding on the remote server (i.e. you can access
 # remote host port as if it was local). Use aliases `ssh-ctrl-$cmd` to control
 # the session.
