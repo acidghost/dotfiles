@@ -47,12 +47,12 @@ _editor-help() {
         nvim)
             tags=$(cd "$(dirname "$(which nvim)")/../share/nvim/runtime/doc/" && pwd)/tags ;;
         *)
-            eecho "Editor $ed not supported"
+            >&2 echo "Editor $ed not supported"
             return 1
             ;;
     esac
-    [ -r "$tags" ] || { eecho "File $tags is not valid for $ed!"; return 1; }
-    f=$(mktemp) || { eecho "Cannot create temp file"; return 1; }
+    [ -r "$tags" ] || { >&2 echo "File $tags is not valid for $ed!"; return 1; }
+    f=$(mktemp) || { >&2 echo "Cannot create temp file"; return 1; }
     selection=$(awk '{printf "%-40s\t%s\n", $2, $1}' "$tags" \
         | fzf --height=50% --layout=reverse --query="$init_q" \
         | cut -d$'\t' -f2)
