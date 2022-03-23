@@ -25,6 +25,8 @@ done
 unset cmd
 alias ssh-ctrl-list="ls -l ~/.ssh/*.ctl"
 
+type jless &>/dev/null && alias yless='jless --yaml'
+
 # Platform specific
 case $(uname) in
     Linux)
