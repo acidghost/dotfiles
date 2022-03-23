@@ -66,6 +66,8 @@
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/neofetch:
     ~/.config/nvim:
+    ~/.config/spotify-tui:
+      if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/vifm:
     ~/.default-perl-modules:
       path: asdf/default-perl-modules
