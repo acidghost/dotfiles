@@ -200,6 +200,7 @@ nmap <Leader>vf :Vista finder<CR>
 nmap <Leader>vs :Vista focus<CR>
 
 noremap <Leader>@ :nohl<CR>
+noremap <Leader>w :setl wrap!<CR>
 
 imap <silent> <c-p> <Plug>(completion_trigger)
 
