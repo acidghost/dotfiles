@@ -117,6 +117,7 @@ set tags+=.tags
 " Lightline configuration
 let g:lightline = {
     \ 'colorscheme': 'Tomorrow_Night_Blue',
+    \ 'enable': { 'tabline': 1, 'statusline': 1 },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'readonly', 'filename', 'modified', 'method' ],
@@ -128,7 +129,17 @@ let g:lightline = {
     \ 'component_function': {
     \   'method': 'NearestMethodOrFunction',
     \ },
+    \ 'tabline': {
+    \   'left': [ [ 'tabs' ] ],
+    \   'right': [ [ 'close' ] ]
     \ }
+    \ }
+
+" Custom Lightline palettes
+let s:palette = g:lightline#colorscheme#Tomorrow_Night_Blue#palette
+let s:palette.tabline.middle = [['#ffffff', '#606087', 231, 60]]
+let s:palette.tabline.right  = [['#ffffff', '#606087', 231, 60]]
+let s:palette.tabline.tabsel = [['#ffffff', '#af5fff', 231, 135]]
 
 if filereadable(expand("~/.vim/lsp.vim"))
     source ~/.vim/lsp.vim
