@@ -20,14 +20,12 @@ my $color_i;
 my %colors = ();
 for(<<>>) {
     chomp;
-    @_ = /\A
+    my ($time, $proto, $src, $dir, $dst) = /\A
             (\d{2}:\d{2}:\d{2}\.\d+)\s              # time
             ([A-Z]+)\s                              # networking proto?
             ([^\s]+)\s([<>])\s([^\s]+):             # source and destination
             /x
             or die "unrecognized !! $_";
-
-    my ($time, $proto, $src, $dir, $dst) = @_;
 
     my $col = $colors{"$src $dst"} || $colors{"$dst $src"};
     if (!$col) {
