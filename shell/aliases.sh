@@ -28,8 +28,8 @@ alias ssh-ctrl-list="ls -l ~/.ssh/*.ctl"
 type jless &>/dev/null && alias yless='jless --yaml'
 
 # set aliases for programs packaged under a different name (e.g. in ubuntu)
-type bat &>/dev/null || type batcat &>/dev/null && alias bat=batcat
-type fd &>/dev/null || type fdfind &>/dev/null && alias fd=fdfind
+if ! type bat &>/dev/null && type batcat &>/dev/null; then alias bat=batcat; fi
+if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
 
 # Platform specific
 case $(uname) in
