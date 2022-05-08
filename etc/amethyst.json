@@ -1,11 +1,8 @@
 {
     "layouts": [
         "tall",
-        "column",
-        "row",
-        "3column-left",
         "widescreen-tall",
-        "floating",
+        "row",
         "fullscreen"
     ],
     "Valid modifiers are": [
@@ -210,7 +207,7 @@
     },
     "floating": [],
     "floating-is-blacklist": true,
-    "float-small-windows": false,
+    "float-small-windows": true,
     "mouse-follows-focus": false,
     "focus-follows-mouse": false,
     "enables-layout-hud": true,
