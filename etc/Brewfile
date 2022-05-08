@@ -69,6 +69,7 @@ cask "mactex-no-gui"            if IS_DARWIN
 if WITH_VIRT
     cask "docker"               if IS_DARWIN
     brew "libvirt"
+    brew "podman"
     brew "qemu"
     cask "utm"                  if IS_DARWIN
 end
