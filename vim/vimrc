@@ -76,6 +76,11 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+if has('nvim-0.7')
+Plug 'hrsh7th/nvim-cmp'
+else
+Plug 'hrsh7th/nvim-cmp', { 'commit': 'bba6fb67fdafc0af7c5454058dfbabc2182741f4' }
+endif
 endif
 
 if filereadable(expand("~/.vim/lsp_plugins.vim"))
