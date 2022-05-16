@@ -25,6 +25,8 @@ done
 unset cmd
 alias ssh-ctrl-list="ls -l ~/.ssh/*.ctl"
 
+alias rsync-repo="rsync -ra --include='**.gitignore' --filter=':- .gitignore' --delete-after"
+
 type jless &>/dev/null && alias yless='jless --yaml'
 type jq &>/dev/null && alias jqc='jq --color-always'
 
