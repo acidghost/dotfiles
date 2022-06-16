@@ -97,6 +97,10 @@ antigen apply
 
 [ -f ~/.cargo/env ] && source ~/.cargo/env
 
+asdf_tool_path=$(asdf where perl 2>/dev/null)
+[ -d "$asdf_tool_path/man" ] && export MANPATH="$asdf_tool_path/man:$MANPATH"
+unset asdf_tool_path
+
 [ -d ~/.awk ] && export AWKPATH="$HOME/.awk:$AWKPATH"
 [ -d ~/.scripts ] && export PATH="$HOME/.scripts:$PATH"
 [ -f ~/.shell/aliases.sh ] && source ~/.shell/aliases.sh
