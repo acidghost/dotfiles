@@ -54,13 +54,25 @@ local servers = {
         },
     };
     tsserver = {};
+    efm = {
+        rootMarkers = {".git/"},
+        languages = {
+            python = {
+                { formatCommand = "black --quiet -", formatStdin = true },
+            },
+        },
+    };
 }
 for lsp, settings in pairs(servers) do
-    nvim_lsp[lsp].setup {
+    local setup = {
         on_attach = on_attach,
         flags = { debounce_text_changes = nil },
         settings = settings,
     }
+    if lsp == "efm" then
+        setup.init_options = { documentFormatting = true }
+    end
+    nvim_lsp[lsp].setup(setup)
 end
 EOF
 end
