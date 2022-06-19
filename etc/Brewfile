@@ -33,6 +33,7 @@ cask "font-hack-nerd-font"      if IS_DARWIN
 cask "1kc-razer"                if IS_DARWIN
 
 # Programming
+brew "efm-langserver"           if WITH_LSP
 brew "gopls"                    if WITH_LSP
 brew "rust-analyzer"            if WITH_LSP
 brew "shellcheck"
