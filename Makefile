@@ -43,4 +43,4 @@ check: ## Check shell/perl scripts (requires shellcheck and Perl::Critic)
 		fzf/*.sh \
 		shell/*.sh \
 		$(BASH_SCRIPTS)
-	@perlcritic $(PERL_SCRIPTS)
+	@perlcritic --stern $(PERL_SCRIPTS)
