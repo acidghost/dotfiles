@@ -18,7 +18,7 @@ my @ALL_COLORS = (
 
 my $color_i;
 my %colors = ();
-for(<<>>) {
+while (my $_ = <<>>) {
     chomp;
     my ($time, $proto, $src, $dir, $dst) = /\A
             (\d{2}:\d{2}:\d{2}\.\d+)\s              # time
@@ -28,7 +28,7 @@ for(<<>>) {
             or die "unrecognized !! $_";
 
     my $col = $colors{"$src $dst"} || $colors{"$dst $src"};
-    if (!$col) {
+    unless ($col) {
         $color_i = ($color_i + 1) % @ALL_COLORS;
         $colors{"$src $dst"} = $ALL_COLORS[$color_i];
         $col = $colors{"$src $dst"};
