@@ -148,7 +148,7 @@ twitch-search-vods() {
     else
         cmd="$cmd vod-chat -mpv -vod={}"
     fi
-    # shellcheck disable=SC2016
+    # shellcheck disable=SC1004,SC2016
     local preview='twitch api get videos -q id=$(sed -E "s,^.*/([0-9]+)$,\1," <<< {1}) | \
         jq -c ".data[0]" | pprint-json-obj id duration view_count published_at title url user_name'
     twitch-search -vod="$1" \
@@ -174,6 +174,7 @@ twitch-search-live() {
     else
         cmd="$cmd vod-chat -live={}"
     fi
+    # shellcheck disable=SC1004
     local preview='twitch api get search/channels -q query={1} -q first=1 | \
         jq -c ".data[0]" | pprint-json-obj id display_name title game_name started_at'
     twitch-search -live \
