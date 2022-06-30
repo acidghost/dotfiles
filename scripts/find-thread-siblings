@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Path::Tiny;
+
+my %h;
+my $dir = "/sys/devices/system/cpu";
+for my $cpu (sort { $a <=> $b } map { /cpu([0-9]+)/ ? $1 : () } glob "$dir/cpu*") {
+    my $p = "$dir/cpu$cpu";
+    my ($line) = path("$p/topology/thread_siblings_list")->lines({ count => 1 });
+    my @s = split /,/, $line;
+    printf "%10s : %2d : %2d\n", "cpu$cpu", @s;
+    $h{$s[0]} = ();
+}
+print join(' ', sort keys(%h)), "\n";
