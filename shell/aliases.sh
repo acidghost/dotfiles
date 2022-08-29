@@ -2,6 +2,7 @@
 # Aliases
 alias ta='tmux attach'
 alias tat='tmux attach -t'
+alias tsh='tmux new-session -s "$(basename "$PWD")"'
 
 alias e='$EDITOR'
 # alias objdump='objdump -M intel'
