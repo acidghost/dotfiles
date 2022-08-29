@@ -2,3 +2,4 @@ ipython
 jupyterlab
 pipenv
 black
+tqdm
