@@ -39,7 +39,7 @@ _fzf_comprun() {
 
 _z_jump() {
     local res
-    res=`_z -l 2>&1 | fzf --tac --preview 'tree {}' --reverse`
+    res=`zshz -l 2>&1 | fzf --tac --preview 'tree {}' --reverse`
     [ $? -eq 0 ] && {
         local p=`echo -n "$res" | sed 's/^[0-9]*\.*[0-9]*[[:space:]]*\/\(.*\)$/\/\1/'`
         zle reset-prompt
