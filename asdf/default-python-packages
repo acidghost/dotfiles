@@ -1,6 +1,7 @@
 black
 ipython
 jupyterlab
+pex
 pipenv
 poetry
 tqdm
