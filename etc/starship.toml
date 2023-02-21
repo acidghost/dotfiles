@@ -11,7 +11,7 @@ $fill\
 ([](fg:danger)$status[](fg:danger))\
 [](fg:light)\
 ($cmd_duration[](bg:light fg:txt))\
-([ ](bg:light)($username@)$hostname)\
+([ ](bg:light)$username$hostname)\
 [](bg:light fg:dark)$time\
 $line_break\
 $character"""
@@ -128,7 +128,7 @@ format = "[ $time  ]($style)"
 [username]
 style_user = "bg:light fg:txt"
 style_root = "bg:light fg:danger"
-format = "[( $user)]($style)"
+format = "[($user@)]($style)"
 
 
 ### NerdFonts preset symbols
