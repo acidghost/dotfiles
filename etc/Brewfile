@@ -56,6 +56,7 @@ brew "neovim"                   unless IS_LIGHTWEIGHT
 brew "pandoc"                   unless IS_LIGHTWEIGHT
 brew "ripgrep"
 brew "spotify-tui"              if WITH_APPS
+brew "starship"
 brew "thefuck"
 brew "tmux"
 brew "tree"

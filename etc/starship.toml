@@ -1,0 +1,215 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+format = """
+$os[](bg:dark fg:black)\
+$directory[](bg:medium fg:dark)\
+$git_branch$git_status[](bg:black fg:medium)\
+( $all)\
+$fill\
+([](fg:danger)$status[](fg:danger))\
+[](fg:light)\
+($cmd_duration[](bg:light fg:txt))\
+([ ](bg:light)($username@)$hostname)\
+[](bg:light fg:dark)$time\
+$line_break\
+$character"""
+
+palette = "plum"
+
+[palettes.plum]
+gray = "#808080"
+txt = "#eaeaea"
+dark = "#af5fff"
+medium = "#af87ff"
+light = "#d787ff"
+danger = "#ff4242"
+
+[cmd_duration]
+style = "bg:light fg:txt"
+format = "[( $duration  )]($style)"
+show_milliseconds = true
+
+[directory]
+disabled = false
+format = "[  $path $read_only]($style)"
+style = "bold bg:dark fg:txt"
+read_only = " "
+[directory.substitutions]
+"Documents" = ""
+"Downloads" = ""
+"Music" = ""
+"Pictures" = ""
+
+[docker_context]
+symbol = " "
+detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile', 'compose.yml', 'compose.yaml', 'Containerfile']
+
+[fill]
+symbol = "─"
+style = "gray"
+
+[git_branch]
+disabled = false
+style = "bg:medium fg:txt"
+format = "[ $symbol$branch(:$remote_branch) ]($style)"
+symbol = " "
+
+[git_commit]
+tag_disabled = false
+
+[git_status]
+disabled = false
+style = "bg:medium fg:txt"
+format = '([\[$all_status$ahead_behind\] ]($style))'
+
+[hostname]
+ssh_only = true
+ssh_symbol = "󰒋 "
+format = '[$hostname ($ssh_symbol )]($style)'
+style = "bg:light fg:txt"
+
+[os]
+disabled = false
+style = "fg:txt"
+format = " [$symbol]($style)"
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "﯑ "
+Gentoo = " "
+HardenedBSD = "ﲊ "
+Illumos = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = " "
+openSUSE = " "
+OracleLinux = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+Solus = "ﴱ "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = " "
+
+
+[status]
+disabled = false
+format = "[( $signal_name$symbol )]($style)"
+style = "bg:danger fg:txt"
+symbol = ''
+signal_symbol = 'X'
+
+[time]
+disabled = false
+style = "bold bg:dark fg:txt"
+format = "[ $time  ]($style)"
+
+[username]
+style_user = "bg:light fg:txt"
+style_root = "bg:light fg:danger"
+format = "[( $user)]($style)"
+
+
+### NerdFonts preset symbols
+
+[aws]
+symbol = " "
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = "⌘ "
+
+[hg_branch]
+symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = " "
+
+[meson]
+symbol = "喝 "
+
+[nim]
+symbol = " "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[package]
+symbol = " "
+
+[python]
+symbol = " "
+
+[rlang]
+symbol = "ﳒ "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[scala]
+symbol = " "
+
+[spack]
+symbol = "🅢 "

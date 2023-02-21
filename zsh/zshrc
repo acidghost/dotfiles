@@ -1,8 +1,13 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# Can be one of: starship, p10k
+PROMPT_PROVIDER=starship
+
+if [ $PROMPT_PROVIDER = p10k ]; then
+    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block, everything else may go below.
+    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    fi
 fi
 
 # Add $HOME/.local/bin to PATH, if exists
@@ -91,7 +96,7 @@ antigen bundle web-search
 antigen bundle z
 
 antigen bundle chriskempson/base16-shell
-antigen theme romkatv/powerlevel10k
+[ $PROMPT_PROVIDER = p10k ] && antigen theme romkatv/powerlevel10k
 antigen bundle wfxr/forgit
 antigen bundle fnune/base16-fzf
 
@@ -105,8 +110,9 @@ antigen bundle fnune/base16-fzf
 
 antigen apply
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+[ $PROMPT_PROVIDER = starship ] && type starship &>/dev/null && eval "$(starship init zsh)"
+
+[ $PROMPT_PROVIDER = p10k ] && [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
 
 if [ $WITH_ASDF = 1 ]; then
     asdf_perl_path=$(asdf where perl 2>/dev/null)
@@ -153,10 +159,21 @@ bindkey -M viins '\ek' fuck-command-line-ext
 # fix for okular icons
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-# key binding to toggle all the additional prompt info
-function toggle-prompt {
-    p10k display '1/(right|left)'=hide,show;
-}
+if [ $PROMPT_PROVIDER = p10k ]; then
+    # key binding to toggle all the additional prompt info
+    function toggle-prompt {
+        p10k display '1/(right|left)'=hide,show;
+    }
+elif [ $PROMPT_PROVIDER = starship ]; then
+    function toggle-prompt {
+        starship toggle os
+        starship toggle directory
+        starship toggle time
+        starship toggle git_branch
+        starship toggle git_status
+    }
+fi
+
 zle -N toggle-prompt
 bindkey '^P' toggle-prompt
 

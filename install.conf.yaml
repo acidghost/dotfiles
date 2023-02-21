@@ -68,6 +68,7 @@
     ~/.config/nvim:
     ~/.config/spotify-tui:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
+    ~/.config/starship.toml: etc/starship.toml
     ~/.config/vifm:
     ~/.default-npm-packages:
       path: asdf/default-npm-packages
