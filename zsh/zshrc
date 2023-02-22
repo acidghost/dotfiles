@@ -73,7 +73,7 @@ export FORGIT_PAGER="delta --features=forgit"
 export FORGIT_SHOW_PAGER=$FORGIT_PAGER
 export FORGIT_DIFF_PAGER=$FORGIT_PAGER
 
-export ANTIGEN_LOG="$HOME/.log/antigen.log"
+export ANTIGEN_LOG="$HOME/.cache/antigen.log"
 source ~/.dotfiles/antigen/antigen.zsh
 
 antigen use oh-my-zsh
