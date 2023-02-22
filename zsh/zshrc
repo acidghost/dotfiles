@@ -103,9 +103,11 @@ antigen bundle wfxr/forgit
 
 antigen apply
 
-[ $PROMPT_PROVIDER = starship ] && type starship &>/dev/null && eval "$(starship init zsh)"
-
-[ $PROMPT_PROVIDER = p10k ] && [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+if [ $PROMPT_PROVIDER = starship ]; then
+    type starship &>/dev/null && eval "$(starship init zsh)"
+elif [ $PROMPT_PROVIDER = p10k ]; then
+    [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+fi
 
 if [ $WITH_ASDF = 1 ]; then
     asdf_perl_path=$(asdf where perl 2>/dev/null)
@@ -131,7 +133,7 @@ export BAT_STYLE=numbers,grid
 # alias bat="bat --terminal-width -2"
 
 # thefuck
-[ type thefuck >& /dev/null ] && eval $(thefuck --alias)
+type thefuck >& /dev/null && eval $(thefuck --alias)
 bindkey -M emacs '^k' fuck-command-line
 bindkey -M vicmd '^k' fuck-command-line
 bindkey -M viins '^k' fuck-command-line
