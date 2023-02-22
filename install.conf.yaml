@@ -13,7 +13,6 @@
 
 - create:
     - ~/wa
-    - ~/.base16
     - ~/.config/dotfiles-env
     - ~/.log
     - ~/.scripts
@@ -39,7 +38,6 @@
       path: etc/amethyst.json
       if: '[ $(uname) = Darwin ]'
     ~/.awk:
-    ~/.base16/update_fzf.sh: fzf/base16_update.sh
     ~/Brewfile:
       path: etc/Brewfile
       if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
@@ -110,15 +108,3 @@
     ~/.vim/vimrc: vim/vimrc
     ~/vusec.ascii:
     ~/.zshrc: zsh/zshrc
-
-# - shell:
-#   -
-#     command: |
-#       if [ "$DOTFILES_WITH_BREW" = 1 ]
-#       then cd ~ && brew bundle install
-#       fi
-#     description: Installing packages
-#     stdout: true
-
-# - shell:
-#   - [base16_outrun-dark, "Setting base16 theme"]

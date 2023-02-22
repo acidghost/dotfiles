@@ -40,6 +40,7 @@ if $TERM == "rxvt-unicode-256color"
     set notermguicolors     " Disable true colors (urxvt fix)
 endif
 
+
 " Install VimPlug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
@@ -54,7 +55,7 @@ call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 Plug 'itchyny/lightline.vim'
-Plug 'chriskempson/base16-vim'
+Plug 'tinted-theming/base16-vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdTree'
@@ -95,14 +96,26 @@ endif
 
 call plug#end()
 
+
 if !has('gui_running')
     set t_Co=256
 endif
 
-" Sync with base16 shell color
-if filereadable(expand("~/.vimrc_background"))
-    let base16colorspace=256
-    source ~/.vimrc_background
+" base16
+function! s:base16_customize() abort
+  call Base16hi("Identifier", g:base16_gui06, "", g:base16_cterm06, "", "none", "")
+endfunction
+
+augroup on_change_colorschema
+  autocmd!
+  autocmd ColorScheme * call s:base16_customize()
+augroup END
+
+if exists('$BASE16_THEME')
+    \ && (!exists('g:colors_name') 
+    \ || g:colors_name != 'base16-$BASE16_THEME')
+  let base16colorspace=256
+  colorscheme base16-$BASE16_THEME
 endif
 
 " Save your swp files to a less annoying place than the current directory.

@@ -65,7 +65,8 @@ forgit_stash_show=fgss
 export ZSH_TMUX_FIXTERM=true
 export ZSH_TMUX_UNICODE=true
 
-export BASE16_SHELL_HOOKS="$HOME/.base16"
+export BASE16_THEME_DEFAULT=outrun-dark
+export BASE16_FZF_PATH="$HOME/.antigen/bundles/tinted-theming/base16-fzf-main"
 
 # forgit
 export FORGIT_PAGER="delta --features=forgit"
@@ -95,18 +96,10 @@ antigen bundle virtualenv
 antigen bundle web-search
 antigen bundle z
 
-antigen bundle chriskempson/base16-shell
+antigen bundle tinted-theming/base16-shell@main
+antigen bundle tinted-theming/base16-fzf@main
 [ $PROMPT_PROVIDER = p10k ] && antigen theme romkatv/powerlevel10k
 antigen bundle wfxr/forgit
-antigen bundle fnune/base16-fzf
-
-# case $(uname) in
-#     Linux)
-#         antigen bundle jordiorlando/base16-rofi
-#         antigen bundle HaoZeke/base16-zathura@main
-#         antigen bundle khamer/base16-dunst
-#         ;;
-# esac
 
 antigen apply
 
