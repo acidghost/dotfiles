@@ -40,7 +40,6 @@ unix-server-light: _dotfiles ## Setup UNIX server (light)
 check: ## Check shell/perl scripts (requires shellcheck and Perl::Critic)
 	@shellcheck \
 		etc/macos \
-		fzf/*.sh \
 		shell/*.sh \
 		$(BASH_SCRIPTS)
 	@perlcritic --stern $(PERL_SCRIPTS)
