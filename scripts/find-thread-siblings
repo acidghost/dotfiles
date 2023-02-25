@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+die "Only supported on Linux" if $^O ne "linux";
+
 use Path::Tiny;
 
 my %h;
@@ -9,6 +11,10 @@ my $dir = "/sys/devices/system/cpu";
 for my $cpu (sort { $a <=> $b } map { /cpu([0-9]+)/ ? $1 : () } glob "$dir/cpu*") {
     my ($line) = path("$dir/cpu$cpu/topology/thread_siblings_list")->lines({ count => 1 });
     my @s = split /,/, $line;
+    if (@s < 2) {
+        printf "No hyper-threading for CPU %d\n", $cpu;
+        next;
+    }
     printf "%10s : %2d : %2d\n", "cpu$cpu", @s;
     $h{$s[0]} = ();
 }
