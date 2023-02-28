@@ -29,7 +29,7 @@ _fzf_comprun() {
   shift
 
   case "$command" in
-    cd)           fzf "$@" --preview 'tree -C {} | head -200' ;;
+    cd)           fzf "$@" --preview 'tree -aC --gitignore {}' ;;
     export|unset) fzf "$@" --preview "eval 'echo \$'{}" "$@" ;;
     ssh)          fzf "$@" --preview 'dig {}' ;;
     $EDITOR)      fzf "$@" --preview 'bat --color always -p {}' ;;
@@ -39,7 +39,7 @@ _fzf_comprun() {
 
 _z_jump() {
     local res
-    res=`zshz -l 2>&1 | fzf --tac --preview 'tree {}' --reverse`
+    res=`zshz -l 2>&1 | fzf --tac --preview 'tree -aC --gitignore -I .git {2}' --reverse`
     [ $? -eq 0 ] && {
         local p=`echo -n "$res" | sed 's/^[0-9]*\.*[0-9]*[[:space:]]*\/\(.*\)$/\/\1/'`
         zle reset-prompt
