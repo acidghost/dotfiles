@@ -106,7 +106,7 @@ endif
 
 " base16
 function! s:base16_customize() abort
-  call Base16hi("Identifier", g:base16_gui06, "", g:base16_cterm06, "", "none", "")
+  call Base16hi("Identifier", g:base16_gui05, "", g:base16_cterm05, "", "none", "")
 endfunction
 
 augroup on_change_colorschema
