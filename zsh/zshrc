@@ -125,12 +125,7 @@ export BAT_STYLE=numbers,grid
 # accomodate for "less -J"
 # alias bat="bat --terminal-width -2"
 
-# thefuck
-type thefuck >& /dev/null && eval $(thefuck --alias)
-bindkey -M emacs '^k' fuck-command-line
-bindkey -M vicmd '^k' fuck-command-line
-bindkey -M viins '^k' fuck-command-line
-
+# thefuck, partially setup by oh-my-zsh plugin
 fuck-command-line-ext() {
     BUFFER="fuck"
     zle accept-line
