@@ -64,8 +64,11 @@ Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-commentary'
 Plug 'dhruvasagar/vim-prosession'
+
 " Language / syntax support
-Plug 'sheerun/vim-polyglot'
+if has('nvim')
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'souffle-lang/souffle.vim'
@@ -181,6 +184,34 @@ command! -bang -nargs=* RgPreview
 
 """ vim-latex
 let g:tex_flavor='latex'
+
+""" nvim-treesitter
+if has('nvim')
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = {
+        "awk",
+        "bash",
+        "c",
+        "help",
+        "latex",
+        "lua",
+        "perl",
+        "python",
+        "rust",
+        "toml",
+        "vim",
+    },
+    highlight = {
+        enable = true,
+    },
+}
+EOF
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable                     " Disable folding at startup.
+endif
+
 
 """ Key mappings
 let mapleader = ","
