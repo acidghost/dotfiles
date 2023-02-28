@@ -30,6 +30,8 @@
           mkdir -p "$HOME/Library/Application Support/Code/User"
         fi
         mkdir -p "$HOME/Library/Application Support/nushell"
+      elif [ "$(uname)" = Linux ]; then
+        mkdir -p "$HOME/.config/nushell"
       fi
     description: Creating OS-specific folders
     quiet: true
