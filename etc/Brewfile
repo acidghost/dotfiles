@@ -44,6 +44,7 @@ brew "universal-ctags"
 brew "alacritty"                if WITH_APPS
 brew "bat"
 brew "chafa"
+brew "dust"
 brew "fd"
 brew "figlet"
 brew "gawk"
