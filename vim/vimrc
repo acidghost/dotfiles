@@ -68,6 +68,7 @@ Plug 'dhruvasagar/vim-prosession'
 " Language / syntax support
 if has('nvim')
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
@@ -212,6 +213,15 @@ set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable                     " Disable folding at startup.
 endif
 
+" nvim-nu / nushell
+if has('nvim')
+lua << EOF
+require'nu'.setup {
+    use_lsp_features = false,
+}
+EOF
+endif
+
 
 """ Key mappings
 let mapleader = ","
@@ -281,6 +291,7 @@ autocmd FileType cmake setlocal shiftwidth=2 tabstop=2
 autocmd FileType org setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType nu setlocal shiftwidth=2 tabstop=2
 
 " Useful utilities
 
