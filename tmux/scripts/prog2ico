@@ -9,7 +9,7 @@ fi
 
 case "$prog" in
     rust|cargo                      ) echo -n "" ;;
-    zsh|bash|sh                     ) echo -n "" ;;
+    zsh|bash|sh|nu                  ) echo -n "" ;;
     [n]vim|vimdiff                  ) echo -n "" ;;
     swipl                           ) echo -n "" ;;
     man                             ) echo -n "" ;;
@@ -27,7 +27,7 @@ case "$prog" in
     *top                            ) echo -n "ﱨ" ;;
     *pdf*|zathura|okular            ) echo -n "" ;;
     lynx|w3m                        ) echo -n "" ;;
-    ssh|mosh*                       ) echo -n "" ;;
+    ssh|mosh*|lima*                 ) echo -n "" ;;
     scheme|petite                   ) echo -n "λ" ;;
     ghc*|stack                      ) echo -n "" ;;
     vifm                            ) echo -n "ﱮ" ;;
@@ -39,4 +39,3 @@ case "$prog" in
     spt                             ) echo -n "" ;;
     *                               ) echo -n "" ;;
 esac
-
