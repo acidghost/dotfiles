@@ -53,6 +53,7 @@ brew "jq"
 brew "lynx"
 brew "neofetch"
 brew "neovim"                   unless IS_LIGHTWEIGHT
+brew "nushell"
 brew "pandoc"                   unless IS_LIGHTWEIGHT
 brew "ripgrep"
 brew "spotify-tui"              if WITH_APPS

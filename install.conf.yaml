@@ -29,6 +29,7 @@
         if [ "$DOTFILES_WITH_APPS" = 1 ]; then
           mkdir -p "$HOME/Library/Application Support/Code/User"
         fi
+        mkdir -p "$HOME/Library/Application Support/nushell"
       fi
     description: Creating OS-specific folders
     quiet: true
@@ -63,6 +64,10 @@
     ~/.config/mpv:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/neofetch:
+    ~/.config/nushell:
+      glob: true
+      path: nushell/*
+      if: '[ "$(uname)" = Linux ]'
     ~/.config/nvim:
     ~/.config/spotify-tui:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
@@ -82,6 +87,10 @@
       glob: true
       path: vscode/*
       if: '[ "$DOTFILES_WITH_APPS" = 1 ] && [ "$(uname)" = Darwin ]'
+    ~/Library/Application Support/nushell:
+      glob: true
+      path: nushell/*
+      if: '[ "$(uname)" = Darwin ]'
     ~/.scripts:
       glob: true
       path: scripts/*
