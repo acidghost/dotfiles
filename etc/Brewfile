@@ -43,6 +43,7 @@ brew "universal-ctags"
 # Terminal
 brew "alacritty"                if WITH_APPS
 brew "bat"
+brew "chafa"
 brew "fd"
 brew "figlet"
 brew "gawk"
