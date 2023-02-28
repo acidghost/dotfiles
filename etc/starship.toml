@@ -6,7 +6,7 @@ format = """
 $os[](bg:dark fg:black)\
 $directory[](bg:medium fg:dark)\
 $git_branch$git_status[](bg:black fg:medium)\
-( $all)\
+( ($shell )$all)\
 $fill\
 ([](fg:danger)$status[](fg:danger))\
 [](fg:light)\
@@ -112,6 +112,12 @@ Ubuntu = " "
 Unknown = " "
 Windows = " "
 
+[shell]
+disabled = false
+# this does not work, moving to the main format string
+# format = '[($indicator )]($style)'
+format = '[$indicator]($style)'
+zsh_indicator = ''
 
 [status]
 disabled = false
