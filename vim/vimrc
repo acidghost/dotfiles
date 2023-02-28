@@ -280,6 +280,7 @@ autocmd FileType cpp setlocal shiftwidth=2 tabstop=2
 autocmd FileType cmake setlocal shiftwidth=2 tabstop=2
 autocmd FileType org setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
 " Useful utilities
 
