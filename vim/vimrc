@@ -282,7 +282,7 @@ autocmd BufRead,BufNewFile *.fc set ft=fennec
 autocmd BufRead,BufNewFile *.ll set ft=llvm
 autocmd BufRead,BufNewFile *.td set ft=tablegen
 autocmd BufRead,BufNewFile *.rasi setf css
-autocmd BufRead,BufNewFile Vagrantfile setf ruby
+autocmd BufRead,BufNewFile Brewfile,Vagrantfile setf ruby
 autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
 
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
