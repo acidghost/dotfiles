@@ -188,14 +188,11 @@ twitch-search-live() {
 # shellcheck disable=SC2032     # we don't want this to be used by xargs
 vgrep() {
     local initial_query="$1" vgrep_prefix="vgrep --no-header "
-    # shellcheck disable=SC2016
-    local preview='
-        l={3} f={2}
-        [ "$l" -gt 3 ] && ll=$((l - 3))
-        exec bat --color always -n -H "$l" -r "$ll:" "$f"'
     # shellcheck disable=SC2033     # we don't want the function but the binary
     FZF_DEFAULT_COMMAND="$vgrep_prefix '$initial_query'" \
-        fzf --bind "change:reload:$vgrep_prefix {q} || true" --preview "$preview" \
+        fzf --bind "change:reload:$vgrep_prefix {q} || true" \
+            --preview 'exec bat --color always -n -H {3} {2}' \
+            --preview-window "+{3}/2" \
             --ansi --phony --tac --query "$initial_query" \
         | awk '{print $1}' | xargs -I{} -o vgrep --show {}
 }
