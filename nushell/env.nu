@@ -68,6 +68,8 @@ let-env NU_PLUGIN_DIRS = [
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
+let-env FORGIT = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
+
 # Dynamic aliases
 seq 1 10 | each { |x| [
   $"alias dh($x) = du -d ($x - 1)"

@@ -1,5 +1,7 @@
 # Nushell Config File
 
+use forgit.nu *
+
 # For more information on themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 let dark_theme = {
