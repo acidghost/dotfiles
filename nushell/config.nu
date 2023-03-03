@@ -1,6 +1,7 @@
 # Nushell Config File
 
 use forgit.nu *
+use u4nu.nu *
 use z.nu *
 
 # For more information on themes, see
@@ -557,9 +558,6 @@ def "history fzf" [term: string = ""] {
     | decode utf-8 | str trim
     | commandline $in
 }
-
-# Negates the piped-in value
-def negate [] { not $in }
 
 # Get the current Git branch name (from oh-my-zsh)
 def git-current-branch [] {
