@@ -83,6 +83,10 @@ if not ($env.ASDF_DIR | is-empty) {
   $"source '($env.ASDF_DIR)/asdf.nu'\n" | save --append $dynamic_env_src
 }
 
+if not (which thefuck | where not built-in | is-empty) {
+  "use thefuck.nu *\n" | save --append $dynamic_env_src
+}
+
 const forgit = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
 if ($forgit | path exists) {
   $"let-env FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
