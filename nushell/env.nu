@@ -1,6 +1,6 @@
 # Nushell Environment Config File
 
-let prompt_provider = 'starship'
+const prompt_provider = 'starship'
 mkdir ~/.cache/nushell
 
 if $prompt_provider == 'starship' {
@@ -68,18 +68,22 @@ let-env NU_PLUGIN_DIRS = [
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
-let-env FORGIT = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
+# XXX: const does not work without explicitly expanding the path at each use
+# const dynamic_env_src = '~/.cache/nushell/dynamic_env.nu'
+let dynamic_env_src = $env.HOME + '/.cache/nushell/dynamic_env.nu'
+rm -f $dynamic_env_src
+touch $dynamic_env_src
 
-# Dynamic aliases
 seq 1 10 | each { |x| [
   $"alias dh($x) = du -d ($x - 1)"
   $"alias tree($x) = tree -L ($x)"
-]} | flatten | save -f ~/.cache/nushell/aliases.nu
-
-let custom_sources = $'($env.HOME)/.cache/nushell/custom_sources.nu'
-rm -f $custom_sources
-touch $custom_sources
+]} | flatten | save --append $dynamic_env_src
 
 if not ($env.ASDF_DIR | is-empty) {
-  "source '" + $env.ASDF_DIR + "/asdf.nu'" | save --append $custom_sources
+  $"source '($env.ASDF_DIR)/asdf.nu'\n" | save --append $dynamic_env_src
+}
+
+const forgit = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
+if ($forgit | path exists) {
+  $"let-env FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
 }

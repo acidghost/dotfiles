@@ -1,6 +1,5 @@
 # Nushell Config File
 
-use forgit.nu *
 use u4nu.nu *
 use z.nu *
 
@@ -516,7 +515,7 @@ let-env config = {
 
 
 source ~/.cache/nushell/prompt.nu
-source ~/.cache/nushell/custom_sources.nu
+source ~/.cache/nushell/dynamic_env.nu
 
 
 alias .. = cd ".."
@@ -546,8 +545,6 @@ alias gst = ( git status --short
 
 alias glo = ( git log --oneline --decorate --color=always
             | lines | reverse | parse "{hash} {txt}" )
-
-source ~/.cache/nushell/aliases.nu
 
 # Reload nu configuration
 def "config reload" [] { exec nu }
