@@ -143,7 +143,7 @@ def cli() -> CLI:
     parser.add_argument(
         "filename",
         nargs="?",
-        help="run git-blame on this file instead of stdin",
+        help="run git-blame on this file instead of using git-blame's output from stdin",
     )
     return CLI(**vars(parser.parse_args()))
 
