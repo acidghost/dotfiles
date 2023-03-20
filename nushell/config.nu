@@ -539,12 +539,18 @@ alias gl    = git pull
 alias gp    = git push
 alias gr    = git remote
 
-alias gst = ( git status --short
-            | from ssv --noheaders --minimum-spaces 1
-            | rename status filename )
+# Wraps git status
+def gst [...args] {
+  ^git status --short $args
+    | from ssv --noheaders --minimum-spaces 1
+    | rename status filename
+}
 
-alias glo = ( git log --oneline --decorate --color=always
-            | lines | reverse | parse "{hash} {txt}" )
+# Wraps git log
+def glo [...args] {
+  ^git log --oneline --decorate --color=always $args
+    | lines | reverse | parse "{hash} {txt}"
+}
 
 # Reload nu configuration
 def "config reload" [] { exec nu }
