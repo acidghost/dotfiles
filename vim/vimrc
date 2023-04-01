@@ -48,6 +48,10 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+if filereadable(expand('/opt/homebrew/opt/fzf/plugin/fzf.vim'))
+    set rtp+=/opt/homebrew/opt/fzf
+endif
+
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
@@ -56,7 +60,8 @@ call plug#begin('~/.vim/plugged')
 " Make sure you use single quotes
 Plug 'itchyny/lightline.vim'
 Plug 'tinted-theming/base16-vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Should be installed system-wide, uncomment otherwise
+" Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdTree'
 Plug 'liuchengxu/vista.vim'
