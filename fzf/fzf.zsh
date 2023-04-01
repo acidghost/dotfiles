@@ -1,16 +1,28 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == *$HOME/.vim/plugged/fzf/bin* ]]; then
-  export PATH="${PATH:+${PATH}:}$HOME/.vim/plugged/fzf/bin"
+# Only add vim-plug managed version if not otherwise installed
+plugged_path="$HOME/.vim/plugged/fzf"
+if [ -n "$commands[fzf]" ]; then
+    case ${OSTYPE} in
+        darwin*)    fzf_prefix=/opt/homebrew/opt/fzf        ;;
+        linux*)     fzf_prefix=/usr/share/fzf               ;;
+        *)          fzf_prefix="$plugged_path"              ;;
+    esac
+    [ ! -d "$fzf_prefix" ] && fzf_prefix="$plugged_path"
+else
+    if [[ ! "$PATH" == *$plugged_path/bin* ]] && [[ -d "$plugged_path/bin" ]]; then
+        export PATH="${PATH:+${PATH}:}$plugged_path/bin"
+        fzf_prefix="$plugged_path"
+    fi
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "$HOME/.vim/plugged/fzf/shell/completion.zsh" 2> /dev/null
+[[ $- == *i* ]] && source "$fzf_prefix/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
 # ------------
-source "$HOME/.vim/plugged/fzf/shell/key-bindings.zsh"
+source "$fzf_prefix/shell/key-bindings.zsh"
 
 export FZF_TMUX=1
 export FZF_DEFAULT_COMMAND="fd --type f"
@@ -48,3 +60,5 @@ _z_jump() {
 }
 zle     -N   _z_jump
 bindkey '^j' _z_jump
+
+unset plugged_path fzf_prefix
