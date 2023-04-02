@@ -91,3 +91,7 @@ const forgit = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
 if ($forgit | path exists) {
   $"let-env FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
 }
+
+if not (which nnn | where not built-in | is-empty) {
+  "use nnn.nu *\n" | save --append $dynamic_env_src
+}

@@ -128,6 +128,15 @@ export BAT_STYLE=numbers,grid
 # accomodate for "less -J"
 # alias bat="bat --terminal-width -2"
 
+# nnn
+if type nnn &> /dev/null; then
+    NNN_PLUGINS_PATH="$HOME/.config/nnn/plugins"
+    export NNN_OPTS="acdx"
+    export NNN_OPENER="$NNN_PLUGINS_PATH/nuke"
+    export NNN_PLUG="p:preview-tui"
+    unset NNN_PLUGINS_PATH
+fi
+
 # thefuck, partially setup by oh-my-zsh plugin
 fuck-command-line-ext() {
     BUFFER="fuck"

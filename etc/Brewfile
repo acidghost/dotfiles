@@ -56,6 +56,7 @@ brew "jq"
 brew "lynx"
 brew "neofetch"
 brew "neovim"                   unless IS_LIGHTWEIGHT
+brew "nnn"
 brew "nushell"
 brew "pandoc"                   unless IS_LIGHTWEIGHT
 brew "pastel"
