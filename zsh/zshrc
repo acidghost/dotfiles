@@ -134,6 +134,7 @@ if type nnn &> /dev/null; then
     export NNN_OPTS="acdQx"
     export NNN_OPENER="$NNN_PLUGINS_PATH/nuke"
     export NNN_PLUG="p:preview-tui"
+    export ICONLOOKUP=1
     unset NNN_PLUGINS_PATH
 fi
 
