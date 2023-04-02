@@ -120,6 +120,7 @@ fi
 export EDITOR=nvim
 export PAGER=less
 export LESS="R"
+[ -n "$TERM" ] && export TERMINAL="$TERM"
 
 # bat
 export BAT_THEME=base16-256
