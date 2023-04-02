@@ -6,6 +6,8 @@
     "~":
     "~/.config":
     "~/.config/dotfiles-env":
+    "~/.config/nnn/plugins/":
+      force: true
     "~/.scripts":
     "~/.tmux/scripts":
       force: true
@@ -66,6 +68,10 @@
     ~/.config/mpv:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/neofetch:
+    ~/.config/nnn/plugins:
+      create: true
+      glob: true
+      path: nnn/plugins/*
     ~/.config/nushell:
       glob: true
       path: nushell/*
