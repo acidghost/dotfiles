@@ -94,6 +94,7 @@ antigen bundle tinted-theming/base16-fzf@main
 [ $PROMPT_PROVIDER = p10k ] && antigen theme romkatv/powerlevel10k
 antigen bundle wfxr/forgit
 antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-syntax-highlighting        # Must be last!
 
 antigen apply
 
