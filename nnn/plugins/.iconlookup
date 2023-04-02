@@ -21,7 +21,7 @@ awk 'BEGIN {
 # Default uses standard nnn icon colors, 8 and 24-bit nord themes are commented out.
     colordepth=8          #colordepth=8        #colordepth=24
     color_dirtxt=177      #color_dirtxt=111    #color_dirtxt="129;161;193"
-    color_filetxt=15      #color_filetxt=111   #color_filetxt="129;161;193"
+    color_filetxt=7       #color_filetxt=111   #color_filetxt="129;161;193"
     color_default=177     #color_default=111   #color_default="129;161;193"
     color_video=93        #color_video=110     #color_video="136;192;208"
     color_audio=220       #color_audio=150     #color_audio="163;190;140"
