@@ -52,12 +52,14 @@ local servers = {
     hls = {};
     pyright = {};
     rust_analyzer = {
-        cargo = {
-            loadOutDirsFromCheck = true
-        },
-        procMacro = {
-            enable = true
-        },
+        ['rust-analyzer'] = {
+            cargo = {
+                loadOutDirsFromCheck = true
+            },
+            procMacro = {
+                enable = true
+            },
+        }
     };
     tsserver = {};
     efm = {
