@@ -12,7 +12,7 @@ else
 D = @
 endif
 
-BASH_SCRIPTS := $(shell grep -lRE '^\#.*bash' scripts tmux/scripts)
+BASH_SCRIPTS := $(shell grep -lRE '^\#.*(?:bash|sh)' scripts tmux/scripts)
 PERL_SCRIPTS := $(shell grep -lRE '^\#.*perl' scripts tmux/scripts)
 
 help: ## Print command list
