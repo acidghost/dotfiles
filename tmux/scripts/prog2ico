@@ -30,7 +30,7 @@ case "$prog" in
     ssh|mosh*|lima*                 ) echo -n "" ;;
     scheme|petite                   ) echo -n "λ" ;;
     ghc*|stack                      ) echo -n "" ;;
-    vifm                            ) echo -n "ﱮ" ;;
+    nnn|vifm                        ) echo -n "ﱮ" ;;
     *emacs*                         ) echo -n "" ;;
     julia                           ) echo -n "" ;;
     delta                           ) echo -n "∆" ;;
