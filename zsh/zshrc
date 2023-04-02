@@ -93,6 +93,7 @@ antigen bundle tinted-theming/base16-shell@main
 antigen bundle tinted-theming/base16-fzf@main
 [ $PROMPT_PROVIDER = p10k ] && antigen theme romkatv/powerlevel10k
 antigen bundle wfxr/forgit
+antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
 
@@ -162,6 +163,14 @@ bindkey '^P' toggle-prompt
 
 bindkey '^w' forward-word
 bindkey '^b' backward-word
+
+# Remove "forward-char" widgets from "ACCEPT".
+ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#forward-char}")
+ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#vi-forward-char}")
+
+# Add "forward-char" widgets to "PARTIAL_ACCEPT".
+ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(forward-char)
+ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(vi-forward-char)
 
 if type brew &> /dev/null && [ $WITH_ASDF = 1 ]; then
     alias brew="env PATH=$(sed -e "s,$(asdf where python | tr -d '\n')/bin:,,g" \
