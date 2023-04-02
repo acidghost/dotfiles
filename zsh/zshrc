@@ -134,6 +134,21 @@ if type nnn &> /dev/null; then
     export NNN_OPTS="acdQx"
     export NNN_OPENER="$NNN_PLUGINS_PATH/nuke"
     export NNN_PLUG="p:preview-tui"
+    export NNN_COLORS="#b1b1b1b1;5555"
+    #  1. block device
+    #  2. char device
+    #  3. directory
+    #  4. executable
+    #  5. regular
+    #  6. hard link
+    #  7. symbolic link
+    #  8. missing OR file details
+    #  9. orphaned symbolic link
+    # 10. FIFO
+    # 11. socket
+    # 12. unknown OR 0B regular/exe
+    #                   1 2 3 4 5 6 7 8 9 0 1 2
+    export NNN_FCOLORS='c1e2b12e006033f7c6d6abc4'
     export ICONLOOKUP=1
     unset NNN_PLUGINS_PATH
 fi

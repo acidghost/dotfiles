@@ -72,6 +72,7 @@
       create: true
       glob: true
       path: nnn/plugins/*
+    ~/.config/nnn/plugins/.iconlookup: nnn/plugins/.iconlookup
     ~/.config/nushell:
       glob: true
       path: nushell/*
