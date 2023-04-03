@@ -87,7 +87,7 @@ antigen bundle tmux
 antigen bundle vagrant
 antigen bundle vi-mode
 antigen bundle web-search
-antigen bundle z
+[ -z "$commands[zoxide]" ] && antigen bundle z
 
 antigen bundle tinted-theming/base16-shell@main
 antigen bundle tinted-theming/base16-fzf@main
@@ -103,6 +103,8 @@ if [ $PROMPT_PROVIDER = starship ]; then
 elif [ $PROMPT_PROVIDER = p10k ]; then
     [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
 fi
+
+[ -n "$commands[zoxide]" ] && eval "$(zoxide init zsh)"
 
 if [ $WITH_ASDF = 1 ]; then
     asdf_perl_path=$(asdf where perl 2>/dev/null)
