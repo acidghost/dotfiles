@@ -339,7 +339,8 @@ preview_file() {
         if [ "$ICONLOOKUP" -ne 0 ] && [ -f "$(dirname "$0")"/.iconlookup ]; then
             [ "$SPLIT" = v ] && BSTR="\n"
             # shellcheck disable=SC2012
-            PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH" ls -F --group-directories-first \
+            tree -a -C -F -I .git --gitignore --dirsfirst \
+                --filelimit "$(find . -maxdepth 1 | wc -l)" -L 3 --noreport "$1" \
                 | head -n "$((lines - 3))" \
                 | "$(dirname "$0")"/.iconlookup -l "$cols" -B "$BSTR" -b " "
         elif exists tree; then
