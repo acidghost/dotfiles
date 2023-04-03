@@ -103,6 +103,7 @@
     ~/.scripts:
       glob: true
       path: scripts/*
+    ~/.scripts/iconlookup: nnn/plugins/.iconlookup
     ~/.scripts/tmux-list-keys: tmux/scripts/tmux-list-keys
     ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
     ~/.shell:
