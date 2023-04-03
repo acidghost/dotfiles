@@ -96,7 +96,7 @@ export def "z add" [
     $res.xs
   } else {
     $tot_rank += 1
-    $res.xs ++ { path: $p rank: 1 time: epochseconds }
+    $res.xs ++ { path: $p rank: 1 time: (epochseconds) }
   }
 
   let dirs = if $tot_rank > 9000 {
@@ -130,4 +130,29 @@ export def "z test rm" [--recursive(-R) p: path] {
   let deleted = ($old | each { |dir| $dir not-in $new })
   let deleted_idx = ($deleted | enumerate | each { |it| if $it.item { $it.index } })
   $old | enumerate | where index in $deleted_idx
+}
+
+export-env {
+  let-env config = ($env | default {} config).config
+
+  let-env config = ($env.config | default {} hooks)
+  let-env config = ($env.config | update hooks ($env.config.hooks | default [] pre_execution))
+  let-env config = ($env.config | update hooks.pre_execution { |c|
+    $c.hooks.pre_execution | append {
+      if $env.PWD != $env.HOME {
+        z add $env.PWD
+      }
+    }
+  })
+
+  let-env config = ($env.config | default [] keybindings)
+  let-env config = ($env.config | update keybindings { |c|
+    $c.keybindings | append {
+      name: znu_jump
+      modifier: control
+      keycode: char_j
+      mode: [emacs, vi_normal, vi_insert]
+      event: { send: ExecuteHostCommand cmd: "z fzf (commandline)" }
+    }
+  })
 }

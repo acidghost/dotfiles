@@ -292,11 +292,6 @@ let-env config = {
   render_right_prompt_on_last_line: false # true or false to enable or disable right prompt to be rendered on last line of the prompt.
 
   hooks: {
-    pre_execution: {
-      if $env.PWD != $env.HOME {
-        z add $env.PWD
-      }
-    }
     display_output: {
       if (term size).columns >= 100 { table -e } else { table }
     }
@@ -485,13 +480,6 @@ let-env config = {
       event: { send: menu name: commands_with_description }
     }
     # Custom
-    {
-      name: znu_jump
-      modifier: control
-      keycode: char_j
-      mode: [emacs, vi_normal, vi_insert]
-      event: { send: ExecuteHostCommand cmd: "z fzf (commandline)" }
-    }
     {
       name: config_reload
       modifier: control
