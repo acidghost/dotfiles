@@ -95,3 +95,20 @@ if ($forgit | path exists) {
 if not (which nnn | where not built-in | is-empty) {
   "use nnn.nu *\n" | save --append $dynamic_env_src
 }
+
+if not (which zoxide | where not built-in | is-empty) {
+  zoxide init nushell | save -f ~/.cache/nushell/zoxide.nu
+  "source ~/.cache/nushell/zoxide.nu
+  let-env config = ($env.config | update keybindings { |c|
+    $c.keybindings | append {
+      name: zoxide_jump
+      modifier: control
+      keycode: char_j
+      mode: [emacs, vi_normal, vi_insert]
+      event: { send: ExecuteHostCommand cmd: 'zi (commandline)' }
+    }
+  })
+  " | save --append $dynamic_env_src
+} else {
+  "use z.nu *\n" | save --append $dynamic_env_src
+}

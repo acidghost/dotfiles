@@ -1,7 +1,6 @@
 # Nushell Config File
 
 use u4nu.nu *
-use z.nu *
 
 # For more information on themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
