@@ -377,6 +377,15 @@ Options:
     -l --limit           Limit line length to [number] characters.'
 }
 
+if [ "$(uname -s)" = 'Darwin' ]; then
+    if ! type gawk > /dev/null 2>&1; then
+        printf "%s requires gawk" "$0"
+        exit 1
+    fi
+    export PATH
+    PATH="$(brew --prefix gawk)/libexec/gnubin:$PATH"
+fi
+
 while :; do
     case $1 in
         -h|-\?|--help)

@@ -341,8 +341,7 @@ preview_file() {
             # shellcheck disable=SC2012
             PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH" ls -F --group-directories-first \
                 | head -n "$((lines - 3))" \
-                | PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH" \
-                    "$(dirname "$0")"/.iconlookup -l "$cols" -B "$BSTR" -b " "
+                | "$(dirname "$0")"/.iconlookup -l "$cols" -B "$BSTR" -b " "
         elif exists tree; then
             fifo_pager tree --filelimit "$(find . -maxdepth 1 | wc -l)" -L 3 -C -F --dirsfirst --noreport
         elif exists exa; then
