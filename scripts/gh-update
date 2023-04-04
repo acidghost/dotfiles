@@ -31,20 +31,58 @@ def cli() -> CLI:
     return CLI(**vars(parser.parse_args()))
 
 
+def main(args: CLI) -> int:
+    args.dst_dir = args.dst_dir.expanduser()
+
+    release = get_release(args.repo)
+    if isinstance(release, int):
+        return release
+
+    print(f"[+] Latest release is {release['tag_name']} {release['html_url']}")
+    recommend_idx = print_assets(release)
+
+    prompt = "[?] Select which asset to install (0 to exit"
+    if recommend_idx is not None:
+        prompt += f", enter for recommended {recommend_idx+1}"
+    prompt += "): "
+
+    asset = prompt_asset(prompt, recommend_idx, release)
+    if isinstance(asset, int):
+        return asset
+
+    print("[+] Selection:", asset["name"])
+
+    match Path(asset["name"]).suffixes:
+        case [*_, ".tar", ".gz"] | [*_, ".zip"]:
+            process_asset = from_archive
+        case [*_, ".gz"]:
+            process_asset = from_gzip
+        case suffixes:
+            print(f"[!] Unable to recognize suffixes: {suffixes}")
+            return 1
+
+    with (
+        tempfile.TemporaryDirectory(prefix="gh-update-") as tmp,
+        urlopen(asset["browser_download_url"]) as rep,
+    ):
+        args.dst_dir.mkdir(parents=True, exist_ok=True)
+        process_asset(args, rep.read(), tmp)
+
+    return 0
+
+
 def get_release(repo: str, ver: str = "latest") -> dict | int:
     latest_release_url = f"https://api.github.com/repos/{repo}/releases/{ver}"
     print(f"[+] Making request to {latest_release_url}")
     try:
         with urlopen(latest_release_url) as req:
-            rep = json.load(req)
+            return json.load(req)
     except HTTPError as e:
         print(f"[!] Failed to make request: {e.reason}")
         return 1
-    return rep
 
 
-def main(args: CLI) -> int:
-    args.dst_dir = args.dst_dir.expanduser()
+def print_assets(release: dict) -> int | None:
     uname = platform.uname()
     this_system = uname.system.lower()
     match uname.machine.lower():
@@ -55,13 +93,8 @@ def main(args: CLI) -> int:
         case machine:
             this_machine = [machine]
 
-    rep = get_release(args.repo)
-    if isinstance(rep, int):
-        return rep
-
-    print(f"[+] Latest release is {rep['tag_name']} {rep['html_url']}")
     recommend_idx = None
-    for i, asset in enumerate(rep["assets"]):
+    for i, asset in enumerate(release["assets"]):
         name = asset["name"].lower()
         recommend = " "
         if this_system in name:
@@ -72,67 +105,57 @@ def main(args: CLI) -> int:
                         recommend_idx = i
                     break
         print(f"    {i+1:02d} {recommend} {asset['browser_download_url']}")
+    return recommend_idx
 
-    prompt = "[?] Select which asset to install (0 to exit"
-    if recommend_idx is not None:
-        prompt += f", enter for recommended {recommend_idx+1}"
-    prompt += "): "
+
+def prompt_asset(prompt: str, recommend_idx: int | None, release: dict) -> dict | int:
     while True:
-        inp = input(prompt)
-        if inp == "":
-            inp = recommend_idx
+        i = input(prompt)
+        if i == "":
+            i = recommend_idx
         else:
             try:
-                inp = int(inp)
+                i = int(i)
             except ValueError:
                 continue
-            if inp == 0:
+            if i == 0:
                 return 0
-            inp -= 1
+            i -= 1
         try:
-            asset = rep["assets"][inp]
+            return release["assets"][i]
         except IndexError:
             continue
-        break
 
-    print("[+] Selection:", asset["name"])
 
-    with (
-        tempfile.TemporaryDirectory(prefix="gh-update-") as tmp,
-        urlopen(asset["browser_download_url"]) as req,
-    ):
-        asset_name = Path(asset["name"])
-        args.dst_dir.mkdir(parents=True, exist_ok=True)
-        dst_filename = args.dst_dir / args.dst_filename
-        match asset_name.suffixes:
-            case [*_, ".tar", ".gz"] | [*_, ".zip"]:
-                print(f"[-] Extracting with 'tar -z'")
-                sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=req.read())
-                files = glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
-                if len(files) == 0:
-                    print(f"[!] No file matches the glob **/{args.dst_filename}")
-                    return 1
-                print(f"[-] Found {files}")
-                sp.run(["chmod", "+x", *files], check=True)
-                print(f"[-] Moving them to {args.dst_dir}")
-                sp.run(["cp", *files, str(args.dst_dir)], check=True)
-            case [*_, ".gz"]:
-                print(f"[-] Extracting with 'gunzip -d'")
-                p = sp.run(
-                    ["gunzip", "-d", "-"],
-                    cwd=tmp,
-                    check=True,
-                    input=req.read(),
-                    capture_output=True,
-                )
-                print(f"[-] Writing to {dst_filename}")
-                dst_filename.write_bytes(p.stdout)
-                sp.run(["chmod", "+x", str(dst_filename)], check=True)
-            case suffixes:
-                print(f"[!] Unable to recognize suffixes: {suffixes}")
-                return 1
+def from_archive(args: CLI, asset: bytes, tmp: str):
+    print(f"[-] Extracting with 'tar -z'")
+    sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=asset)
 
-    return 0
+    files = glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
+    if len(files) == 0:
+        print(f"[!] No file matches the glob **/{args.dst_filename}")
+        return 1
+
+    print(f"[-] Found {files}")
+    sp.run(["chmod", "+x", *files], check=True)
+    print(f"[-] Moving them to {args.dst_dir}")
+    sp.run(["cp", *files, str(args.dst_dir)], check=True)
+
+
+def from_gzip(args: CLI, asset: bytes, tmp: str):
+    print(f"[-] Extracting with 'gunzip -d'")
+    p = sp.run(
+        ["gunzip", "-d", "-"],
+        cwd=tmp,
+        check=True,
+        input=asset,
+        capture_output=True,
+    )
+
+    dst_filename = args.dst_dir / args.dst_filename
+    print(f"[-] Writing to {dst_filename}")
+    dst_filename.write_bytes(p.stdout)
+    sp.run(["chmod", "+x", str(dst_filename)], check=True)
 
 
 if __name__ == "__main__":
