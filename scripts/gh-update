@@ -66,7 +66,9 @@ def main(args: CLI) -> int:
         urlopen(asset["browser_download_url"]) as rep,
     ):
         args.dst_dir.mkdir(parents=True, exist_ok=True)
-        process_asset(args, rep.read(), tmp)
+        r = process_asset(args, rep.read(), tmp)
+        if r is not None:
+            return r
 
     return 0
 
@@ -127,7 +129,7 @@ def prompt_asset(prompt: str, recommend_idx: int | None, release: dict) -> dict 
             continue
 
 
-def from_archive(args: CLI, asset: bytes, tmp: str):
+def from_archive(args: CLI, asset: bytes, tmp: str) -> int | None:
     print(f"[-] Extracting with 'tar -z'")
     sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=asset)
 
@@ -142,7 +144,7 @@ def from_archive(args: CLI, asset: bytes, tmp: str):
     sp.run(["cp", *files, str(args.dst_dir)], check=True)
 
 
-def from_gzip(args: CLI, asset: bytes, tmp: str):
+def from_gzip(args: CLI, asset: bytes, tmp: str) -> int | None:
     print(f"[-] Extracting with 'gunzip -d'")
     p = sp.run(
         ["gunzip", "-d", "-"],
