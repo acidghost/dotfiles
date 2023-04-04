@@ -68,7 +68,8 @@ def main(args: CLI) -> int:
             for m in this_machine:
                 if m in name:
                     recommend = "*"
-                    recommend_idx = i
+                    if recommend_idx is None:
+                        recommend_idx = i
                     break
         print(f"    {i+1:02d} {recommend} {asset['browser_download_url']}")
 
