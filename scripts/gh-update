@@ -15,6 +15,9 @@ class CLI:
     dst_filename: str
 
 
+KNOWN_REPOS = {"zoxide": ("ajeetdsouza/zoxide", "zoxide")}
+
+
 def cli() -> CLI:
     parser = argparse.ArgumentParser(
         description="Download a released artifact from Github."
@@ -27,13 +30,30 @@ def cli() -> CLI:
         help="Where to put the extracted asset",
     )
     parser.add_argument("repo", help="Remote repository")
-    parser.add_argument("dst_filename", help="File to grab from the release")
-    return CLI(**vars(parser.parse_args()))
+    parser.add_argument("dst_filename", nargs="?", help="File to grab from the release")
+    args = parser.parse_args()
+
+    if args.repo in KNOWN_REPOS:
+        args.repo, dst_filename = KNOWN_REPOS[args.repo]
+        if args.dst_filename is None:
+            args.dst_filename = dst_filename
+    elif "/" not in args.repo:
+        if args.dst_filename is None:
+            args.dst_filename = args.repo
+        args.repo = f"{args.repo}/{args.repo}"
+    elif args.dst_filename is None:
+        _, args.dst_filename = args.repo.split("/", 2)
+
+    if args.dst_filename is None:
+        print(f"[!] Could not infer asset filename (dst_filename)")
+        exit(1)
+
+    args.dst_dir = args.dst_dir.expanduser()
+
+    return CLI(**vars(args))
 
 
 def main(args: CLI) -> int:
-    args.dst_dir = args.dst_dir.expanduser()
-
     release = get_release(args.repo)
     if isinstance(release, int):
         return release
