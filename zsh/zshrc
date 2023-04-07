@@ -134,7 +134,7 @@ export BAT_STYLE=numbers,grid
 # nnn
 if type nnn &> /dev/null; then
     NNN_PLUGINS_PATH="$HOME/.config/nnn/plugins"
-    export NNN_OPTS="acdQx"
+    export NNN_OPTS="acdQ"
     export NNN_OPENER="$NNN_PLUGINS_PATH/nuke"
     export NNN_PLUG="p:preview-tui;j:autojump"
     export NNN_COLORS="#b1b1b1b1;5555"
