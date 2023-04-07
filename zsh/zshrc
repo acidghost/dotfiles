@@ -74,6 +74,7 @@ export FORGIT_SHOW_PAGER=$FORGIT_PAGER
 export FORGIT_DIFF_PAGER=$FORGIT_PAGER
 
 export ANTIGEN_LOG="$HOME/.cache/antigen.log"
+[ ! -d ~/.cache ] && mkdir ~/.cache
 source ~/.dotfiles/antigen/antigen.zsh
 
 antigen use oh-my-zsh
