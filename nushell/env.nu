@@ -5,10 +5,10 @@ mkdir ~/.cache/nushell
 
 if $prompt_provider == 'starship' {
   starship init nu | save -f ~/.cache/nushell/prompt.nu
-  let-env PROMPT_INDICATOR = { "" }
-  let-env PROMPT_INDICATOR_VI_INSERT = { "" }
-  let-env PROMPT_INDICATOR_VI_NORMAL = { "" }
-  let-env PROMPT_MULTILINE_INDICATOR = { "::: " }
+  let-env PROMPT_INDICATOR = { || "" }
+  let-env PROMPT_INDICATOR_VI_INSERT = { || "" }
+  let-env PROMPT_INDICATOR_VI_NORMAL = { || "" }
+  let-env PROMPT_MULTILINE_INDICATOR = { || "::: " }
 } else {
   '' | save -f ~/.cache/nushell/prompt.nu
 
@@ -30,8 +30,8 @@ if $prompt_provider == 'starship' {
       $time_segment
   }
 
-  let-env PROMPT_COMMAND = { create_left_prompt }
-  let-env PROMPT_COMMAND_RIGHT = { create_right_prompt }
+  let-env PROMPT_COMMAND = { || create_left_prompt }
+  let-env PROMPT_COMMAND_RIGHT = { || create_right_prompt }
 }
 
 # Specifies how environment variables are:
