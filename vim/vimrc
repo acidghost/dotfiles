@@ -64,7 +64,6 @@ Plug 'tinted-theming/base16-vim'
 " Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdTree'
-Plug 'ryanoasis/vim-devicons'
 Plug 'liuchengxu/vista.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-obsession'
@@ -103,6 +102,9 @@ if has('nvim')
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 endif
+
+Plug 'johnstef99/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -156,6 +158,8 @@ let g:lightline = {
     \ },
     \ 'component_function': {
     \   'method': 'NearestMethodOrFunction',
+    \   'filetype': 'DevIconsFiletype',
+    \   'fileformat': 'DevIconsFileformat',
     \ },
     \ 'tabline': {
     \   'left': [ [ 'tabs' ] ],
@@ -179,8 +183,20 @@ let g:prosession_tmux_title_format = ":@@@"
 let g:prosession_on_startup = 1
 
 " vista.vim
+let g:vista_update_on_text_changed = 1
+let g:vista_fzf_preview = ['right:50%']
 function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
+" devicons
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
+function! DevIconsFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+function! DevIconsFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
 " FZF
