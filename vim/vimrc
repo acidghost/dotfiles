@@ -277,7 +277,7 @@ nmap <Leader>vs :Vista focus<CR>
 noremap <Leader>@ :nohl<CR>
 noremap <Leader>w :setl wrap!<CR>
 
-noremap <C-w>gn :tabnew<CR>
+noremap <C-w>gn :tabnew %<CR>
 
 imap <silent> <c-p> <Plug>(completion_trigger)
 
