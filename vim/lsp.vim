@@ -68,6 +68,9 @@ local servers = {
             python = {
                 { formatCommand = "black --quiet -", formatStdin = true },
             },
+            sh = {
+                { formatCommand = "shfmt --filename=${INPUT} -s -bn -i=4", formatStdin = true },
+            },
         },
     };
 }
