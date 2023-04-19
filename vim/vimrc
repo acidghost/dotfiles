@@ -268,7 +268,11 @@ nmap <Up> <C-Y>
 nmap <Left> 20zl
 nmap <Right> 20zr
 
-nmap <C-n> :NERDTreeToggle<CR>
+nmap <C-n>n :NERDTreeToggle<CR>
+nmap <C-n>f :NERDTreeFocus<CR>
+nmap <C-n>m :NERDTreeMirror<CR>
+nmap <C-n>x :NERDTreeFind<CR>
+nmap <C-n>r :NERDTreeRefreshRoot<CR>
 
 nmap <C-p> :FZF<CR>
 nmap <C-t>p :Tags<CR>
