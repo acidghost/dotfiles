@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 progname=$(basename "$0")
-if [[ "$progname" =~ figlet* ]]; then
+if [[ $progname =~ figlet* ]]; then
     prog=figlet
 else
     prog=toilet
 fi
 
-if ! command -v "$prog" &> /dev/null; then
+if ! command -v "$prog" &>/dev/null; then
     echo "$prog not found"
     exit 1
 fi
