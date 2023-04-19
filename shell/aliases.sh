@@ -37,9 +37,9 @@ if ! type bat &>/dev/null && type batcat &>/dev/null; then alias bat=batcat; fi
 if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
 
 # Platform specific
-case $(uname) in
-    Linux)
-        # shellcheck source=shell/aliases_linux.sh
-        source ~/.shell/aliases_linux.sh
-        ;;
+case $OSTYPE in
+linux*)
+    # shellcheck source=shell/aliases_linux.sh
+    source ~/.shell/aliases_linux.sh
+    ;;
 esac
