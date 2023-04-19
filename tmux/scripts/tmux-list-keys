@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-tmux list-keys |
-    gawk '
+tmux list-keys \
+    | gawk '
         match($0, /^bind-key\s+(-r )?-T ([a-z\-]+)\s+([[:graph:]]+)\s+(.+)$/, arr) {
             all[NR][1] = arr[2]
             all[NR][2] = arr[1] ? "repeat" : "norep"
@@ -25,5 +25,6 @@ tmux list-keys |
                     all[i][1], all[i][2], all[i][3], all[i][4])
             }
         }
-    ' |
-    fzf
+    ' \
+    | fzf
+
