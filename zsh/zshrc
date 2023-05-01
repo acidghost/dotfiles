@@ -170,6 +170,9 @@ bindkey -M viins '\ek' fuck-command-line-ext
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
+# atuin / has to come after FZF to replace its bindings
+[ -n "$commands[atuin]" ] && eval "$(atuin init zsh --disable-up-arrow)"
+
 # fix for okular icons
 export QT_QPA_PLATFORMTHEME=qt5ct
 
