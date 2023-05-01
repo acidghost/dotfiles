@@ -123,7 +123,6 @@ fi
 export EDITOR=nvim
 export PAGER=less
 export LESS="R"
-[ -n "$TERM" ] && export TERMINAL="$TERM"
 
 # bat
 export BAT_THEME=base16-256
@@ -152,7 +151,9 @@ if type nnn &> /dev/null; then
     # 12. unknown OR 0B regular/exe
     #                   1 2 3 4 5 6 7 8 9 0 1 2
     export NNN_FCOLORS='c1e2b12e006033f7c6d6abc4'
-    export ICONLOOKUP=1
+    # XXX: iconlookup is broken with Nerd Fonts v3+
+    export NNN_ICONLOOKUP=0
+    [ -n "$TERM" ] && export NNN_TERMINAL="$TERM"
     unset NNN_PLUGINS_PATH
 fi
 
