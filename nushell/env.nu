@@ -112,3 +112,8 @@ if not (which zoxide | where not built-in | is-empty) {
 } else {
   "use z.nu *\n" | save --append $dynamic_env_src
 }
+
+if not (which atuin | where not built-in | is-empty) {
+  atuin init nu --disable-up-arrow | save -f ~/.cache/nushell/atuin.nu
+  "source ~/.cache/nushell/atuin.nu\n" | save --append $dynamic_env_src
+}
