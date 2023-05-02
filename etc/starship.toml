@@ -35,9 +35,9 @@ show_milliseconds = true
 disabled = false
 format = "[  $path $read_only]($style)"
 style = "bold bg:dark fg:txt"
-read_only = " "
+read_only = "󰌾 "
 [directory.substitutions]
-"Documents" = ""
+"Documents" = "󰈙"
 "Downloads" = ""
 "Music" = ""
 "Pictures" = ""
@@ -86,10 +86,10 @@ Emscripten = " "
 EndeavourOS = " "
 Fedora = " "
 FreeBSD = " "
-Garuda = "﯑ "
+Garuda = "󰛓 "
 Gentoo = " "
-HardenedBSD = "ﲊ "
-Illumos = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
 Linux = " "
 Macos = " "
 Manjaro = " "
@@ -98,19 +98,19 @@ MidnightBSD = " "
 Mint = " "
 NetBSD = " "
 NixOS = " "
-OpenBSD = " "
+OpenBSD = "󰈺 "
 openSUSE = " "
-OracleLinux = " "
+OracleLinux = "󰌷 "
 Pop = " "
 Raspbian = " "
 Redhat = " "
 RedHatEnterprise = " "
-Redox = " "
-Solus = "ﴱ "
+Redox = "󰀘 "
+Solus = "󰠳 "
 SUSE = " "
 Ubuntu = " "
 Unknown = " "
-Windows = " "
+Windows = "󰍲 "
 
 [shell]
 disabled = false
@@ -185,13 +185,13 @@ symbol = " "
 symbol = " "
 
 [memory_usage]
-symbol = " "
+symbol = "󰍛 "
 
 [meson]
-symbol = "喝 "
+symbol = "󰔷 "
 
 [nim]
-symbol = " "
+symbol = "󰆥 "
 
 [nix_shell]
 symbol = " "
@@ -200,13 +200,13 @@ symbol = " "
 symbol = " "
 
 [package]
-symbol = " "
+symbol = "󰏗 "
 
 [python]
 symbol = " "
 
 [rlang]
-symbol = "ﳒ "
+symbol = "󰟔 "
 
 [ruby]
 symbol = " "
