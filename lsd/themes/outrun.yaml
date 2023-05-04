@@ -1,0 +1,20 @@
+permission:
+  read: 213
+  write: 177
+  exec: 135
+  exec-sticky: 5
+  no-access: 245
+  octal: 6
+  acl: dark_cyan
+  context: cyan
+user: 177
+group: 135
+size:
+  none: 219
+  small: 183
+  medium: 177
+  large: 135
+date:
+  hour-old: 183
+  day-old: 177
+  older: 135

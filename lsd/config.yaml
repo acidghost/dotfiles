@@ -1,0 +1,16 @@
+blocks:
+  - permission
+  - user
+  - group
+  - size
+  - date
+  - name
+
+layout: grid
+
+sorting:
+  column: name
+  dir-grouping: first
+
+color:
+  theme: outrun
