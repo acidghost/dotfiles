@@ -350,6 +350,8 @@ preview_file() {
                 --filelimit "$(find . -maxdepth 1 | wc -l)" -L 3 --noreport "$1" \
                 | head -n "$((lines - 3))" \
                 | "$(dirname "$0")"/.iconlookup -l "$cols" -B "$BSTR" -b " "
+        elif exists lsd; then
+            fifo_pager lsd --group-directories-first --color always --icon always --tree --depth 5 "$1"
         elif exists tree; then
             fifo_pager tree --filelimit "$(find . -maxdepth 1 | wc -l)" -L 3 -C -F --dirsfirst --noreport
         elif exists exa; then
