@@ -16,7 +16,10 @@ class CLI:
     dst_filename: str
 
 
-KNOWN_REPOS = {"zoxide": ("ajeetdsouza/zoxide", "zoxide")}
+KNOWN_REPOS = {
+    "atuin": ("ellie/atuin", "atuin"),
+    "zoxide": ("ajeetdsouza/zoxide", "zoxide"),
+}
 
 
 def cli() -> CLI:
