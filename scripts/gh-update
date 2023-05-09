@@ -73,7 +73,7 @@ def main(args: CLI) -> int:
         if recommend_idx is None:
             print("[!] Could not recommend anything")
             return 1
-        asset = release["asset"][recommend_idx]
+        asset = release["assets"][recommend_idx]
     else:
         prompt = "[?] Select which asset to install (0 to exit"
         if recommend_idx is not None:
