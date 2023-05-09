@@ -11,6 +11,7 @@ from urllib.request import urlopen
 @dataclass
 class CLI:
     dst_dir: Path
+    yes: bool
     repo: str
     dst_filename: str
 
@@ -28,6 +29,9 @@ def cli() -> CLI:
         type=Path,
         default=Path("~/.local/bin"),
         help="Where to put the extracted asset",
+    )
+    parser.add_argument(
+        "-y", "--yes", action="store_true", help="Assume yes to all questions"
     )
     parser.add_argument("repo", help="Remote repository")
     parser.add_argument("dst_filename", nargs="?", help="File to grab from the release")
@@ -61,14 +65,20 @@ def main(args: CLI) -> int:
     print(f"[+] Latest release is {release['tag_name']} {release['html_url']}")
     recommend_idx = print_assets(release)
 
-    prompt = "[?] Select which asset to install (0 to exit"
-    if recommend_idx is not None:
-        prompt += f", enter for recommended {recommend_idx+1}"
-    prompt += "): "
+    if args.yes:
+        if recommend_idx is None:
+            print("[!] Could not recommend anything")
+            return 1
+        asset = release["asset"][recommend_idx]
+    else:
+        prompt = "[?] Select which asset to install (0 to exit"
+        if recommend_idx is not None:
+            prompt += f", enter for recommended {recommend_idx+1}"
+        prompt += "): "
 
-    asset = prompt_asset(prompt, recommend_idx, release)
-    if isinstance(asset, int):
-        return asset
+        asset = prompt_asset(prompt, recommend_idx, release)
+        if isinstance(asset, int):
+            return asset
 
     print("[+] Selection:", asset["name"])
 
