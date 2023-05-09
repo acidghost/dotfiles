@@ -18,6 +18,7 @@ class CLI:
 
 KNOWN_REPOS = {
     "atuin": ("ellie/atuin", "atuin"),
+    "lsd": ("lsd-rs/lsd", "lsd"),
     "zoxide": ("ajeetdsouza/zoxide", "zoxide"),
 }
 
