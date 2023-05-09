@@ -215,7 +215,6 @@ require'nvim-treesitter.configs'.setup {
     ensure_installed = {
         "awk",
         "c",
-        "help",
         "latex",
         "lua",
         "perl",
@@ -223,6 +222,7 @@ require'nvim-treesitter.configs'.setup {
         "rust",
         "toml",
         "vim",
+        "vimdoc",
     },
     highlight = {
         enable = true,
