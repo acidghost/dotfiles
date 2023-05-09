@@ -12,6 +12,7 @@ from urllib.request import urlopen
 class CLI:
     dst_dir: Path
     yes: bool
+    plain: bool
     repo: str
     dst_filename: str
 
@@ -36,6 +37,12 @@ def cli() -> CLI:
     )
     parser.add_argument(
         "-y", "--yes", action="store_true", help="Assume yes to all questions"
+    )
+    parser.add_argument(
+        "-p",
+        "--plain",
+        action="store_true",
+        help="Force treating the asset as plain file",
     )
     parser.add_argument("repo", help="Remote repository")
     parser.add_argument("dst_filename", nargs="?", help="File to grab from the release")
@@ -86,14 +93,19 @@ def main(args: CLI) -> int:
 
     print("[+] Selection:", asset["name"])
 
-    match Path(asset["name"]).suffixes:
-        case [*_, ".tar", ".gz"] | [*_, ".zip"]:
-            process_asset = from_archive
-        case [*_, ".gz"]:
-            process_asset = from_gzip
-        case suffixes:
-            print(f"[!] Unable to recognize suffixes: {suffixes}")
-            return 1
+    if args.plain:
+        process_asset = from_plain
+    else:
+        match Path(asset["name"]).suffixes:
+            case [*_, ".tar", ".gz"] | [*_, ".zip"]:
+                process_asset = from_archive
+            case [*_, ".gz"]:
+                process_asset = from_gzip
+            case []:
+                process_asset = from_plain
+            case suffixes:
+                print(f"[!] Unable to recognize suffixes: {suffixes}")
+                return 1
 
     with (
         tempfile.TemporaryDirectory(prefix="gh-update-") as tmp,
@@ -191,6 +203,13 @@ def from_gzip(args: CLI, asset: bytes, tmp: str) -> int | None:
     dst_filename = args.dst_dir / args.dst_filename
     print(f"[-] Writing to {dst_filename}")
     dst_filename.write_bytes(p.stdout)
+    sp.run(["chmod", "+x", str(dst_filename)], check=True)
+
+
+def from_plain(args: CLI, asset: bytes, _) -> int | None:
+    dst_filename = args.dst_dir / args.dst_filename
+    print(f"[-] Writing plain file to {dst_filename}")
+    dst_filename.write_bytes(asset)
     sp.run(["chmod", "+x", str(dst_filename)], check=True)
 
 
