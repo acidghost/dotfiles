@@ -74,6 +74,7 @@ Plug 'dhruvasagar/vim-prosession'
 if has('nvim')
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
+Plug 'Olical/conjure'
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
@@ -247,9 +248,24 @@ require'nu'.setup {
 EOF
 endif
 
+" conjure
+let g:conjure#filetypes = [
+    \'clojure',
+    \'fennel',
+    \'janet',
+    \'hy',
+    \'julia',
+    \'racket',
+    \'scheme',
+    \'lua',
+    \'lisp',
+    \'python'
+    \]
+
 
 """ Key mappings
 let mapleader = ","
+let maplocalleader = "<"
 
 " Yank to PRIMARY clipboard
 noremap <Leader>y "*y
