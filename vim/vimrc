@@ -221,6 +221,7 @@ require'nvim-treesitter.configs'.setup {
         "awk",
         "c",
         "latex",
+        "llvm",
         "lua",
         "perl",
         "python",
