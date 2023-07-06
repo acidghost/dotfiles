@@ -63,6 +63,7 @@ Plug 'tinted-theming/base16-vim'
 " Should be installed system-wide, uncomment otherwise
 " Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'scrooloose/nerdTree'
 Plug 'liuchengxu/vista.vim'
 Plug 'machakann/vim-sandwich'
@@ -317,6 +318,8 @@ nmap <Leader>vs :Vista focus<CR>
 
 noremap <Leader>@ :nohl<CR>
 noremap <Leader>w :setl wrap!<CR>
+
+noremap <Leader>W :Goyo<CR>
 
 noremap <C-w>gn :tabnew %<CR>
 
