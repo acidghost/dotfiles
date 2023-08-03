@@ -84,6 +84,10 @@ seq 1 10 | each { |x| [
   $"alias tree($x) = tree -L ($x)"
 ]} | flatten | save --append $dynamic_env_src
 
+if (program exists brew) {
+  "use brew.nu\n" | save --append $dynamic_env_src
+}
+
 if not ($env.ASDF_DIR | is-empty) {
   $"source '($env.ASDF_DIR)/asdf.nu'\n" | save --append $dynamic_env_src
 }
