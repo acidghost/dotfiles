@@ -74,6 +74,11 @@ let dynamic_env_src = $env.HOME + '/.cache/nushell/dynamic_env.nu'
 rm -f $dynamic_env_src
 touch $dynamic_env_src
 
+# Check if a program (i.e. not a built-in) exists.
+def "program exists" [cmd] {
+  not (which -a $cmd | where not built-in | is-empty)
+}
+
 seq 1 10 | each { |x| [
   $"alias dh($x) = du -d ($x - 1)"
   $"alias tree($x) = tree -L ($x)"
@@ -83,7 +88,7 @@ if not ($env.ASDF_DIR | is-empty) {
   $"source '($env.ASDF_DIR)/asdf.nu'\n" | save --append $dynamic_env_src
 }
 
-if not (which thefuck | where not built-in | is-empty) {
+if (program exists thefuck) {
   "use thefuck.nu *\n" | save --append $dynamic_env_src
 }
 
@@ -92,11 +97,15 @@ if ($forgit | path exists) {
   $"let-env FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
 }
 
-if not (which nnn | where not built-in | is-empty) {
+if (program exists nnn) {
   "use nnn.nu *\n" | save --append $dynamic_env_src
 }
 
-if not (which zoxide | where not built-in | is-empty) {
+if ('~/.config/broot/launcher/nushell/br' | path exists) {
+  "source ~/.config/broot/launcher/nushell/br\n" | save --append $dynamic_env_src
+}
+
+if (program exists zoxide) {
   zoxide init nushell | save -f ~/.cache/nushell/zoxide.nu
   "source ~/.cache/nushell/zoxide.nu
   let-env config = ($env.config | update keybindings { |c|
@@ -113,7 +122,7 @@ if not (which zoxide | where not built-in | is-empty) {
   "use z.nu *\n" | save --append $dynamic_env_src
 }
 
-if not (which atuin | where not built-in | is-empty) {
+if (program exists atuin) {
   atuin init nu --disable-up-arrow | save -f ~/.cache/nushell/atuin.nu
   "source ~/.cache/nushell/atuin.nu\n" | save --append $dynamic_env_src
 }
