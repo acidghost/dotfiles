@@ -4,7 +4,6 @@ lua << EOF
 local nvim_lsp = require('lspconfig')
 
 local opts = { noremap=true, silent=true }
--- TODO: fix these
 vim.keymap.set('n', '<leader>led', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '<leader>lep', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', '<leader>len', vim.diagnostic.goto_next, opts)
