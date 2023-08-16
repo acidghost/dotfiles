@@ -98,25 +98,25 @@ def main(args: CLI) -> int:
     if args.plain:
         process_asset = from_plain
     else:
-        match Path(asset["name"]).suffixes:
-            case [*_, ".tar", ".gz"]:
+        suffixes = Path(asset["name"]).suffixes
+        if suffixes[-2:] == [".tar", ".gz"]:
+            process_asset = from_archive_tar
+        elif suffixes[-1] == ".gz":
+            process_asset = from_gzip
+        elif suffixes[-1] == ".zip":
+            uname_system = uname().system
+            if uname_system == "Linux":
+                process_asset = from_archive_zip
+            elif uname_system == "Darwin":
                 process_asset = from_archive_tar
-            case [*_, ".gz"]:
-                process_asset = from_gzip
-            case [*_, ".zip"]:
-                match uname().system:
-                    case "Linux":
-                        process_asset = from_archive_zip
-                    case "Darwin":
-                        process_asset = from_archive_tar
-                    case system:
-                        print(f"[!] I don't know how to handle .zip in {system}")
-                        return 1
-            case []:
-                process_asset = from_plain
-            case suffixes:
-                print(f"[!] Unable to recognize suffixes: {suffixes}")
+            else:
+                print(f"[!] I don't know how to handle .zip in {uname_system}")
                 return 1
+        elif suffixes == []:
+            process_asset = from_plain
+        else:
+            print(f"[!] Unable to recognize suffixes: {suffixes}")
+            return 1
 
     with (
         tempfile.TemporaryDirectory(prefix="gh-update-") as tmp,
@@ -144,13 +144,15 @@ def get_release(repo: str, ver: str = "latest") -> dict | int:
 def print_assets(release: dict) -> int | None:
     uname = platform.uname()
     this_system = uname.system.lower()
-    match uname.machine.lower():
-        case "amd64" | "x86_64":
-            this_machine = ["amd64", "x86_64"]
-        case "arm64" | "aarch64":
-            this_machine = ["arm64", "aarch64"]
-        case machine:
-            this_machine = [machine]
+    this_machine = uname.machine.lower()
+    ARCH_X86 = ["x86_64", "amd64"]
+    ARCH_ARM = ["aaarch64", "arm64"]
+    if this_machine in ARCH_X86:
+        this_machine = ARCH_X86
+    elif this_machine in ARCH_ARM:
+        this_machine = ARCH_ARM
+    else:
+        this_machine = [this_machine]
 
     recommend_idx = None
     for i, asset in enumerate(release["assets"]):
