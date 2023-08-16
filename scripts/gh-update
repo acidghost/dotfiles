@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
 from platform import uname
+from typing import Optional, Union
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -128,7 +129,7 @@ def main(args: CLI) -> int:
     return 0
 
 
-def get_release(repo: str, ver: str = "latest") -> dict | int:
+def get_release(repo: str, ver: str = "latest") -> Union[dict, int]:
     latest_release_url = f"https://api.github.com/repos/{repo}/releases/{ver}"
     print(f"[+] Making request to {latest_release_url}")
     try:
@@ -139,7 +140,7 @@ def get_release(repo: str, ver: str = "latest") -> dict | int:
         return 1
 
 
-def print_assets(release: dict) -> int | None:
+def print_assets(release: dict) -> Optional[int]:
     uname = platform.uname()
     this_system = uname.system.lower()
     this_machine = uname.machine.lower()
@@ -167,7 +168,7 @@ def print_assets(release: dict) -> int | None:
     return recommend_idx
 
 
-def prompt_asset(prompt: str, recommend_idx: int | None, release: dict) -> dict | int:
+def prompt_asset(prompt: str, recommend_idx: Optional[int], release: dict) -> Union[dict, int]:
     while True:
         i = input(prompt)
         if i == "":
@@ -186,7 +187,7 @@ def prompt_asset(prompt: str, recommend_idx: int | None, release: dict) -> dict 
             continue
 
 
-def from_archive_tar(args: CLI, asset: bytes, tmp: str) -> int | None:
+def from_archive_tar(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     print(f"[-] Extracting with 'tar -z'")
     sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=asset)
 
@@ -201,7 +202,7 @@ def from_archive_tar(args: CLI, asset: bytes, tmp: str) -> int | None:
     sp.run(["cp", *files, str(args.dst_dir)], check=True)
 
 
-def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> int | None:
+def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     tmp_p = Path(tmp)
     zipfile = tmp_p / "asset.zip"
     print(f"[-] Saving .zip to {zipfile}")
@@ -222,7 +223,7 @@ def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> int | None:
     sp.run(["cp", *files, str(args.dst_dir)], check=True)
 
 
-def from_gzip(args: CLI, asset: bytes, tmp: str) -> int | None:
+def from_gzip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     print(f"[-] Extracting with 'gunzip -d'")
     p = sp.run(
         ["gunzip", "-d", "-"],
@@ -238,7 +239,7 @@ def from_gzip(args: CLI, asset: bytes, tmp: str) -> int | None:
     sp.run(["chmod", "+x", str(dst_filename)], check=True)
 
 
-def from_plain(args: CLI, asset: bytes, _) -> int | None:
+def from_plain(args: CLI, asset: bytes, _) -> Optional[int]:
     dst_filename = args.dst_dir / args.dst_filename
     print(f"[-] Writing plain file to {dst_filename}")
     dst_filename.write_bytes(asset)
