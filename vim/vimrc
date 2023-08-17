@@ -81,7 +81,9 @@ endif
 if has('nvim-0.7')
 Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
 endif
+if has('nvim-0.8')
 Plug 'Olical/conjure'
+endif
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
