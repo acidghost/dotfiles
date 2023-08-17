@@ -80,8 +80,8 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'commit': '63260da1
 endif
 if has('nvim-0.7')
 Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
-endif
 Plug 'Olical/conjure'
+endif
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
