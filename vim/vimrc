@@ -78,7 +78,9 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 else
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'commit': '63260da18bf273c76b8e2ea0db84eb901cab49ce' }
 endif
+if has('nvim-0.7')
 Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
+endif
 Plug 'Olical/conjure'
 endif
 Plug 'vim-latex/vim-latex'
