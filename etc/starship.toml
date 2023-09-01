@@ -43,6 +43,7 @@ read_only = "󰌾 "
 "Pictures" = ""
 
 [docker_context]
+disabled = true
 symbol = " "
 detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile', 'compose.yml', 'compose.yaml', 'Containerfile']
 
