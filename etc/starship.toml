@@ -149,6 +149,9 @@ symbol = " "
 [c]
 symbol = " "
 
+[cmake]
+disabled = true
+
 [conda]
 symbol = " "
 
