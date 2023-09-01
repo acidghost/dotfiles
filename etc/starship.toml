@@ -204,6 +204,7 @@ symbol = " "
 symbol = " "
 
 [package]
+disabled = true
 symbol = "󰏗 "
 
 [python]
