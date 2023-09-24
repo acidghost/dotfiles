@@ -17,6 +17,7 @@ tap "homebrew/cask-fonts"
 # Applications
 cask "amethyst"                 if WITH_APPS && IS_DARWIN
 cask "firefox"                  if WITH_APPS && IS_DARWIN
+cask "grandperspective"         if WITH_APPS && IS_DARWIN
 brew "mpv"                      if WITH_APPS
 cask "obs"                      if WITH_APPS
 cask "obsidian"                 if WITH_APPS && IS_DARWIN
