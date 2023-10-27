@@ -200,6 +200,16 @@ fi
 zle -N toggle-prompt
 bindkey '^P' toggle-prompt
 
+widget-expand-cmd-name() {
+    local exe cmd=(${(s: :)BUFFER})
+    [ "${#cmd[@]}" -lt 1 ] && return
+    exe=$(whence -c "${cmd[1]}") || return
+    BUFFER="$exe ${cmd[@]:1}"
+}
+
+zle -N widget-expand-cmd-name
+bindkey '^Xx' widget-expand-cmd-name
+
 bindkey '^w' forward-word
 bindkey '^b' backward-word
 
