@@ -42,6 +42,7 @@ unix-server-light: _dotfiles ## Setup UNIX server (light)
 
 check: ## Check shell/perl scripts (requires shellcheck and Perl::Critic)
 	$(D)shellcheck \
+		install \
 		etc/macos \
 		shell/*.sh \
 		$(BASH_SCRIPTS)
