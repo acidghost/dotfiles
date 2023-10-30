@@ -16,6 +16,10 @@ else
     fi
 fi
 
+if [ -z "$fzf_prefix" ]; then
+    exit 0
+fi
+
 # Auto-completion
 # ---------------
 [[ $- == *i* ]] && source "$fzf_prefix/shell/completion.zsh" 2> /dev/null
