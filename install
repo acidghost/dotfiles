@@ -2,6 +2,14 @@
 
 set -e
 
+# Set defaults for environments that call this script directly (e.g. dev containers, codespaces)
+export DOTFILES_IS_LIGHTWEIGHT=${DOTFILES_IS_LIGHTWEIGHT:-1}
+export DOTFILES_WITH_APPS=${DOTFILES_WITH_APPS:-0}
+export DOTFILES_WITH_ASDF=${DOTFILES_WITH_ASDF:-0}
+export DOTFILES_WITH_BREW=${DOTFILES_WITH_BREW:-0}
+export DOTFILES_WITH_LSP=${DOTFILES_WITH_LSP:-0}
+export DOTFILES_WITH_VIRT=${DOTFILES_WITH_VIRT:-0}
+
 CONFIG="install.conf.yaml"
 DOTBOT_DIR="dotbot"
 
