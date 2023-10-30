@@ -37,6 +37,13 @@
       fi
     description: Creating OS-specific folders
     quiet: true
+  -
+    command: |
+      if [ ! -L "$HOME/.zshrc" ] && [ -f "$HOME/.zshrc" ]; then
+        mv "$HOME/.zshrc" "$HOME/.zshrc.dotfiles.bck"
+      fi
+    description: Possibly making backup of existing zshrc
+    quiet: true
 
 - link:
     ~/.amethyst:
