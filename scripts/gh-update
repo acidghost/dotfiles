@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 import argparse, json, platform, tempfile
 import subprocess as sp
-from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
 from platform import uname
-from typing import Optional, Union
+from typing import NamedTuple, Optional, Union
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
 
-@dataclass
-class CLI:
+class CLI(NamedTuple):
     dst_dir: Path
     yes: bool
     plain: bool
@@ -168,7 +166,9 @@ def print_assets(release: dict) -> Optional[int]:
     return recommend_idx
 
 
-def prompt_asset(prompt: str, recommend_idx: Optional[int], release: dict) -> Union[dict, int]:
+def prompt_asset(
+    prompt: str, recommend_idx: Optional[int], release: dict
+) -> Union[dict, int]:
     while True:
         i = input(prompt)
         if i == "":
