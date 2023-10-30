@@ -17,7 +17,7 @@ else
 fi
 
 if [ -z "$fzf_prefix" ]; then
-    exit 0
+    return
 fi
 
 # Auto-completion
