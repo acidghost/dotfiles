@@ -16,7 +16,7 @@ else
     fi
 fi
 
-if [ -z "$fzf_prefix" ]; then
+if [ -z "$fzf_prefix" ] || [ ! -d "$fzf_prefix" ]; then
     return
 fi
 
