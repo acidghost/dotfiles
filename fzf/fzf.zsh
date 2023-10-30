@@ -49,24 +49,4 @@ _fzf_comprun() {
   esac
 }
 
-_z_jump() {
-    local res
-    if [ -n "$commands[zoxide]" ]; then
-        res=$(zoxide query -i -- "$@")
-        [ $? -eq 0 ] && {
-            LBUFFER+="cd $res"
-        }
-        zle redisplay
-    else
-        res=`zshz -l 2>&1 | fzf --tac --preview 'tree -aC --gitignore -I .git {2}' --reverse`
-        [ $? -eq 0 ] && {
-            local p=`echo -n "$res" | sed 's/^[0-9]*\.*[0-9]*[[:space:]]*\/\(.*\)$/\/\1/'`
-            zle reset-prompt
-            LBUFFER+="cd $p"
-        }
-    fi
-}
-zle     -N   _z_jump
-bindkey '^j' _z_jump
-
 unset plugged_path fzf_prefix
