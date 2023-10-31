@@ -38,6 +38,7 @@ brew "efm-langserver"           if WITH_LSP
 brew "gopls"                    if WITH_LSP
 brew "rust-analyzer"            if WITH_LSP
 brew "shellcheck"
+brew "shfmt"
 cask "visual-studio-code"       if WITH_APPS && IS_DARWIN
 brew "universal-ctags"
 
