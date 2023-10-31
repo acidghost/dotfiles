@@ -44,6 +44,7 @@ brew "universal-ctags"
 
 # Terminal
 brew "alacritty"                if WITH_APPS
+brew "atuin"
 brew "bat"
 brew "chafa"
 brew "dust"
