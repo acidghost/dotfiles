@@ -10,7 +10,8 @@ fi
 case "$prog" in
     rust|cargo                      ) echo -n "" ;;
     zsh|bash|sh|nu                  ) echo -n "" ;;
-    [n]vim|vimdiff                  ) echo -n "" ;;
+    vim|vimdiff                     ) echo -n "" ;;
+    nvim                            ) echo -n "" ;;
     swipl                           ) echo -n "" ;;
     man                             ) echo -n "" ;;
     gdb|rr                          ) echo -n "" ;;
