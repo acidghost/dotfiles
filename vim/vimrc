@@ -273,6 +273,13 @@ let g:conjure#filetypes = [
     \'python'
     \]
 
+" copilot
+let g:copilot_filetypes = {
+    \'markdown': v:false,
+    \'tex': v:false,
+    \'text': v:false,
+    \}
+
 
 """ Key mappings
 
