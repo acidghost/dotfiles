@@ -268,10 +268,8 @@
     },
     "notebook.output.textLineLimit": 100,
     "notebook.output.scrolling": true,
-    "dev.containers.dockerPath": "podman-devcontainer-wrapper",
     "settingsSync.ignoredSettings": [
-        "-dotfiles.repository",
-        "-dotfiles.targetPath"
+        "-dev.containers.dockerPath"
     ],
     "[python]": {
         "diffEditor.ignoreTrimWhitespace": false,
