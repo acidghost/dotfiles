@@ -5,10 +5,10 @@ mkdir ~/.cache/nushell
 
 if $prompt_provider == 'starship' {
   starship init nu | save -f ~/.cache/nushell/prompt.nu
-  let-env PROMPT_INDICATOR = { || "" }
-  let-env PROMPT_INDICATOR_VI_INSERT = { || "" }
-  let-env PROMPT_INDICATOR_VI_NORMAL = { || "" }
-  let-env PROMPT_MULTILINE_INDICATOR = { || "::: " }
+  $env.PROMPT_INDICATOR = { || "" }
+  $env.PROMPT_INDICATOR_VI_INSERT = { || "" }
+  $env.PROMPT_INDICATOR_VI_NORMAL = { || "" }
+  $env.PROMPT_MULTILINE_INDICATOR = { || "::: " }
 } else {
   '' | save -f ~/.cache/nushell/prompt.nu
 
@@ -30,15 +30,15 @@ if $prompt_provider == 'starship' {
       $time_segment
   }
 
-  let-env PROMPT_COMMAND = { || create_left_prompt }
-  let-env PROMPT_COMMAND_RIGHT = { || create_right_prompt }
+  $env.PROMPT_COMMAND = { || create_left_prompt }
+  $env.PROMPT_COMMAND_RIGHT = { || create_right_prompt }
 }
 
 # Specifies how environment variables are:
 # - converted from a string to a value on Nushell startup (from_string)
 # - converted from a value back to a string when running external commands (to_string)
 # Note: The conversions happen *after* config.nu is loaded
-let-env ENV_CONVERSIONS = {
+$env.ENV_CONVERSIONS = {
   "PATH": {
     from_string: { |s| $s | split row (char esep) | path expand -n }
     to_string: { |v| $v | path expand -n | str join (char esep) }
@@ -53,7 +53,7 @@ let-env ENV_CONVERSIONS = {
 #
 # By default, <nushell-config-dir>/scripts is added
 let config_dir = ($nu.config-path | path dirname)
-let-env NU_LIB_DIRS = [
+$env.NU_LIB_DIRS = [
     ($config_dir | path join 'scripts')
     ($config_dir | path join 'modules')
 ]
@@ -61,12 +61,12 @@ let-env NU_LIB_DIRS = [
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
-let-env NU_PLUGIN_DIRS = [
+$env.NU_PLUGIN_DIRS = [
     ($nu.config-path | path dirname | path join 'plugins')
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
+# $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
 # XXX: const does not work without explicitly expanding the path at each use
 # const dynamic_env_src = '~/.cache/nushell/dynamic_env.nu'
@@ -98,7 +98,7 @@ if (program exists thefuck) {
 
 const forgit = '~/.antigen/bundles/wfxr/forgit/bin/git-forgit'
 if ($forgit | path exists) {
-  $"let-env FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
+  $"$env.FORGIT = '($forgit)'\nuse forgit.nu *\n" | save --append $dynamic_env_src
 }
 
 if (program exists nnn) {
@@ -112,7 +112,7 @@ if ('~/.config/broot/launcher/nushell/br' | path exists) {
 if (program exists zoxide) {
   zoxide init nushell | save -f ~/.cache/nushell/zoxide.nu
   "source ~/.cache/nushell/zoxide.nu
-  let-env config = ($env.config | update keybindings { |c|
+  $env.config = ($env.config | update keybindings { |c|
     $c.keybindings | append {
       name: zoxide_jump
       modifier: control

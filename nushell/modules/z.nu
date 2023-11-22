@@ -133,11 +133,11 @@ export def "z test rm" [--recursive(-R) p: path] {
 }
 
 export-env {
-  let-env config = ($env | default {} config).config
+  $env.config = ($env | default {} config).config
 
-  let-env config = ($env.config | default {} hooks)
-  let-env config = ($env.config | update hooks ($env.config.hooks | default [] pre_execution))
-  let-env config = ($env.config | update hooks.pre_execution { |c|
+  $env.config = ($env.config | default {} hooks)
+  $env.config = ($env.config | update hooks ($env.config.hooks | default [] pre_execution))
+  $env.config = ($env.config | update hooks.pre_execution { |c|
     $c.hooks.pre_execution | append {
       if $env.PWD != $env.HOME {
         z add $env.PWD
@@ -145,8 +145,8 @@ export-env {
     }
   })
 
-  let-env config = ($env.config | default [] keybindings)
-  let-env config = ($env.config | update keybindings { |c|
+  $env.config = ($env.config | default [] keybindings)
+  $env.config = ($env.config | update keybindings { |c|
     $c.keybindings | append {
       name: znu_jump
       modifier: control

@@ -24,7 +24,7 @@ export def fuck [
 }
 
 export-env {
-  let-env config = ($env.config | upsert keybindings { |config|
+  $env.config = ($env.config | upsert keybindings { |config|
     $config.keybindings | append {
       name: fuck
       modifier: control
