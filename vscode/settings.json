@@ -1,7 +1,8 @@
 {
     "telemetry.telemetryLevel": "crash",
-    "terminal.external.osxExec": "iTerm.app",
+    "terminal.external.osxExec": "Alacritty.app",
     "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+    "terminal.integrated.defaultProfile.linux": "zsh",
     "vim.leader": ",",
     "vim.normalModeKeyBindings": [
         {
@@ -162,11 +163,15 @@
         100
     ],
     "editor.cursorSurroundingLines": 3,
+    "editor.renderWhitespace": "boundary",
+    "editor.minimap.enabled": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.inlayHints.enabled": "offUnlessPressed",
     "workbench.colorCustomizations": {
         "[Abyss]": {
             "editor.foreground": "#cacaff",
             "editor.background": "#00002a",
-            "editor.selectionBackground": "#2a002a",
+            "editor.selectionBackground": "#b6b",
             "editor.lineHighlightBackground": "#2a002a",
             "sideBar.background": "#00002a",
             "statusBar.background": "#00002a",
@@ -226,14 +231,51 @@
                 "class": "#f0a",
                 "decorator": "#0af",
                 "formatSpecifier": "#cacaff",
+                "interface": "#f0a",
+                "macro": "#aaf",
                 "method.static": "#0af",
                 "module": {
                     "foreground": "#cacaff",
                     "fontStyle": ""
                 },
+                "namespace": {
+                    "foreground": "#cacaff",
+                    "fontStyle": ""
+                },
+                "struct": "#f0a",
                 "parameter": "#6df"
+            }
+        },
+        "[Base16 Outrun Dark]": {
+            "rules": {
+                "variable": "#cacaff"
             }
         }
     },
-    "workbench.colorTheme": "Abyss"
+    "workbench.colorTheme": "Base16 Outrun Dark",
+    "cmake.statusbar.visibility": "icon",
+    "base16.generator.activatedThemes": [
+        "base16-outrun-dark",
+        "base16-outrun-light"
+    ],
+    "dotfiles.targetPath": "~/.dotfiles",
+    "dotfiles.repository": "acidghost/dotfiles",
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "notebook.output.textLineLimit": 100,
+    "notebook.output.scrolling": true,
+    "dev.containers.dockerPath": "podman-devcontainer-wrapper",
+    "settingsSync.ignoredSettings": [
+        "-dotfiles.repository",
+        "-dotfiles.targetPath"
+    ],
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": false
+    }
 }
