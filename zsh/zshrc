@@ -10,10 +10,10 @@ if [ $PROMPT_PROVIDER = p10k ]; then
     fi
 fi
 
-# Add $HOME/.local/bin to PATH, if exists
-if [ -d "$HOME/.local/bin" ] && ! grep "$HOME/.local/bin" <<< "$PATH" &> /dev/null; then
-    export PATH="$PATH:$HOME/.local/bin"
-fi
+# Make PATH have unique values only
+typeset -U path PATH
+
+[ -d "$HOME/.local/bin" ] && export PATH="$PATH:$HOME/.local/bin"
 
 # Homebrew
 if [ -f /opt/homebrew/bin/brew ]; then
