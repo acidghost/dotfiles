@@ -29,29 +29,17 @@ bindkey -v
 
 zstyle :compinstall filename "$HOME/.zshrc"
 
-if type brew &> /dev/null; then
-    fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
-fi
-
-WITH_ASDF=0
-if [ -f "$HOME/.config/dotfiles-env/with_asdf" ]; then
-    WITH_ASDF=1
-fi
-
-if [ $WITH_ASDF = 1 ]; then
-    ASDF_DIR="$HOME/.dotfiles/asdf-vm"
-    fpath=(${ASDF_DIR}/completions $fpath)
-fi
-
-[ -d ~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions ] && \
-    fpath=(~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions $fpath)
-
 autoload -Uz compinit
 compinit
 
 autoload -U zmv
 
-[ $WITH_ASDF = 1 ] && source "$ASDF_DIR/asdf.sh"
+WITH_ASDF=0
+if [ -f "$HOME/.config/dotfiles-env/with_asdf" ]; then
+    WITH_ASDF=1
+    ASDF_DIR="$HOME/.dotfiles/asdf-vm"
+    source "$ASDF_DIR/asdf.sh"
+fi
 
 forgit_log=fglo
 forgit_diff=fgd
@@ -72,6 +60,10 @@ export BASE16_FZF_PATH="$HOME/.antigen/bundles/tinted-theming/base16-fzf-main"
 export FORGIT_PAGER="delta --features=forgit"
 export FORGIT_SHOW_PAGER=$FORGIT_PAGER
 export FORGIT_DIFF_PAGER=$FORGIT_PAGER
+
+# antigen does not run the main oh-my-zsh script, hence the completions folder
+# needs to be created and the fpath needs to be setup manually
+mkdir -p ~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions
 
 export ANTIGEN_LOG="$HOME/.cache/antigen.log"
 [ ! -d ~/.cache ] && mkdir ~/.cache
@@ -99,8 +91,20 @@ antigen bundle zsh-users/zsh-syntax-highlighting        # Must be last!
 
 antigen apply
 
+if [ -n "$commands[brew]" ]; then
+    fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+fi
+
+[ -d "${ASDF_DIR}/completions" ] && fpath=("${ASDF_DIR}/completions" $fpath)
+
+[ -d ~/.local/share/zsh/site-functions ] && \
+    fpath=(~/.local/share/zsh/site-functions $fpath)
+
+[ -d ~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions ] && \
+    fpath=(~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions $fpath)
+
 if [ $PROMPT_PROVIDER = starship ]; then
-    type starship &>/dev/null && eval "$(starship init zsh)"
+    [ -n "$commands[starship]" ] && eval "$(starship init zsh)"
 elif [ $PROMPT_PROVIDER = p10k ]; then
     [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
 fi
@@ -136,7 +140,7 @@ export BAT_STYLE=numbers,grid
 # alias bat="bat --terminal-width -2"
 
 # nnn
-if type nnn &> /dev/null; then
+if [ -n "$commands[nnn]" ]; then
     NNN_PLUGINS_PATH="$HOME/.config/nnn/plugins"
     export NNN_OPTS="acdQ"
     export NNN_OPENER="$NNN_PLUGINS_PATH/nuke"
@@ -241,9 +245,9 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#vi-forward
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(forward-char)
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(vi-forward-char)
 
-if type brew &> /dev/null && [ $WITH_ASDF = 1 ]; then
-    alias brew="env PATH=$(sed -e "s,$(asdf where python | tr -d '\n')/bin:,,g" \
-                               -e "s,$HOME/.asdf/shims:,,g" <<< "$PATH") brew"
+if [ -n "$commands[brew]" ] && [ $WITH_ASDF = 1 ]; then
+    alias brew="env PATH='$(sed -e "s,$(asdf where python | tr -d '\n')/bin:,,g" \
+                                -e "s,$HOME/.asdf/shims:,,g" <<< "$PATH")' brew"
 fi
 
 # https://gist.github.com/thomd/7667642
