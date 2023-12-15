@@ -61,35 +61,19 @@ export FORGIT_PAGER="delta --features=forgit"
 export FORGIT_SHOW_PAGER=$FORGIT_PAGER
 export FORGIT_DIFF_PAGER=$FORGIT_PAGER
 
-# antigen does not run the main oh-my-zsh script, hence the completions folder
-# needs to be created and the fpath needs to be setup manually
-mkdir -p ~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions
-
-export ANTIGEN_LOG="$HOME/.cache/antigen.log"
 [ ! -d ~/.cache ] && mkdir ~/.cache
-source ~/.dotfiles/antigen/antigen.zsh
 
-antigen use oh-my-zsh
+source ~/.dotfiles/antidote/antidote.zsh
 
-antigen bundle colored-man-pages
-antigen bundle git
-antigen bundle gitignore
-antigen bundle rust
-antigen bundle thefuck
-antigen bundle tmux
-antigen bundle vagrant
-antigen bundle vi-mode
-antigen bundle web-search
-[ -z "$commands[zoxide]" ] && antigen bundle z
+# set omz variables
+ZSH=$(antidote path ohmyzsh/ohmyzsh)
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
+# antidote does not run the main oh-my-zsh script, hence the completions folder
+# needs to be created and the fpath needs to be setup manually
+OMZ_COMPDIR="$ZSH_CACHE_DIR/completions"
+[[ -d "$OMZ_COMPDIR" ]] || mkdir -p "$OMZ_COMPDIR"
 
-antigen bundle tinted-theming/base16-shell@main
-antigen bundle tinted-theming/base16-fzf@main
-[ $PROMPT_PROVIDER = p10k ] && antigen theme romkatv/powerlevel10k
-antigen bundle wfxr/forgit
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-syntax-highlighting        # Must be last!
-
-antigen apply
+antidote load
 
 if [ -n "$commands[brew]" ]; then
     fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
@@ -100,8 +84,7 @@ fi
 [ -d ~/.local/share/zsh/site-functions ] && \
     fpath=(~/.local/share/zsh/site-functions $fpath)
 
-[ -d ~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions ] && \
-    fpath=(~/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions $fpath)
+[ -d "$OMZ_COMPDIR" ] && fpath=("$OMZ_COMPDIR" $fpath)
 
 if [ $PROMPT_PROVIDER = starship ]; then
     [ -n "$commands[starship]" ] && eval "$(starship init zsh)"

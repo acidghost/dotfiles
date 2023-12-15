@@ -138,4 +138,5 @@
       if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
     ~/.vim/vimrc: vim/vimrc
     ~/vusec.ascii:
+    ~/.zsh_plugins.txt: zsh/plugins.txt
     ~/.zshrc: zsh/zshrc
