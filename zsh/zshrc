@@ -53,9 +53,6 @@ forgit_stash_show=fgss
 export ZSH_TMUX_FIXTERM=true
 export ZSH_TMUX_UNICODE=true
 
-export BASE16_THEME_DEFAULT=outrun-dark
-export BASE16_FZF_PATH="$HOME/.antigen/bundles/tinted-theming/base16-fzf-main"
-
 # forgit
 export FORGIT_PAGER="delta --features=forgit"
 export FORGIT_SHOW_PAGER=$FORGIT_PAGER
@@ -85,6 +82,9 @@ fi
     fpath=(~/.local/share/zsh/site-functions $fpath)
 
 [ -d "$OMZ_COMPDIR" ] && fpath=("$OMZ_COMPDIR" $fpath)
+
+export BASE16_THEME_DEFAULT=outrun-dark
+type antidote &>/dev/null && export BASE16_FZF_PATH="$(antidote path tinted-theming/base16-fzf)"
 
 if [ $PROMPT_PROVIDER = starship ]; then
     [ -n "$commands[starship]" ] && eval "$(starship init zsh)"
