@@ -49,6 +49,7 @@ local servers = {
     -- fsautocomplete = {};
     gopls = {};
     hls = {};
+    nushell = {};
     pyright = {};
     rust_analyzer = {
         ['rust-analyzer'] = {
