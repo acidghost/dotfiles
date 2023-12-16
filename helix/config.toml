@@ -1,0 +1,7 @@
+theme = "base16-outrun-dark"
+
+[editor]
+line-number = "relative"
+cursorline = true
+text-width = 100
+rulers = [100]
