@@ -5,3 +5,11 @@ line-number = "relative"
 cursorline = true
 text-width = 100
 rulers = [100]
+
+[editor.whitespace]
+render = "all"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
