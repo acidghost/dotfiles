@@ -1,0 +1,21 @@
+[font]
+size = 12.0
+
+[font.normal]
+family = "Hack Nerd Font Mono"
+style = "Regular"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[window]
+decorations = "None"
+option_as_alt = "OnlyLeft"
+padding = { x = 2, y = 0 }
+
+[cursor]
+style = { blinking = "On" }
+
+[mouse]
+hide_when_typing = true
