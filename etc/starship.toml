@@ -5,7 +5,7 @@ add_newline = false
 format = """
 $os[](bg:dark fg:black)\
 $directory[](bg:medium fg:dark)\
-$git_branch$git_status[](bg:black fg:medium)\
+$git_branch$git_status[](fg:medium)\
 ( ($shell )$all)\
 $fill\
 ([](fg:danger)$status[](fg:danger))\
