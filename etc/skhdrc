@@ -110,4 +110,4 @@ cmd + ctrl - return : alacritty-new-window
 cmd + ctrl + shift - h : alacritty-new-window htop
 
 # open mpv
-cmd - m : mpv --terminal=no $(pbpaste)
+cmd + ctrl + shift - m : mpv --terminal=no $(pbpaste)
