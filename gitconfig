@@ -5,12 +5,16 @@
     diff = delta --features=sides
     log = delta --features=sides
     show = delta --features=sides
+    blame = delta
 
 [interactive]
     diffFilter = delta --color-only
 
 [delta]
     dark = true
+    hyperlinks = true
+    blame-code-style = syntax
+    blame-palette = "#00002a #00004e #000075 #00009c #0000c3 #2a00c3 #5400c3 #7f00c3 #aa00c3 #d400c3 #d400aa #d4007f"
 
 [delta "sides"]
     side-by-side = true
