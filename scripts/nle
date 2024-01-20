@@ -1,0 +1,57 @@
+#!/usr/bin/env -S gawk -f
+
+# NLE: nmap log enhancer
+# Enhances the output of Nmap by adding colors and other formatting.
+
+@include "color.awk"
+
+BEGIN {
+    LINT="fatal"
+}
+
+/^Starting Nmap / {
+    print color::ize(color::bri_blue, $0)
+    next
+}
+
+match($0, /^(Nmap scan report for )(.+)$/, ms) {
+    print "\n" ms[1] color::ize(color::cyan, ms[2])
+    next
+}
+
+match($0, /^Host is ([a-z]+)(.*)$/, ms) {
+    c = color::yellow
+    if (ms[1] == "up") {
+        c = color::green
+    } else if (ms[1] == "down") {
+        c = color::red
+    }
+    print "Host " color::ize(c, "is "ms[1]) ms[2]
+    next
+}
+
+match($0, /^MAC Address: ([0-9A-F:]+) \((.+)\)$/, ms) {
+    print "MAC Address: " color::ize(color::yellow, ms[1]) \
+        " (" color::ize(color::magenta, ms[2]) ")"
+    next
+}
+
+match($0, /^([0-9]+)\/tcp\s+(open|closed|filtered)\s+(.+)$/, ms) {
+    c = color::yellow
+    if (ms[2] == "open") {
+        c = color::green
+    } else if (ms[2] == "closed") {
+        c = color::red
+    }
+    print ms[1] "/tcp " color::ize(c, ms[2]) " " ms[3]
+    next
+}
+
+/^Nmap done: / {
+    print "\n" color::ize(color::bri_blue, $0)
+    next
+}
+
+{
+    print
+}
