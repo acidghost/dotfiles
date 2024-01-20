@@ -1,4 +1,7 @@
-#!/usr/bin/gawk -f
+#!/usr/bin/env -S gawk -f
+
+# SLE: strace log enhancer
+# Enhances strace logs with colors and additional information like process parents.
 
 @include "color.awk"
 
