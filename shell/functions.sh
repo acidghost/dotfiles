@@ -250,6 +250,30 @@ n() {
     fi
 }
 
+bat() {
+    if ! type bat &>/dev/null; then
+        echo >&2 "bat is not installed"
+        return 1
+    fi
+
+    local file_args=0 arg
+    for arg in "$@"; do
+        if [ -f "$arg" ]; then
+            ((file_args++))
+        fi
+    done
+
+    if [[ $file_args -gt 1 ]]; then
+        local style
+        if [ -n "$BAT_STYLE" ]; then
+            style="$BAT_STYLE,"
+        fi
+        command bat --style="${style}header" "$@"
+    else
+        command bat "$@"
+    fi
+}
+
 # Platform specific
 case $OSTYPE in
 linux*)
