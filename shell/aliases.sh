@@ -36,6 +36,8 @@ type jq &>/dev/null && alias jqc='jq --color-always'
 if ! type bat &>/dev/null && type batcat &>/dev/null; then alias bat=batcat; fi
 if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
 
+alias batpage='bat --paging=always'
+
 type lsd &>/dev/null && alias ls=lsd
 
 # Platform specific
