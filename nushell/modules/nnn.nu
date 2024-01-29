@@ -1,5 +1,5 @@
 # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
-export def-env n [...x] {
+export def --env n [...x] {
   let cfgHome = ($env | default $"($env.HOME)/.config" XDG_CONFIG_HOME | get XDG_CONFIG_HOME)
   $env.NNN_TMPFILE = $"($cfgHome)/nnn/.lastd"
 

@@ -10,7 +10,7 @@ export def fuck [
     TF_ALIAS: 'fuck'
     TF_SHELL_ALIASES: ($nu.scope.aliases
       | update expansion { |a| $a.expansion | lines | str join ' ' }
-      | format '{name}={expansion}' | to text)
+      | format pattern '{name}={expansion}' | to text)
     TF_HISTORY: (history | last 10 | get command | to text)
     PYTHONENCODING: 'utf-8'
   }
