@@ -17,7 +17,7 @@ unset i
 
 alias rgrep='rgrep --color=auto -n'
 alias tabcsv='column -s, -t'
-alias tabtsv='column -s"\t" -t'
+alias tabtsv="column -s$'\t' -t"
 
 for cmd in check exit; do
     # shellcheck disable=SC2139
