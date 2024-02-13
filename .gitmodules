@@ -11,3 +11,6 @@
 [submodule "antidote"]
 	path = antidote
 	url = https://github.com/mattmc3/antidote.git
+[submodule "ble.sh"]
+	path = ble.sh
+	url = https://github.com/akinomyoga/ble.sh.git
