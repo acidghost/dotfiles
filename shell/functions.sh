@@ -29,14 +29,6 @@ md-read-as-pdf() {
     rm "$tmpf" "$tmpf_pdf"
 }
 
-pdfread() {
-    zathura --fork "$@"
-}
-
-picshow() {
-    nohup sxiv "$@" >/dev/null &
-}
-
 _editor-help() {
     local ed=$1 init_q=$2 tags selection f
     case ${ed} in
