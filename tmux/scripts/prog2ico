@@ -12,6 +12,7 @@ case "$prog" in
     zsh|bash|sh|nu                  ) echo -n "" ;;
     vim|vimdiff                     ) echo -n "" ;;
     nvim                            ) echo -n "" ;;
+    hx                              ) echo -n "" ;;
     swipl                           ) echo -n "" ;;
     man                             ) echo -n "" ;;
     rizin                           ) echo -n "󱁆" ;;
@@ -34,6 +35,8 @@ case "$prog" in
     nnn|vifm                        ) echo -n "" ;;
     *emacs*                         ) echo -n "" ;;
     julia                           ) echo -n "" ;;
+    ruby                            ) echo -n "" ;;
+    node*|npm                       ) echo -n "" ;;
     delta                           ) echo -n "∆" ;;
     packer                          ) echo -n "" ;;
     mpv                             ) echo -n "" ;;
