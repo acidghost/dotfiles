@@ -1,8 +1,26 @@
 # shellcheck shell=bash
-# Aliases
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+alias ll='ls -lh'
+alias la='ls -Alh'
+alias l='ls -alh'
+
 alias ta='tmux attach'
 alias tat='tmux attach -t'
+alias ts='tmux new-session -s'
 alias tsh='tmux new-session -s "$(basename "$PWD")"'
+
+alias ga='git add'
+alias gd='git diff'
+alias gd='git diff --staged'
+alias gc='git commit'
+alias gf='git fetch'
+alias gl='git pull'
+alias gst='git status'
+alias glo='git log --oneline'
 
 alias e='$EDITOR'
 # alias objdump='objdump -M intel'
