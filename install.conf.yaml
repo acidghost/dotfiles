@@ -44,6 +44,7 @@
       fi
     description: Possibly making backup of existing zshrc
     quiet: true
+  - [make -C ble.sh, "Creating ble.sh script"]
 
 - link:
     ~/.amethyst:
