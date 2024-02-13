@@ -42,7 +42,10 @@
       if [ ! -L "$HOME/.zshrc" ] && [ -f "$HOME/.zshrc" ]; then
         mv "$HOME/.zshrc" "$HOME/.zshrc.dotfiles.bck"
       fi
-    description: Possibly making backup of existing zshrc
+      if [ ! -L "$HOME/.bashrc" ] && [ -f "$HOME/.bashrc" ]; then
+        mv "$HOME/.bashrc" "$HOME/.bashrc.dotfiles.bck"
+      fi
+    description: Possibly making backup of existing bashrc and zshrc
     quiet: true
   - [make -C ble.sh, "Creating ble.sh script"]
 
@@ -51,6 +54,7 @@
       path: etc/amethyst.json
       if: '[ $(uname) = Darwin ]'
     ~/.awk:
+    ~/.bashrc: bash/bashrc
     ~/Brewfile:
       path: etc/Brewfile
       if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
