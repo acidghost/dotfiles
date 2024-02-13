@@ -40,6 +40,8 @@ alias batpage='bat --paging=always'
 
 type lsd &>/dev/null && alias ls=lsd
 
+type kubectl &>/dev/null && alias k=kubectl
+
 # Platform specific
 case $OSTYPE in
 linux*)
