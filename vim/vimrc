@@ -165,8 +165,13 @@ let g:lightline = {
     \ 'enable': { 'tabline': 1, 'statusline': 1 },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'readonly', 'filename', 'modified', 'method' ],
+    \             [ 'readonly', 'relativepath', 'modified', 'method' ],
     \             [ 'obsession' ] ]
+    \ },
+    \ 'inactive': {
+    \   'left': [ [ 'relativepath' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \              [ 'percent' ] ]
     \ },
     \ 'component': {
     \   'obsession': '%{ObsessionStatus("", "")}',
