@@ -57,6 +57,10 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 # Locale settings
 if [ -z "$LANG" ]; then
-    export LC_CTYPE=en_US.UTF-8
-    export LC_ALL=en_US.UTF-8
+    if [ -f /.dockerenv ]; then
+        export LANG=C.UTF-8
+    else
+        export LC_CTYPE=en_US.UTF-8
+        export LC_ALL=en_US.UTF-8
+    fi
 fi
