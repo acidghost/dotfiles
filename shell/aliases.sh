@@ -15,7 +15,7 @@ alias tsh='tmux new-session -s "$(basename "$PWD")"'
 
 alias ga='git add'
 alias gd='git diff'
-alias gd='git diff --staged'
+alias gds='git diff --staged'
 alias gc='git commit'
 alias gf='git fetch'
 alias gl='git pull'
