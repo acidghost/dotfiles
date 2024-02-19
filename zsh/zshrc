@@ -32,8 +32,6 @@ bindkey -v
 zstyle :compinstall filename "$HOME/.zshrc"
 
 autoload -Uz compinit
-compinit
-
 autoload -U zmv
 
 WITH_ASDF=0
@@ -65,14 +63,11 @@ export FORGIT_DIFF_PAGER=$FORGIT_PAGER
 source ~/.dotfiles/antidote/antidote.zsh
 
 # set omz variables
-ZSH=$(antidote path ohmyzsh/ohmyzsh)
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
 # antidote does not run the main oh-my-zsh script, hence the completions folder
 # needs to be created and the fpath needs to be setup manually
 OMZ_COMPDIR="$ZSH_CACHE_DIR/completions"
 [[ -d "$OMZ_COMPDIR" ]] || mkdir -p "$OMZ_COMPDIR"
-
-antidote load
 
 if [ -n "$commands[brew]" ]; then
     fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
@@ -85,6 +80,9 @@ fi
 
 [ -d "$OMZ_COMPDIR" ] && fpath=("$OMZ_COMPDIR" $fpath)
 
+compinit
+
+antidote load
 
 if [ $PROMPT_PROVIDER = starship ]; then
     [ -n "$commands[starship]" ] && eval "$(starship init zsh)"
