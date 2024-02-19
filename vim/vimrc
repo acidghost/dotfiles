@@ -356,6 +356,7 @@ autocmd BufRead,BufNewFile *.td set ft=tablegen
 autocmd BufRead,BufNewFile *.rasi setf css
 autocmd BufRead,BufNewFile Brewfile,Vagrantfile setf ruby
 autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
+autocmd BufRead,BufNewFile devcontainer.json set ft=jsonc
 
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 autocmd FileType cpp setlocal shiftwidth=2 tabstop=2
