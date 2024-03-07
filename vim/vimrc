@@ -73,17 +73,19 @@ Plug 'dhruvasagar/vim-prosession'
 
 " Language / syntax support
 if has('nvim')
-if has('nvim-0.9.2')
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-elseif has('nvim-0.9.1')
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'commit': 'f197a15b0d1e8d555263af20add51450e5aaa1f0' }
-else
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate', 'commit': '63260da18bf273c76b8e2ea0db84eb901cab49ce' }
-endif
-if has('nvim-0.7')
-Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
-Plug 'Olical/conjure'
-endif
+    if has('nvim-0.9.2')
+        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+    elseif has('nvim-0.9.1')
+        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate',
+            \ 'commit': 'f197a15b0d1e8d555263af20add51450e5aaa1f0' }
+    else
+        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate',
+            \ 'commit': '63260da18bf273c76b8e2ea0db84eb901cab49ce' }
+    endif
+    if has('nvim-0.7')
+        Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
+        Plug 'Olical/conjure'
+    endif
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
@@ -92,15 +94,15 @@ Plug 'aliou/bats.vim'
 
 " Completions
 if has('nvim')
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
-if has('nvim-0.7')
-Plug 'hrsh7th/nvim-cmp'
-else
-Plug 'hrsh7th/nvim-cmp', { 'commit': 'bba6fb67fdafc0af7c5454058dfbabc2182741f4' }
-endif
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/nvim-cmp'
+    if has('nvim-0.7')
+        Plug 'hrsh7th/nvim-cmp'
+    else
+        Plug 'hrsh7th/nvim-cmp', { 'commit': 'bba6fb67fdafc0af7c5454058dfbabc2182741f4' }
+    endif
 endif
 
 if filereadable(expand("~/.vim/lsp_plugins.vim"))
@@ -114,7 +116,7 @@ Plug 'hrsh7th/vim-vsnip'
 endif
 
 if has('nvim-0.6')
-Plug 'github/copilot.vim'
+    Plug 'github/copilot.vim'
 endif
 
 Plug 'johnstef99/vim-nerdtree-syntax-highlight'
@@ -132,19 +134,18 @@ let maplocalleader = "<"
 
 " base16
 function! s:base16_customize() abort
-  call Base16hi("Identifier", g:base16_gui05, "", g:base16_cterm05, "", "none", "")
+    call Base16hi("Identifier", g:base16_gui05, "", g:base16_cterm05, "", "none", "")
 endfunction
 
 augroup on_change_colorschema
-  autocmd!
-  autocmd ColorScheme * call s:base16_customize()
+    autocmd!
+    autocmd ColorScheme * call s:base16_customize()
 augroup END
 
 if exists('$BASE16_THEME')
-    \ && (!exists('g:colors_name') 
-    \ || g:colors_name != 'base16-$BASE16_THEME')
-  let base16colorspace=256
-  colorscheme base16-$BASE16_THEME
+    \ && (!exists('g:colors_name') || g:colors_name != 'base16-$BASE16_THEME')
+    let base16colorspace=256
+    colorscheme base16-$BASE16_THEME
 endif
 
 " Save your swp files to a less annoying place than the current directory.
@@ -208,24 +209,24 @@ let g:prosession_on_startup = 1
 let g:vista_update_on_text_changed = 1
 let g:vista_fzf_preview = ['right:50%']
 function! NearestMethodOrFunction() abort
-  return get(b:, 'vista_nearest_method_or_function', '')
+    return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
 " devicons
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
 function! DevIconsFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
 endfunction
 function! DevIconsFileformat()
-  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
 " FZF
 command! -bang -nargs=* RgPreview
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+    \   fzf#vim#with_preview(), <bang>0)
 
 """ vim-latex
 let g:tex_flavor='latex'
@@ -381,45 +382,45 @@ command! DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_
         \ | diffthis | wincmd p | diffthis
 
 function! MoveToPrevTab()
-  "there is only one window
-  if tabpagenr('$') == 1 && winnr('$') == 1
-    return
-  endif
-  "preparing new window
-  let l:tab_nr = tabpagenr('$')
-  let l:cur_buf = bufnr('%')
-  if tabpagenr() != 1
-    close!
-    if l:tab_nr == tabpagenr('$')
-      tabprev
+    "there is only one window
+    if tabpagenr('$') == 1 && winnr('$') == 1
+        return
     endif
-    sp
-  else
-    close!
-    exe "0tabnew"
-  endif
-  "opening current buffer in new window
-  exe "b".l:cur_buf
+    "preparing new window
+    let l:tab_nr = tabpagenr('$')
+    let l:cur_buf = bufnr('%')
+    if tabpagenr() != 1
+        close!
+        if l:tab_nr == tabpagenr('$')
+            tabprev
+        endif
+        sp
+    else
+        close!
+        exe "0tabnew"
+    endif
+    "opening current buffer in new window
+    exe "b".l:cur_buf
 endfunc
 
 function! MoveToNextTab()
-  "there is only one window
-  if tabpagenr('$') == 1 && winnr('$') == 1
-    return
-  endif
-  "preparing new window
-  let l:tab_nr = tabpagenr('$')
-  let l:cur_buf = bufnr('%')
-  if tabpagenr() < tab_nr
-    close!
-    if l:tab_nr == tabpagenr('$')
-      tabnext
+    "there is only one window
+    if tabpagenr('$') == 1 && winnr('$') == 1
+        return
     endif
-    sp
-  else
-    close!
-    tabnew
-  endif
-  "opening current buffer in new window
-  exe "b".l:cur_buf
+    "preparing new window
+    let l:tab_nr = tabpagenr('$')
+    let l:cur_buf = bufnr('%')
+    if tabpagenr() < tab_nr
+        close!
+        if l:tab_nr == tabpagenr('$')
+            tabnext
+        endif
+        sp
+    else
+        close!
+        tabnew
+    endif
+    "opening current buffer in new window
+    exe "b".l:cur_buf
 endfunc
