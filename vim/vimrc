@@ -358,6 +358,9 @@ imap <silent> <c-p> <Plug>(completion_trigger)
 nnoremap <C-w>. :call MoveToNextTab()<CR><C-w>H
 nnoremap <C-w>, :call MoveToPrevTab()<CR><C-w>H
 
+nnoremap <C-w>S :call Scratch(0)<CR>
+nnoremap <C-w><C-s> :call Scratch(1)<CR>
+
 autocmd BufRead,BufNewFile $HOME/.aliases set ft=sh
 autocmd BufRead,BufNewFile $HOME/.path set ft=sh
 autocmd BufRead,BufNewFile *.fc set ft=fennec
@@ -424,3 +427,26 @@ function! MoveToNextTab()
     "opening current buffer in new window
     exe "b".l:cur_buf
 endfunc
+
+let g:scratch_bufname = 'scratch'
+function! Scratch(fresh)
+    if bufname() == g:scratch_bufname
+        return
+    endif
+    let l:scratch = bufnr(g:scratch_bufname)
+    if l:scratch != -1
+        if a:fresh == 1
+            exe l:scratch . 'bwipe'
+        else
+            exe 'vsplit' g:scratch_bufname
+            return
+        endif
+    endif
+    vsplit
+    noswapfile hide enew
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    "setlocal nobuflisted
+    "lcd ~
+    exe 'file' g:scratch_bufname
+endfunction
