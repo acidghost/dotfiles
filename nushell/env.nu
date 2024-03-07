@@ -110,13 +110,7 @@ if ('~/.config/broot/launcher/nushell/br' | path exists) {
 }
 
 if (program exists zoxide) {
-  # XXX: patches
-  # - https://github.com/ajeetdsouza/zoxide/issues/630
-  # - https://github.com/ajeetdsouza/zoxide/issues/662
-  zoxide init nushell
-    | str replace --all "-- $rest" "-- ...$rest"
-    | str replace --all "def-env" "def --env"
-    | save -f ~/.cache/nushell/zoxide.nu
+  zoxide init nushell | save -f ~/.cache/nushell/zoxide.nu
   "source ~/.cache/nushell/zoxide.nu
   $env.config = ($env.config | update keybindings { |c|
     $c.keybindings | append {
