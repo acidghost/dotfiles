@@ -243,9 +243,14 @@ n() {
 }
 
 bat() {
+    local cmd=bat
     if ! type bat &>/dev/null; then
-        echo >&2 "bat is not installed"
-        return 1
+        # installed as batcat in some systems (e.g. Ubuntu)
+        if ! type batcat &>/dev/null; then
+            echo >&2 "bat is not installed"
+            return 1
+        fi
+        cmd=batcat
     fi
 
     local file_args=0 arg
@@ -260,10 +265,17 @@ bat() {
         if [ -n "$BAT_STYLE" ]; then
             style="$BAT_STYLE,"
         fi
-        command bat --style="${style}header" "$@"
+        command $cmd --style="${style}header" "$@"
     else
-        command bat "$@"
+        command $cmd "$@"
     fi
+}
+
+which-bat() {
+    local cmd
+    for cmd in "$@"; do
+        which "$cmd" | bat --language=sh
+    done
 }
 
 # Platform specific

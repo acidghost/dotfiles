@@ -51,10 +51,9 @@ type jless &>/dev/null && alias yless='jless --yaml'
 type jq &>/dev/null && alias jqc='jq --color-always'
 
 # set aliases for programs packaged under a different name (e.g. in ubuntu)
-if ! type bat &>/dev/null && type batcat &>/dev/null; then alias bat=batcat; fi
 if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
 
-alias batpage='bat --paging=always'
+type bat &>/dev/null && alias batpage='bat --paging=always'
 
 type lsd &>/dev/null && alias ls=lsd
 
