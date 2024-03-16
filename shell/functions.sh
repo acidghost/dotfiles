@@ -244,9 +244,9 @@ n() {
 
 bat() {
     local cmd=bat
-    if ! type bat &>/dev/null; then
+    if ! type -P bat &>/dev/null; then
         # installed as batcat in some systems (e.g. Ubuntu)
-        if ! type batcat &>/dev/null; then
+        if ! type -P batcat &>/dev/null; then
             echo >&2 "bat is not installed"
             return 1
         fi
