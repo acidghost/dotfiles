@@ -244,9 +244,9 @@ n() {
 
 bat() {
     local cmd=bat
-    if ! type -P bat &>/dev/null; then
+    if ! which-path bat &>/dev/null; then
         # installed as batcat in some systems (e.g. Ubuntu)
-        if ! type -P batcat &>/dev/null; then
+        if ! which-path batcat &>/dev/null; then
             echo >&2 "bat is not installed"
             return 1
         fi
@@ -268,6 +268,17 @@ bat() {
         command $cmd --style="${style}header" "$@"
     else
         command $cmd "$@"
+    fi
+}
+
+which-path() {
+    if [ -n "$ZSH_VERSION" ]; then
+        whence -p "$@"
+    elif [ -n "$BASH_VERSINFO" ]; then
+        type -P "$@"
+    else
+        echo >&2 "Unsupported shell"
+        return 1
     fi
 }
 
