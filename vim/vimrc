@@ -361,6 +361,19 @@ nnoremap <C-w>, :call MoveToPrevTab()<CR><C-w>H
 nnoremap <C-w>S :call Scratch(0)<CR>
 nnoremap <C-w><C-s> :call Scratch(1)<CR>
 
+nmap <Leader>lce :Copilot enable<CR>
+nmap <Leader>lcd :Copilot disable<CR>
+nmap <Leader>lcs :Copilot status<CR>
+nmap <Leader>lcp :Copilot panel<CR>
+
+imap <C-]>         <Plug>(copilot-dismiss)
+imap <M-C-Right>   <Plug>(copilot-accept-line)
+imap <M-Right>     <Plug>(copilot-accept-word)
+imap <M-Bslash>    <Plug>(copilot-suggest)
+imap <M-[>         <Plug>(copilot-previous)
+imap <M-]>         <Plug>(copilot-next)
+
+
 autocmd BufRead,BufNewFile $HOME/.aliases set ft=sh
 autocmd BufRead,BufNewFile $HOME/.path set ft=sh
 autocmd BufRead,BufNewFile *.fc set ft=fennec
