@@ -239,6 +239,7 @@ require'nvim-treesitter.configs'.setup {
         "awk",
         "c",
         "go",
+        "just",
         "latex",
         "llvm",
         "lua",
@@ -383,6 +384,7 @@ autocmd BufRead,BufNewFile *.rasi setf css
 autocmd BufRead,BufNewFile Brewfile,Vagrantfile setf ruby
 autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
 autocmd BufRead,BufNewFile devcontainer.json set ft=jsonc
+au VimEnter,BufWinEnter,BufRead,BufNewFile {.,}justfile\c,*.just setlocal filetype=just | setlocal commentstring=#\ %s
 
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 autocmd FileType cpp setlocal shiftwidth=2 tabstop=2
