@@ -122,9 +122,6 @@
     ~/.scripts/tmux-list-keys: tmux/scripts/tmux-list-keys
     ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
     ~/.shell:
-    ~/.skhdrc:
-      path: etc/skhdrc
-      if: '[ "$(uname)" = Darwin ]'
     ~/.p10k.zsh: zsh/p10k.zsh
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/scripts:
