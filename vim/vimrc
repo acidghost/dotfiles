@@ -292,9 +292,7 @@ let g:conjure#filetypes = [
 
 " copilot
 let g:copilot_filetypes = {
-    \'markdown': v:false,
-    \'tex': v:false,
-    \'text': v:false,
+    \'*': v:false,
     \}
 
 
