@@ -65,6 +65,26 @@ _editor-help() {
 alias vim-help="_editor-help vim"
 alias nvim-help="_editor-help nvim"
 
+nvim-copilot() {
+    if ! which-path nvim &>/dev/null; then
+        echo >&2 "nvim is not installed"
+        return 1
+    fi
+
+    local args=() arg
+    for arg in "$@"; do
+        if [[ $arg == ---* ]]; then
+            args+=("+:let g:copilot_filetypes['${arg#---}']=v:true")
+        else
+            args+=("$arg")
+        fi
+    done
+
+    command nvim "${args[@]}"
+}
+
+alias nvim-copilot-all="nvim-copilot ---\*"
+
 # http://unix.stackexchange.com/a/269085/67282
 hex-to-256() {
     local hex=$1 r g b
