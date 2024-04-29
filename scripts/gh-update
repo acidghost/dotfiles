@@ -143,7 +143,7 @@ def print_assets(release: dict) -> Optional[int]:
     this_system = uname.system.lower()
     this_machine = uname.machine.lower()
     ARCH_X86 = ["x86_64", "amd64"]
-    ARCH_ARM = ["aaarch64", "arm64"]
+    ARCH_ARM = ["aarch64", "arm64"]
     if this_machine in ARCH_X86:
         this_machine = ARCH_X86
     elif this_machine in ARCH_ARM:
