@@ -19,6 +19,7 @@ class CLI(NamedTuple):
 
 KNOWN_REPOS = {
     "atuin": ("atuinsh/atuin", "atuin"),
+    "delta": ("dandavison/delta", "delta"),
     "jless": ("PaulJuliusMartinez/jless", "jless"),
     "lsd": ("lsd-rs/lsd", "lsd"),
     "zoxide": ("ajeetdsouza/zoxide", "zoxide"),
