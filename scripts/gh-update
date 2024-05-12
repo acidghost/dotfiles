@@ -4,7 +4,7 @@ import subprocess as sp
 from glob import glob
 from pathlib import Path
 from platform import uname
-from typing import Callable, NamedTuple, List, Optional, Union
+from typing import NamedTuple, Optional, Union
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -100,9 +100,7 @@ def main(args: CLI) -> int:
     else:
         suffixes = Path(asset["name"]).suffixes
         if suffixes[-2:] == [".tar", ".gz"]:
-            process_asset = from_archive_tar("-z")
-        if suffixes[-1] == ".tbz":
-            process_asset = from_archive_tar("-j")
+            process_asset = from_archive_tar
         elif suffixes[-1] == ".gz":
             process_asset = from_gzip
         elif suffixes[-1] == ".zip":
@@ -110,7 +108,7 @@ def main(args: CLI) -> int:
             if uname_system == "Linux":
                 process_asset = from_archive_zip
             elif uname_system == "Darwin":
-                process_asset = from_archive_tar("-z")
+                process_asset = from_archive_tar
             else:
                 print(f"[!] I don't know how to handle .zip in {uname_system}")
                 return 1
@@ -190,27 +188,24 @@ def prompt_asset(
             continue
 
 
-def from_archive_tar(*flags: str) -> Callable[[CLI, bytes, str], Optional[int]]:
-    def fn(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
-        print(f"[-] Extracting with 'tar -x'")
-        sp.run(["tar", "-x", *flags, "-f", "-", "-C", tmp], check=True, input=asset)
+def from_archive_tar(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
+    print(f"[-] Extracting with 'tar -z'")
+    sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=asset)
 
-        files = [
-            f
-            for f in glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
-            if os.path.isfile(f)
-        ]
+    files = [
+        f
+        for f in glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
+        if os.path.isfile(f)
+    ]
 
-        if len(files) == 0:
-            print(f"[!] No file matches the glob **/{args.dst_filename}")
-            return 1
+    if len(files) == 0:
+        print(f"[!] No file matches the glob **/{args.dst_filename}")
+        return 1
 
-        print(f"[-] Found {files}")
-        sp.run(["chmod", "+x", *files], check=True)
-        print(f"[-] Moving them to {args.dst_dir}")
-        sp.run(["cp", *files, str(args.dst_dir)], check=True)
-
-    return fn
+    print(f"[-] Found {files}")
+    sp.run(["chmod", "+x", *files], check=True)
+    print(f"[-] Moving them to {args.dst_dir}")
+    sp.run(["cp", *files, str(args.dst_dir)], check=True)
 
 
 def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
