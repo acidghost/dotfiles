@@ -61,6 +61,7 @@
     ~/.config/alacritty:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/atuin:
+    ~/.config/btop:
     ~/.config/dotfiles-env/is_lightweight:
       path: dotfiles-env/is_lightweight
       if: '[ "$DOTFILES_IS_LIGHTWEIGHT" = 1 ]'
