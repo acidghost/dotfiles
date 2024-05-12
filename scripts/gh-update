@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, json, platform, tempfile
+import argparse, json, os, platform, tempfile
 import subprocess as sp
 from glob import glob
 from pathlib import Path
@@ -195,7 +195,12 @@ def from_archive_tar(*flags: str) -> Callable[[CLI, bytes, str], Optional[int]]:
         print(f"[-] Extracting with 'tar -x'")
         sp.run(["tar", "-x", *flags, "-f", "-", "-C", tmp], check=True, input=asset)
 
-        files = glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
+        files = [
+            f
+            for f in glob(f"{tmp}/**/{args.dst_filename}", recursive=True)
+            if os.path.isfile(f)
+        ]
+
         if len(files) == 0:
             print(f"[!] No file matches the glob **/{args.dst_filename}")
             return 1
@@ -218,7 +223,12 @@ def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     out_p = tmp_p / "out"
     sp.run(["unzip", "-d", out_p, zipfile], check=True)
 
-    files = glob(str(out_p / "**" / args.dst_filename), recursive=True)
+    files = [
+        f
+        for f in glob(str(out_p / "**" / args.dst_filename), recursive=True)
+        if os.path.isfile(f)
+    ]
+
     if len(files) == 0:
         print(f"[!] No file matches the glob **/{args.dst_filename}")
         return 1
