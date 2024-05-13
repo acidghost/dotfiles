@@ -49,6 +49,7 @@ brew "universal-ctags"
 brew "alacritty"                if WITH_APPS
 brew "atuin"
 brew "bat"
+brew "btop"
 brew "chafa"
 brew "dust"
 brew "fd"
