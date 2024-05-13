@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse, json, os, platform, tempfile
 import subprocess as sp
+from functools import partial
 from glob import glob
 from pathlib import Path
 from platform import uname
@@ -103,6 +104,8 @@ def main(args: CLI) -> int:
             process_asset = from_archive_tar
         elif suffixes[-1] == ".gz":
             process_asset = from_gzip
+        elif suffixes[-1] == ".tbz":
+            process_asset = partial(from_archive_tar, flags="j")
         elif suffixes[-1] == ".zip":
             uname_system = uname().system
             if uname_system == "Linux":
@@ -188,9 +191,11 @@ def prompt_asset(
             continue
 
 
-def from_archive_tar(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
-    print(f"[-] Extracting with 'tar -z'")
-    sp.run(["tar", "-xzf", "-", "-C", tmp], check=True, input=asset)
+def from_archive_tar(
+    args: CLI, asset: bytes, tmp: str, flags: str = "z"
+) -> Optional[int]:
+    print(f"[-] Extracting with 'tar -{flags}'")
+    sp.run(["tar", f"-x{flags}f", "-", "-C", tmp], check=True, input=asset)
 
     files = [
         f
