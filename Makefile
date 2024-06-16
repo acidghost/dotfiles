@@ -29,6 +29,11 @@ fedora-server: DOTFILES_WITH_APPS=0
 fedora-server: DOTFILES_WITH_BREW=0
 fedora-server: _dotfiles ## Setup Fedora server
 
+dev-server: DOTFILES_WITH_APPS=0
+dev-server: DOTFILES_WITH_BREW=0
+dev-server: DOTFILES_WITH_VIRT=0
+dev-server: _dotfiles ## Setup dev server
+
 unix-server: DOTFILES_WITH_APPS=0
 unix-server: DOTFILES_WITH_LSP=0
 unix-server: _dotfiles ## Setup UNIX server
