@@ -5,7 +5,7 @@ from functools import partial
 from glob import glob
 from pathlib import Path
 from platform import uname
-from typing import NamedTuple, Optional, Union
+from typing import List, NamedTuple, Optional, Union
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -212,7 +212,7 @@ def from_archive_tar(
     print(f"[-] Found {files}")
     sp.run(["chmod", "+x", *files], check=True)
     print(f"[-] Moving them to {args.dst_dir}")
-    sp.run(["cp", *files, str(args.dst_dir)], check=True)
+    copy_archive_contents(args.dst_dir, files)
 
 
 def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
@@ -238,7 +238,47 @@ def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     print(f"[-] Found {files}")
     sp.run(["chmod", "+x", *files], check=True)
     print(f"[-] Moving them to {args.dst_dir}")
-    sp.run(["cp", *files, str(args.dst_dir)], check=True)
+    copy_archive_contents(args.dst_dir, files)
+
+
+def copy_archive_contents(dst_dir: Path, files: List[str]):
+    group_dupes = {}
+    for file in files:
+        file = Path(file)
+        if file.name in group_dupes:
+            group_dupes[file.name].append(file)
+        else:
+            group_dupes[file.name] = [file]
+
+    sp.run(
+        [
+            "cp",
+            "-v",
+            *[
+                str(prompt_dedupe(dupes) if len(dupes) > 1 else dupes[0])
+                for dupes in group_dupes.values()
+            ],
+            str(dst_dir),
+        ],
+        check=True,
+    )
+
+
+def prompt_dedupe(files: List[Path]) -> Path:
+    print(f"[!] Duplicate file names for {files[0].name}")
+    for i, file in enumerate(files):
+        print(f"    {i:2d} {file}")
+
+    while True:
+        i = input("[?] Which should I move? ")
+        try:
+            i = int(i)
+        except ValueError:
+            continue
+        try:
+            return files[i]
+        except IndexError:
+            continue
 
 
 def from_gzip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
