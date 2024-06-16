@@ -55,7 +55,12 @@ if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
 
 type bat &>/dev/null && alias batpage='bat --paging=always'
 
-type lsd &>/dev/null && alias ls=lsd
+if type lsd &>/dev/null; then
+    alias ls=lsd
+    alias lt='lsd --tree'
+    alias llt='lsd --tree -lh'
+    alias lat='lsd --tree -Alh'
+fi
 
 type kubectl &>/dev/null && alias k=kubectl
 
