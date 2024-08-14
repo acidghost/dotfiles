@@ -57,7 +57,8 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 # Locale settings
 if [ -z "$LANG" ]; then
-    if [ -f /.dockerenv ]; then
+    # $container is defined in /etc/environment
+    if [ "$container" = podman ] || [ -f /.dockerenv ]; then
         export LANG=C.UTF-8
     else
         export LC_CTYPE=en_US.UTF-8
