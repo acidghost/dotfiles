@@ -9,7 +9,7 @@ export def main [
     if not ($time | is-empty) { $time } else
     if not ($rank | is-empty) { $rank } else
     { error make { msg: 'No argument given' } })
-  commandline --replace $"cd ($path)"
+  commandline edit $"cd ($path)"
 }
 
 def "nu-complete z"   [] { z list    | z-list-complete frecency }
@@ -53,7 +53,7 @@ export def "z fzf" [
   let sel = $sel.0
   if $dry_run { return $sel }
 
-  commandline --replace $"cd ($sel.path)"
+  commandline edit $"cd ($sel.path)"
 }
 
 def "z store" [dirs: table] {
