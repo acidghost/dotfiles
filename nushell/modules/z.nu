@@ -20,7 +20,7 @@ def z-list-complete [attr: string] {
   reverse | each { |x| { value: $x.path description: ($x | get $attr) } }
 }
 
-def epochseconds [] { date now | date format %s | into int }
+def epochseconds [] { date now | format date %s | into int }
 
 # List all directories by 'frecency'.
 export def "z list" [
@@ -58,7 +58,7 @@ export def "z fzf" [
 
 def "z store" [dirs: table] {
   let csv = ($dirs | to csv -s '|' -n)
-  let tmp = (mktemp $"($env.HOME)/.z.nu.XXXXXX" | str trim)
+  let tmp = (mktemp -p $env.HOME .z.nu.XXXXXX | str trim)
   try {
     $csv | save -f $tmp
   } catch { |e|
