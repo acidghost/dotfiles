@@ -12,7 +12,6 @@ $env.config = {
     metric: true # true => KB, MB, GB (ISO standard), false => KiB, MiB, GiB (Windows standard)
   }
   edit_mode: vi
-  shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
 
   hooks: {
     display_output: {
@@ -288,7 +287,7 @@ def "history fzf" [term: string = ""] {
   history | get command | reverse | uniq | str join (char -i 0)
     | fzf --read0 --reverse --height '40%' -q $term
     | decode utf-8 | str trim
-    | commandline $in
+    | commandline edit $in
 }
 
 # Get the current Git branch name (from oh-my-zsh)

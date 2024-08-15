@@ -14,12 +14,12 @@ export def fuck [
     TF_HISTORY: (history | last 10 | get command | to text)
     PYTHONENCODING: 'utf-8'
   }
-  commandline --replace (if $yes {
+  commandline edit (if $yes {
     # Stdout from thefuck is not printed to nushell's stdout
     do { ^thefuck THEFUCK_ARGUMENT_PLACEHOLDER ($args | append '--yes') }
   } else {
     # Allow the user to interact with thefuck
-    run-external --redirect-stdout thefuck THEFUCK_ARGUMENT_PLACEHOLDER $args
+    ^thefuck THEFUCK_ARGUMENT_PLACEHOLDER $args
   })
 }
 

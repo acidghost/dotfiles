@@ -11,7 +11,7 @@ export def list [
   if $cask {
     $args = ($args | append "--cask")
   }
-  ^brew list $args | lines | wrap name
+  ^brew list ...$args | lines | wrap name
 }
 
 # List installed formulae.
