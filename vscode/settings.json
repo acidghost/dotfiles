@@ -252,8 +252,9 @@
             }
         }
     },
-    "workbench.colorTheme": "Base16 Outrun Dark",
+    "workbench.colorTheme": "Abyss",
     "cmake.statusbar.visibility": "icon",
+    "cmake.showOptionsMovedNotification": false,
     "base16.generator.activatedThemes": [
         "base16-outrun-dark",
         "base16-outrun-light"
@@ -266,14 +267,19 @@
         "markdown": false,
         "scminput": false
     },
+    "github.copilot.editor.enableAutoCompletions": true,
     "notebook.output.textLineLimit": 100,
     "notebook.output.scrolling": true,
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "right"
+    },
     "settingsSync.ignoredSettings": [
         "-dev.containers.dockerPath"
     ],
     "[python]": {
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnType": true,
-        "editor.wordBasedSuggestions": false
+        "editor.wordBasedSuggestions": "off"
     }
 }
