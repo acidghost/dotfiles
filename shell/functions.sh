@@ -309,6 +309,38 @@ which-bat() {
     done
 }
 
+devcontainer-up() {
+    local args=()
+    if type podman-devcontainer-wrapper &>/dev/null; then
+        args+=(--docker-path podman-devcontainer-wrapper)
+    fi
+    devcontainer up "${args[@]}" \
+        --dotfiles-repository 'https://github.com/acidghost/dotfiles' \
+        --dotfiles-target-path '~/.dotfiles' \
+        --log-level debug \
+        --workspace-folder . \
+        "$@"
+}
+
+devcontainer-build() {
+    local args=()
+    if type podman-devcontainer-wrapper &>/dev/null; then
+        args+=(--docker-path podman-devcontainer-wrapper)
+    fi
+    devcontainer build "${args[@]}" \
+        --log-level debug \
+        --workspace-folder . \
+        "$@"
+}
+
+devcontainer-exec() {
+    local args=()
+    if type podman-devcontainer-wrapper &>/dev/null; then
+        args+=(--docker-path podman-devcontainer-wrapper)
+    fi
+    devcontainer exec "${args[@]}" --workspace-folder . "$@"
+}
+
 # Platform specific
 case $OSTYPE in
 linux*)
