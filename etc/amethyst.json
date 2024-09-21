@@ -2,8 +2,10 @@
     "layouts": [
         "tall",
         "widescreen-tall",
+        "column",
         "row",
-        "fullscreen"
+        "fullscreen",
+        "floating"
     ],
     "Valid modifiers are": [
         "option",
