@@ -343,6 +343,13 @@ devcontainer-exec() {
     devcontainer exec "${args[@]}" --workspace-folder . "$@"
 }
 
+container-forward-port() {
+    local CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
+    local container=$1 port=$2 proto=${3:-tcp}
+    socat "$proto-listen:$port" \
+        system:"$CONTAINER_ENGINE exec -i '$container' socat - '$proto\:localhost\:$port'"
+}
+
 # Platform specific
 case $OSTYPE in
 linux*)
