@@ -551,5 +551,3 @@ handle_mime "${MIMETYPE}"
 [ "$BIN" -ne 0 ] && [ -x "${FPATH}" ] && handle_bin
 handle_blocked "${MIMETYPE}"
 handle_fallback
-
-exit 1
