@@ -292,6 +292,7 @@ bat() {
 }
 
 which-path() {
+    # shellcheck disable=SC2128
     if [ -n "$ZSH_VERSION" ]; then
         whence -p "$@"
     elif [ -n "$BASH_VERSINFO" ]; then
@@ -314,6 +315,7 @@ devcontainer-up() {
     if type podman-devcontainer-wrapper &>/dev/null; then
         args+=(--docker-path podman-devcontainer-wrapper)
     fi
+    # shellcheck disable=SC2088
     devcontainer up "${args[@]}" \
         --dotfiles-repository 'https://github.com/acidghost/dotfiles' \
         --dotfiles-target-path '~/.dotfiles' \
