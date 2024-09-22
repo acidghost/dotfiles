@@ -15,7 +15,7 @@ case "$prog" in
     nvim                            ) echo -n "" ;;
     hx                              ) echo -n "" ;;
     swipl                           ) echo -n "" ;;
-    man                             ) echo -n "" ;;
+    man|glow*                       ) echo -n "" ;;
     rizin                           ) echo -n "󱁆" ;;
     gdb|rr                          ) echo -n "" ;;
     bat                             ) echo -n "" ;;
