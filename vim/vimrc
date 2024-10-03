@@ -122,6 +122,10 @@ endif
 Plug 'johnstef99/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 
+if has('nvim-0.8')
+    Plug 'zk-org/zk-nvim'
+endif
+
 call plug#end()
 
 
@@ -295,6 +299,16 @@ let g:copilot_filetypes = {
     \'*': v:false,
     \}
 
+" zk-nvim
+if has('nvim')
+lua << EOF
+require("zk").setup({
+    picker = "fzf",
+})
+EOF
+endif
+
+
 
 """ Key mappings
 
@@ -371,6 +385,16 @@ imap <M-Right>     <Plug>(copilot-accept-word)
 imap <M-Bslash>    <Plug>(copilot-suggest)
 imap <M-[>         <Plug>(copilot-previous)
 imap <M-]>         <Plug>(copilot-next)
+
+nmap <Leader>zo    :ZkNotes { sort = { "modified" }, excludeHrefs = { "daily" } }<CR>
+nmap <Leader>zD    :ZkNotes { sort = { "path-" }, hrefs = { "daily" } }<CR>
+nmap <Leader>zi    :ZkNotes { sort = { "modified" }, tags = { "issue" } }<CR>
+nmap <Leader>znn   :ZkNew<CR>
+vmap <Leader>znn   :'<,'>ZkNewFromTitleSelection<CR>
+vmap <Leader>zni   :'<,'>ZkNewFromTitleSelection { template = "issue.md" }<CR>
+nmap <Leader>zd    :ZkNew { dir = "daily" }<CR>
+nmap <Leader>zt    :ZkTags<CR>
+nmap <Leader>zx    :ZkIndex<CR>
 
 
 autocmd BufRead,BufNewFile $HOME/.aliases set ft=sh
