@@ -350,6 +350,57 @@ container-forward-port() {
         system:"$CONTAINER_ENGINE exec -i '$container' socat - '$proto\:localhost\:$port'"
 }
 
+if type zk &>/dev/null; then
+    zkj() {
+        local note
+        note="$ZK_NOTEBOOK_DIR/daily/$(date +'%Y-%m-%d').md"
+        if [ ! -f "$note" ]; then
+            zk daily
+        fi
+        printf -- '- 📝 %s %s\n' "$(date +'%H:%M')" "$*" >>"$note"
+    }
+fi
+
+if type pomodoro &>/dev/null; then
+    posw() {
+        local duration=${1:-25}
+        [ $# -gt 0 ] && shift
+        bash -c \
+            "trap 'echo \"  done\"; pomodoro finish' EXIT \
+            && pomodoro start -d\"$duration\" $* --wait"
+    }
+    pohd() {
+        pomodoro history -ojson \
+            | jq \
+                --arg midnight \
+                "$(date -juf '%Y-%m-%dT%T' "$(date +'%Y-%m-%d')T00:00:00" '+%s')" \
+                '[
+                    .pomodoros[] |
+                        select(
+                            (.start_time |
+                                split("+") | first | strptime("%Y-%m-%dT%T") | mktime
+                            ) >= ($midnight | tonumber)
+                        ) | .duration
+                ] | add'
+    }
+    pohw() {
+        pomodoro history -ojson \
+            | jq \
+                --arg monday \
+                "$(date -juf '%Y-%m-%dT%T' "$(date -v-monday +'%Y-%m-%d')T00:00:00" '+%s')" \
+                --arg saturday \
+                "$(date -juf '%Y-%m-%dT%T' "$(date -v+saturday +'%Y-%m-%d')T00:00:00" '+%s')" \
+                '[
+                    .pomodoros[] |
+                        select(
+                            (.start_time |
+                                split("+") | first | strptime("%Y-%m-%dT%T") | mktime
+                            ) | (. >= ($monday | tonumber) and . < ($saturday | tonumber))
+                        ) | .duration
+                ] | add'
+    }
+fi
+
 # Platform specific
 case $OSTYPE in
 linux*)

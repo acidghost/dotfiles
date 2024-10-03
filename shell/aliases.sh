@@ -64,6 +64,26 @@ fi
 
 type kubectl &>/dev/null && alias k=kubectl
 
+alias today='date +"%Y-%m-%d"'
+
+if type zk &>/dev/null; then
+    alias zke='zk edit -ix daily'
+    alias zked='zk edit -i'
+    alias zki='zk index'
+    alias zkl='zk list'
+    alias zkli='zk list -i'
+    alias zkd='zk daily'
+    alias zkcd='cd "$ZK_NOTEBOOK_DIR"'
+fi
+
+if type pomodoro &>/dev/null; then
+    alias po=pomodoro
+    alias pos='pomodoro start'
+    alias pob='pomodoro break'
+    alias poh='pomodoro history'
+    alias pohj='pomodoro history -o json'
+fi
+
 # Platform specific
 case $OSTYPE in
 linux*)
