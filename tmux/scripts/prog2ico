@@ -13,7 +13,7 @@ case "$prog" in
     zsh|bash|sh|nu                  ) echo -n "" ;;
     vim|vimdiff                     ) echo -n "" ;;
     nvim                            ) echo -n "" ;;
-    hx                              ) echo -n "" ;;
+    hx|zk                           ) echo -n "" ;;
     swipl                           ) echo -n "" ;;
     man|glow*                       ) echo -n "" ;;
     rizin                           ) echo -n "󱁆" ;;
@@ -43,5 +43,6 @@ case "$prog" in
     packer                          ) echo -n "" ;;
     mpv                             ) echo -n "" ;;
     spt                             ) echo -n "" ;;
+    pomodoro                        ) echo -n "🍅" ;;
     *                               ) echo -n "" ;;
 esac
