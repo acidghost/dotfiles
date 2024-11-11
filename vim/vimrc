@@ -364,6 +364,9 @@ noremap <Leader>w :setl wrap!<CR>
 
 noremap <Leader>W :Goyo<CR>
 
+noremap <Leader>d :e %/..<CR>
+noremap <Leader>D :e .<CR>
+
 noremap <C-w>gn :tabnew %<CR>
 
 imap <silent> <c-p> <Plug>(completion_trigger)
