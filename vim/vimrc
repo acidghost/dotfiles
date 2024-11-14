@@ -342,12 +342,12 @@ nmap <C-p> :FZF<CR>
 nmap <S-p> :FZF!<CR>
 nmap <C-t>p :Tags<CR>
 nmap <C-t>b :BTags<CR>
-nmap <Leader>g :GFiles<CR>
-nmap <Leader>G :GFiles!<CR>
-nmap <Leader>c :GFiles?<CR>
 nmap <Leader>f :Rg<Space>
 nmap <Leader>F :RG<CR>
 nmap <Leader>b :Buffers<CR>
+nmap <Leader>gg :GFiles<CR>
+nmap <Leader>gG :GFiles!<CR>
+nmap <Leader>gc :GFiles?<CR>
 cmap <C-h> :History:<CR>
 nmap <C-h> :Helptags<CR>
 
@@ -368,6 +368,9 @@ noremap <Leader>d :e %/..<CR>
 noremap <Leader>D :e .<CR>
 
 noremap <C-w>gn :tabnew %<CR>
+
+nmap <Leader>c :%bd\|edit#\|bd#<CR>
+nmap <Leader>C :%bd<CR>
 
 imap <silent> <c-p> <Plug>(completion_trigger)
 
