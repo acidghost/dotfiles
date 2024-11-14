@@ -63,7 +63,7 @@ local servers = {
             },
         }
     };
-    tsserver = {};
+    ts_ls = {};
     efm = {
         rootMarkers = {".git/"},
         languages = {
