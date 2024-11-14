@@ -48,9 +48,22 @@ end
 -- map buffer local keybindings when the language server attaches
 local servers = {
     clangd = {};
+    efm = {
+        rootMarkers = {".git/"},
+        languages = {
+            python = {
+                { formatCommand = "black --quiet -", formatStdin = true },
+            },
+            sh = {
+                { formatCommand = "shfmt --filename=${INPUT} -s -bn -i=4", formatStdin = true },
+            },
+        },
+    };
     -- fsautocomplete = {};
     gopls = {};
+    helm_ls = {};
     hls = {};
+    jsonls = {};
     nushell = {};
     pyright = {};
     rust_analyzer = {
@@ -63,15 +76,12 @@ local servers = {
             },
         }
     };
+    terraformls = {};
     ts_ls = {};
-    efm = {
-        rootMarkers = {".git/"},
-        languages = {
-            python = {
-                { formatCommand = "black --quiet -", formatStdin = true },
-            },
-            sh = {
-                { formatCommand = "shfmt --filename=${INPUT} -s -bn -i=4", formatStdin = true },
+    yamlls = {
+        yaml = {
+            schemas = {
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
             },
         },
     };
