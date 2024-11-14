@@ -21,7 +21,7 @@ case "$prog" in
     bat                             ) echo -n "" ;;
     *python*|pip[23]                ) echo -n "" ;;
     meson|cmake|make|ninja          ) echo -n "" ;;
-    kubectl                         ) echo -n "󱃾" ;;
+    kubectl|k9s                     ) echo -n "󱃾" ;;
     docker*                         ) echo -n "" ;;
     vagrant                         ) echo -n "" ;;
     sqlite*                         ) echo -n "" ;;
