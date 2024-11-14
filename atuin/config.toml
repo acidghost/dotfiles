@@ -1,3 +1,4 @@
 style = "compact"
 inline_height = 30
 show_preview = true
+history_filter = ["^zkj "]
