@@ -232,12 +232,6 @@ function! DevIconsFileformat()
     return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
-" FZF
-command! -bang -nargs=* RgPreview
-    \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-    \   fzf#vim#with_preview(), <bang>0)
-
 """ vim-latex
 let g:tex_flavor='latex'
 
@@ -345,14 +339,14 @@ nmap <C-n>x :NERDTreeFind<CR>
 nmap <C-n>r :NERDTreeRefreshRoot<CR>
 
 nmap <C-p> :FZF<CR>
+nmap <S-p> :FZF!<CR>
 nmap <C-t>p :Tags<CR>
 nmap <C-t>b :BTags<CR>
-nmap <S-p> :FZF!<CR>
-nmap <Leader>f :RgPreview<Space>
-nmap <Leader>F :RgPreview!<Space>
 nmap <Leader>g :GFiles<CR>
 nmap <Leader>G :GFiles!<CR>
 nmap <Leader>c :GFiles?<CR>
+nmap <Leader>f :Rg<Space>
+nmap <Leader>F :RG<CR>
 nmap <Leader>b :Buffers<CR>
 cmap <C-h> :History:<CR>
 nmap <C-h> :Helptags<CR>
