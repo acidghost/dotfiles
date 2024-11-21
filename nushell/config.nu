@@ -268,7 +268,7 @@ alias gr    = git remote
 
 # Wraps git status
 def gst [...args] {
-  ^git status --short $args
+  ^git status --short ...$args
     | from ssv --noheaders --minimum-spaces 1
     | rename status filename
 }
