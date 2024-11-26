@@ -89,7 +89,6 @@ if has('nvim')
             " v0.9.1
     endif
     if has('nvim-0.7')
-        Plug 'LhKipp/nvim-nu', { 'do': ':TSInstall nu' }
         Plug 'Olical/conjure'
     endif
 endif
@@ -247,6 +246,7 @@ require'nvim-treesitter.configs'.setup {
         "latex",
         "llvm",
         "lua",
+        "nu",
         "perl",
         "python",
         "rust",
@@ -269,15 +269,6 @@ EOF
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable                     " Disable folding at startup.
-endif
-
-" nvim-nu / nushell
-if has('nvim')
-lua << EOF
-require'nu'.setup {
-    use_lsp_features = false,
-}
-EOF
 endif
 
 " conjure
