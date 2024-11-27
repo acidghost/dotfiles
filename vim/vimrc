@@ -70,6 +70,7 @@ Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-commentary'
 Plug 'dhruvasagar/vim-prosession'
+Plug 'airblade/vim-gitgutter'
 
 " Language / syntax support
 if has('nvim')
@@ -178,7 +179,7 @@ let g:lightline = {
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'readonly', 'relativepath', 'modified', 'method' ],
-    \             [ 'obsession' ] ]
+    \             [ 'obsession', 'gitstatus' ] ]
     \ },
     \ 'inactive': {
     \   'left': [ [ 'relativepath' ] ],
@@ -192,6 +193,7 @@ let g:lightline = {
     \   'method': 'NearestMethodOrFunction',
     \   'filetype': 'DevIconsFiletype',
     \   'fileformat': 'DevIconsFileformat',
+    \   'gitstatus': 'GitStatus',
     \ },
     \ 'tabline': {
     \   'left': [ [ 'tabs' ] ],
@@ -229,6 +231,12 @@ function! DevIconsFiletype()
 endfunction
 function! DevIconsFileformat()
     return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+""" vim-gitgutter
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
 endfunction
 
 """ vim-latex
