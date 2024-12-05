@@ -50,6 +50,8 @@ endif
 
 if filereadable(expand('/opt/homebrew/opt/fzf/plugin/fzf.vim'))
     set rtp+=/opt/homebrew/opt/fzf
+elseif filereadable(expand('/usr/share/doc/fzf/examples/plugin/fzf.vim'))
+    set rtp+=/usr/share/doc/fzf/examples
 endif
 
 " Specify a directory for plugins
