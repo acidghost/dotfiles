@@ -146,7 +146,7 @@ let maplocalleader = "<"
 
 " base16
 function! s:base16_customize() abort
-    call Base16hi("Identifier", g:base16_gui05, "", g:base16_cterm05, "", "none", "")
+    call Tinted_Hi("Identifier", g:tinted_gui05, "", g:tinted_cterm05, "", "none", "")
 endfunction
 
 augroup on_change_colorschema
@@ -156,7 +156,7 @@ augroup END
 
 if exists('$BASE16_THEME')
     \ && (!exists('g:colors_name') || g:colors_name != 'base16-$BASE16_THEME')
-    let base16colorspace=256
+    let tinted_colorspace=256
     colorscheme base16-$BASE16_THEME
 endif
 
