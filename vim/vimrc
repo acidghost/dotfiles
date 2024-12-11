@@ -61,7 +61,7 @@ call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 Plug 'itchyny/lightline.vim'
-Plug 'tinted-theming/base16-vim'
+Plug 'tinted-theming/base16-vim', { 'commit': '577fe8125d74ff456cf942c733a85d769afe58b7' }
 " Should be installed system-wide, uncomment otherwise
 " Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
