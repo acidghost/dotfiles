@@ -61,7 +61,7 @@ call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 Plug 'itchyny/lightline.vim'
-Plug 'tinted-theming/base16-vim', { 'commit': '577fe8125d74ff456cf942c733a85d769afe58b7' }
+Plug 'tinted-theming/base16-vim'
 " Should be installed system-wide, uncomment otherwise
 " Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -146,7 +146,14 @@ let maplocalleader = "<"
 
 " base16
 function! s:base16_customize() abort
-    call Base16hi("Identifier", g:base16_gui05, "", g:base16_cterm05, "", "none", "")
+    call Tinted_Hi("Identifier", g:tinted_gui05, "", g:tinted_cterm05, "", "none", "")
+    call Tinted_Hi("Folded", g:tinted_gui02, "", g:tinted_cterm02, "", "none", "")
+    call Tinted_Hi("MatchParen", "", g:tinted_gui03, "", g:tinted_cterm03, "none", "")
+    call Tinted_Hi("@markup.raw", g:tinted_gui09, "", g:tinted_cterm09, "", "none", "")
+    call Tinted_Hi("@markup.raw.block", g:tinted_gui09, "", g:tinted_cterm09, "", "none", "")
+    call Tinted_Hi("@markup.link", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
+    call Tinted_Hi("@markup.link.label", g:tinted_gui0C, "", g:tinted_cterm0C, "", "bold", "")
+    call Tinted_Hi("@markup.link.url", g:tinted_gui0E, "", g:tinted_cterm0E, "", "underline", "")
 endfunction
 
 augroup on_change_colorschema
@@ -156,7 +163,7 @@ augroup END
 
 if exists('$BASE16_THEME')
     \ && (!exists('g:colors_name') || g:colors_name != 'base16-$BASE16_THEME')
-    let base16colorspace=256
+    let tinted_colorspace=256
     colorscheme base16-$BASE16_THEME
 endif
 
