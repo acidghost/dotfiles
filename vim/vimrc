@@ -97,7 +97,6 @@ if has('nvim')
 endif
 Plug 'vim-latex/vim-latex'
 Plug 'JuliaEditorSupport/julia-vim'
-Plug 'souffle-lang/souffle.vim'
 Plug 'aliou/bats.vim'
 
 " Completions
