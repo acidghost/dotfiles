@@ -1,0 +1,12 @@
+[theme]
+name = "mine"
+parent = "marine"
+
+[colors]
+AlertError = "deeppink"
+AlertInfo = "orchid"
+AlertWarn = "yellow"
+Annotation = "darkorchid"
+Base = "mediumpurple"
+Guidance = "plum"
+Title = "mediumslateblue"
