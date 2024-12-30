@@ -79,6 +79,8 @@
       path: dotfiles-env/with_virt
       if: '[ "$DOTFILES_WITH_VIRT" = 1 ]'
     ~/.config/fzf:
+    ~/.config/ghostty:
+      if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/helix:
     ~/.config/lsd:
     ~/.config/mpv:
