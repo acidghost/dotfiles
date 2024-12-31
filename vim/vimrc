@@ -153,6 +153,8 @@ function! s:base16_customize() abort
     call Tinted_Hi("@markup.link", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
     call Tinted_Hi("@markup.link.label", g:tinted_gui0C, "", g:tinted_cterm0C, "", "bold", "")
     call Tinted_Hi("@markup.link.url", g:tinted_gui0E, "", g:tinted_cterm0E, "", "underline", "")
+    call Tinted_Hi("@property.yaml", g:tinted_gui0E, "", g:tinted_cterm0E, "", "none", "")
+    call Tinted_Hi("@string.yaml", g:tinted_gui0B, "", g:tinted_cterm0B, "", "none", "")
 endfunction
 
 augroup on_change_colorschema
