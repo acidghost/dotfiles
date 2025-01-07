@@ -300,3 +300,24 @@ def git-current-branch [] {
     $symref.stdout
   } | str trim | str replace "refs/heads/" ""
 }
+
+def bat [...args] {
+  let cmd = if (which --all bat | where type == external | length) > 0 {
+    'bat'
+  } else if (which --all batcat | where type == external | length) > 0 {
+    'batcat'
+  } else {
+    error make {msg: "bat is not installed"}
+  }
+  let file_args = $args | filter {|f| $f | path exists} | length
+  if $file_args > 1 {
+    let style = if ($env | get -i BAT_STYLE | is-not-empty) {
+      $"($env.BAT_STYLE),header"
+    } else {
+      'header'
+    }
+    ^$cmd $"--style=($style)" ...$args
+  } else {
+    ^$cmd ...$args
+  }
+}
