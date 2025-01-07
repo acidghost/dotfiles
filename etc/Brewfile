@@ -19,6 +19,7 @@ tap "koekeishiya/formulae"      if WITH_APPS && IS_DARWIN
 # Applications
 cask "amethyst"                 if WITH_APPS && IS_DARWIN
 cask "firefox"                  if WITH_APPS && IS_DARWIN
+cask "ghostty"                  if WITH_APPS
 cask "grandperspective"         if WITH_APPS && IS_DARWIN
 brew "mpv"                      if WITH_APPS
 cask "obs"                      if WITH_APPS
