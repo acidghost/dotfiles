@@ -32,6 +32,7 @@ cask "zoom"                     if WITH_APPS && IS_DARWIN
 cask "zotero"                   if WITH_APPS && IS_DARWIN
 
 # Fonts
+cask "font-fira-code"           if IS_DARWIN
 cask "font-fira-code-nerd-font" if IS_DARWIN
 cask "font-hack-nerd-font"      if IS_DARWIN
 
