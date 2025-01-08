@@ -275,7 +275,7 @@ def gst [...args] {
 
 # Wraps git log
 def glo [...args] {
-  ^git log --oneline --decorate --color=always $args
+  ^git log --oneline --decorate --color=always ...$args
     | lines | reverse | parse "{hash} {txt}"
 }
 
