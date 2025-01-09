@@ -9,3 +9,9 @@ export def negate [pred?: closure] {
 
 # Repeat action f n times.
 export def repeat [n, f] { seq 1 $n | each $f }
+
+# An S-combinator, equivalent to `x(in, y(in))`.
+export def "comb s" [x: closure, y: closure, arg?: any] {
+  let z = if $arg == null { $in } else { $arg };
+  do $x $z (do $y $z)
+}
