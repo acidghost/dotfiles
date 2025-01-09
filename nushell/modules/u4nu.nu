@@ -6,3 +6,6 @@ export def negate [pred?: closure] {
     do $pred | not $in
   } else { not $in }
 }
+
+# Repeat action f n times.
+export def repeat [n, f] { seq 1 $n | each $f }
