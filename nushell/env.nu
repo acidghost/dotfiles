@@ -130,3 +130,14 @@ if (program exists atuin) {
   atuin init nu --disable-up-arrow | save -f ~/.cache/nushell/atuin.nu
   "source ~/.cache/nushell/atuin.nu\n" | save --append $dynamic_env_src
 }
+
+if (program exists zk) {
+  "alias zke = zk edit -ix daily
+   alias zked = zk edit -i
+   alias zki = zk index
+   alias zkl = zk list
+   alias zkli = zk list -i
+   alias zkd = zk daily
+   alias zkcd = cd $env.ZK_NOTEBOOK_DIR
+  " | save --append $dynamic_env_src
+}
