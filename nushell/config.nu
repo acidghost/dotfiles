@@ -290,6 +290,9 @@ def "history fzf" [term: string = ""] {
     | commandline edit $in
 }
 
+# Run a closure multiple times and time it's execution.
+def "timeit bench" [n f] { repeat $n { timeit $f } }
+
 # Get the current Git branch name (from oh-my-zsh)
 def git-current-branch [] {
   let symref = (do { git symbolic-ref --quiet HEAD } | complete)
