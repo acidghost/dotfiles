@@ -324,3 +324,14 @@ def bat [...args] {
     ^$cmd ...$args
   }
 }
+
+# List broken symbolic links
+def broken-symlinks [--depth: number p?: path] {
+  ls -l ...(glob --depth=$depth $"(if ($p | is-empty) { $env.PWD } else { $p })/**/*")
+    | filter { |it|
+      $it.type == symlink and (
+        (($it.target | into string) starts-with / and not ($it.target | path exists))
+        and not (($it.name | path dirname) + / + $it.target | path exists)
+      )
+    }
+}
