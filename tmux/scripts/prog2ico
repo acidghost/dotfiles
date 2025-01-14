@@ -28,6 +28,7 @@ case "$prog" in
     *mysql*                         ) echo -n "" ;;
     *postgres*                      ) echo -n "" ;;
     git*                            ) echo -n "" ;;
+    gh                              ) echo -n "" ;;
     *top                            ) echo -n "" ;;
     *pdf*|zathura|okular            ) echo -n "" ;;
     lynx|w3m                        ) echo -n "" ;;
