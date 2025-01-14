@@ -84,6 +84,11 @@ if type pomodoro &>/dev/null; then
     alias pohj='pomodoro history -o json'
 fi
 
+if type monolith &>/dev/null; then
+    alias monolith-plain='monolith -acfFiIjMv'
+    alias monolith-simple='monolith -afIjv'
+fi
+
 # Platform specific
 case $OSTYPE in
 linux*)
