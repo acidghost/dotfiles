@@ -236,8 +236,9 @@ filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ gpicview %c,
         \ {View in shotwell}
         \ shotwell,
-fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
-         \ identify %f
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm} chafa %f
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm} imgcat %c:p %pd
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm} identify %f
 
 " OpenRaster
 filextype *.ora
@@ -349,6 +350,11 @@ filextype *.pro qtcreator %f &
 filextype */
         \ {View in thunar}
         \ Thunar %f &,
+fileviewer */ tree -C %f
+
+" Displaying pictures in terminal
+"
+" fileviewer *.jpg,*.png shellpic %c
 
 " Syntax highlighting in preview
 "
@@ -365,10 +371,6 @@ filextype */
 "
 " fileviewer *[^/] pygmentize -O style=monokai -f console256 -g
 fileviewer *[^/] bat --wrap=auto --terminal-width=%pw --paging=never --color=always -n %c
-
-" Displaying pictures in terminal
-"
-" fileviewer *.jpg,*.png shellpic %c
 
 " Open all other files with default system programs (you can also remove all
 " :file[x]type commands above to ensure they don't interfere with system-wide
