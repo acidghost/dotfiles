@@ -273,6 +273,7 @@ require'nvim-treesitter.configs'.setup {
         "toml",
         "vim",
         "vimdoc",
+        "yaml",
     },
     highlight = { enable = true },
     incremental_selection = {
