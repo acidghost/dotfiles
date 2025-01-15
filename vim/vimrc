@@ -451,6 +451,10 @@ endif
 command! DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_
         \ | diffthis | wincmd p | diffthis
 
+" Highlights parts that belong to the same highlighting group (see also treesitter's :Inspect)
+command! -complete=highlight -nargs=1
+        \ HighlightHighlight execute 'highlight! link ' . <q-args> . ' Search'
+
 function! MoveToPrevTab()
     "there is only one window
     if tabpagenr('$') == 1 && winnr('$') == 1
