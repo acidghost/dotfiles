@@ -64,6 +64,7 @@ brew "git-delta"
 brew "htop"
 brew "jless"
 brew "jq"
+brew "just"
 brew "lynx"
 brew "neofetch"
 brew "neovim"                   unless IS_LIGHTWEIGHT
