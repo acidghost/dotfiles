@@ -47,6 +47,10 @@
         "mod": "mod1",
         "key": "d"
     },
+    "select-floating-layout": {
+        "mod": "mod1",
+        "key": "t"
+    },
     "focus-screen-ccw": {
         "mod": "mod1",
         "key": "p"
@@ -184,8 +188,8 @@
         "key": "right"
     },
     "toggle-float": {
-        "mod": "mod1",
-        "key": "t"
+        "mod": "",
+        "key": ""
     },
     "toggle-tiling": {
         "mod": "mod2",
