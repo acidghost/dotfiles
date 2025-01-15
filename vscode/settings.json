@@ -153,6 +153,7 @@
         }
     ],
     "vim.hlsearch": true,
+    "vim.foldfix": true,
     "editor.lineNumbers": "relative",
     "editor.fontFamily": "Hack Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
     "editor.insertSpaces": true,
