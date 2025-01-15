@@ -117,7 +117,7 @@ def main(args: CLI) -> int:
             else:
                 print(f"[!] I don't know how to handle .zip in {uname_system}")
                 return 1
-        elif suffixes == []:
+        elif suffixes == [] or suffixes[-1] == ".AppImage":
             process_asset = from_plain
         else:
             print(f"[!] Unable to recognize suffixes: {suffixes}")
