@@ -48,9 +48,9 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-if filereadable(expand('/opt/homebrew/opt/fzf/plugin/fzf.vim'))
+if filereadable('/opt/homebrew/opt/fzf/plugin/fzf.vim')
     set rtp+=/opt/homebrew/opt/fzf
-elseif filereadable(expand('/usr/share/doc/fzf/examples/plugin/fzf.vim'))
+elseif filereadable('/usr/share/doc/fzf/examples/plugin/fzf.vim')
     set rtp+=/usr/share/doc/fzf/examples
 endif
 
