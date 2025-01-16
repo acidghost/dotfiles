@@ -354,7 +354,10 @@ def bat [...args] {
 }
 
 # List broken symbolic links
-def broken-symlinks [--depth: number = 0 p?: path] {
+def broken-symlinks [
+  --depth(-d): number = 0
+  p?: path
+] {
   let p = if ($p | is-empty) {
     $env.PWD
   } else {
@@ -367,18 +370,17 @@ def broken-symlinks [--depth: number = 0 p?: path] {
     $p
   }
   let p = if $p ends-with / { $p | str substring 0..-2 } else { $p }
-  let glob = { |g|
-    if $depth == 0 {
-      glob --no-dir $g
-    } else {
-      glob --no-dir --depth=$depth $g
-    }
+  let g = $p + '/**/*'
+  let glob = if $depth == 0 {
+    glob --no-dir --no-file $g
+  } else {
+    glob --no-dir --no-file --depth=$depth $g
   }
-  ls -lf ...(do $glob ($p + '/**/*')) | filter { |it|
-    if $it.type != symlink { return false }
-    if ($it.target | into string) starts-with / and ($it.target | path exists) {
-      return false
+  ls --long --directory --full-paths ...$glob
+    | filter { |it|
+      if ($it.target | into string) starts-with / and ($it.target | path exists) {
+        return false
+      }
+      not ($it.name | path dirname | path join $it.target | path exists)
     }
-    not ($it.name | path dirname | path join $it.target | path exists)
-  }
 }
