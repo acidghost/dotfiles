@@ -293,6 +293,34 @@ def "history fzf" [term: string = ""] {
 # Run a closure multiple times and time it's execution.
 def "timeit bench" [n f] { repeat $n { timeit $f } }
 
+# Parse all extensions.
+def "path extensions" []: [
+  string -> list<string>
+  list<string> -> list<list<string>>
+] {
+  match ($in | describe) {
+    list<string> => {
+      $in | each {path extensions}
+    }
+    string => {
+      mut p = ($in | path parse)
+      mut res = []
+      while $p.extension != "" {
+        $res = ($res | append $p.extension)
+        $p = ($p.stem | path parse)
+      }
+      $res
+    }
+    $type => {
+      # without this block, allows list<any>
+      error make {
+        msg: $"Unexpected input type: ($type)"
+        label: { text: input span: (metadata $in).span }
+      }
+    }
+  }
+}
+
 # Get the current Git branch name (from oh-my-zsh)
 def git-current-branch [] {
   let symref = (do { git symbolic-ref --quiet HEAD } | complete)
