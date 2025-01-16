@@ -351,6 +351,6 @@ def broken-symlinks [--depth: number = 0 p?: path] {
     if ($it.target | into string) starts-with / and ($it.target | path exists) {
       return false
     }
-    not (($it.name | path dirname) | path join $it.target | path exists)
+    not ($it.name | path dirname | path join $it.target | path exists)
   }
 }
