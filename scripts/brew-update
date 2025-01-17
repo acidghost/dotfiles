@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+export BORDER=thick
+export BORDER_FOREGROUND=219
+export PADDING='1 1'
+
+brew update
+output=$(brew outdated --verbose)
+if [[ -z $output ]]; then
+    exit 0
+fi
+gum style 'Outdated packages:' "$output"
+
+gum confirm 'Upgrade everything?'
+brew upgrade
