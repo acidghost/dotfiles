@@ -55,6 +55,10 @@ elseif filereadable('/usr/share/doc/fzf/examples/plugin/fzf.vim')
     set rtp+=/usr/share/doc/fzf/examples
 endif
 
+if isdirectory('/Applications/Ghostty.app/Contents/Resources/vim/vimfiles')
+    set rtp+=/Applications/Ghostty.app/Contents/Resources/vim/vimfiles
+endif
+
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
