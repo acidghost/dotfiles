@@ -25,6 +25,7 @@ set list           " Highlight non whitespace characters
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
 set noshowmode     " Hide mode in bottom line given lightline
 set colorcolumn=100 " Vertical column
+set textwidth=90   " Used when formatting text
 
 " allow .vimrc files to reside in project folders
 set exrc
