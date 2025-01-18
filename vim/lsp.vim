@@ -57,6 +57,9 @@ local servers = {
             sh = {
                 { formatCommand = "shfmt --filename=${INPUT} -s -bn -i=4", formatStdin = true },
             },
+            yaml = {
+                { formatCommand = "npx prettier --stdin-filepath ${INPUT}", formatStdin = true },
+            },
         },
     };
     -- fsautocomplete = {};
