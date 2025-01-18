@@ -378,6 +378,8 @@ def broken-symlinks [
   }
   ls --long --directory --full-paths ...$glob
     | filter { |it|
+      # despite the glob above, ls can return socket files
+      if $it.type != symlink { return false }
       if ($it.target | into string) starts-with / and ($it.target | path exists) {
         return false
       }
