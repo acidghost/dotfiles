@@ -242,10 +242,14 @@ endfunction
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
 function! DevIconsFiletype()
-    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+    return winwidth(0) > 70 ?
+        \ (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft')
+        \ : ''
 endfunction
 function! DevIconsFileformat()
-    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+    return winwidth(0) > 70 ?
+        \ (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol())
+        \ : ''
 endfunction
 
 """ vim-gitgutter
