@@ -1,35 +1,4 @@
-set nocompatible   " Disable vi compatibilty
-set encoding=utf-8 " Use UTF-8
-syntax enable      " Turn on syntax highlighting
-set showmatch      " Show matching brackets
-set ignorecase     " Do case insensitive matching
-set number         " Show numbers
-set relativenumber " Show relative numbers
-set undolevels=999 " Lots of these
-set hlsearch       " Highlight Search
-set tabstop=4      " Tab size
-set shiftwidth=4   " Indentation size
-set softtabstop=4  " Tabs/Spaces interop
-set expandtab      " Expands tab to spaces
-set nomodeline     " Disable as a security precaution
-set mouse=a        " Enable mouse mode
-set autoindent     " Enable autoindent
-set complete-=i    " Better completion
-set laststatus=2   " Always show status line
-set ruler          " Show cursor position
-set scrolloff=3    " Scroll offset
-set sidescrolloff=5
-set autoread       " Reload files on change
-set history=1000   " More history
-set list           " Highlight non whitespace characters
-set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
-set noshowmode     " Hide mode in bottom line given lightline
-set colorcolumn=100 " Vertical column
-set textwidth=90   " Used when formatting text
-
-" allow .vimrc files to reside in project folders
-set exrc
-set secure
+source ~/.vim/my/settings.vim
 
 if exists('+termguicolors')
     let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
@@ -70,73 +39,14 @@ Plug 'tinted-theming/base16-vim'
 " Should be installed system-wide, uncomment otherwise
 " Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'scrooloose/nerdTree'
-Plug 'liuchengxu/vista.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-commentary'
 Plug 'dhruvasagar/vim-prosession'
 Plug 'airblade/vim-gitgutter'
-
-" Language / syntax support
-if has('nvim')
-    if has('nvim-0.10')
-        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-    elseif has('nvim-0.9.2')
-        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate',
-            \ 'commit': 'cfc6f2c117aaaa82f19bcce44deec2c194d900ab' }
-            " v0.9.3
-    elseif has('nvim-0.9.1')
-        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate',
-            \ 'commit': 'f197a15b0d1e8d555263af20add51450e5aaa1f0' }
-            " v0.9.2
-    else
-        Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate',
-            \ 'commit': '63260da18bf273c76b8e2ea0db84eb901cab49ce' }
-            " v0.9.1
-    endif
-    if has('nvim-0.7')
-        Plug 'Olical/conjure'
-    endif
-endif
-Plug 'vim-latex/vim-latex'
 " Plug 'JuliaEditorSupport/julia-vim'
 " Plug 'aliou/bats.vim'
-
-" Completions
-if has('nvim')
-    Plug 'hrsh7th/cmp-buffer'
-    Plug 'hrsh7th/cmp-path'
-    Plug 'hrsh7th/cmp-cmdline'
-    Plug 'hrsh7th/nvim-cmp'
-    if has('nvim-0.7')
-        Plug 'hrsh7th/nvim-cmp'
-    else
-        Plug 'hrsh7th/nvim-cmp', { 'commit': 'bba6fb67fdafc0af7c5454058dfbabc2182741f4' }
-    endif
-endif
-
-if filereadable(expand("~/.vim/lsp_plugins.vim"))
-    source ~/.vim/lsp_plugins.vim
-endif
-
-" Snippets
-if has('nvim')
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
-endif
-
-if has('nvim-0.6')
-    Plug 'github/copilot.vim'
-endif
-
-Plug 'johnstef99/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-
-if has('nvim-0.8')
-    Plug 'zk-org/zk-nvim'
-endif
 
 call plug#end()
 
@@ -145,47 +55,7 @@ if !has('gui_running')
     set t_Co=256
 endif
 
-let mapleader = ","
-let maplocalleader = "<"
-
-" base16
-function! s:base16_customize() abort
-    call Tinted_Hi("Identifier", g:tinted_gui05, "", g:tinted_cterm05, "", "none", "")
-    call Tinted_Hi("Folded", g:tinted_gui02, "", g:tinted_cterm02, "", "none", "")
-    call Tinted_Hi("MatchParen", "", g:tinted_gui03, "", g:tinted_cterm03, "none", "")
-    call Tinted_Hi("@markup.raw", g:tinted_gui09, "", g:tinted_cterm09, "", "none", "")
-    call Tinted_Hi("@markup.raw.block", g:tinted_gui09, "", g:tinted_cterm09, "", "none", "")
-    call Tinted_Hi("@markup.link", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
-    call Tinted_Hi("@markup.link.label", g:tinted_gui0C, "", g:tinted_cterm0C, "", "bold", "")
-    call Tinted_Hi("@markup.link.url", g:tinted_gui0E, "", g:tinted_cterm0E, "", "underline", "")
-    call Tinted_Hi("@property.yaml", g:tinted_gui0E, "", g:tinted_cterm0E, "", "none", "")
-    call Tinted_Hi("@string.yaml", g:tinted_gui0B, "", g:tinted_cterm0B, "", "none", "")
-endfunction
-
-augroup on_change_colorschema
-    autocmd!
-    autocmd ColorScheme * call s:base16_customize()
-augroup END
-
-if exists('$BASE16_THEME')
-    \ && (!exists('g:colors_name') || g:colors_name != 'base16-$BASE16_THEME')
-    let tinted_colorspace=256
-    colorscheme base16-$BASE16_THEME
-endif
-
-" Save your swp files to a less annoying place than the current directory.
-" If you have .vim-swap in the current directory, it'll use that.
-" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
-if isdirectory($HOME . '/.vim/swap') == 0
-    call mkdir($HOME.'/.vim/swap', 'p')
-endif
-set directory=./.vim-swap//
-set directory+=~/.vim/swap//
-set directory+=~/tmp//
-set directory+=.
-
-" Alternative ctags filename
-set tags+=.tags
+source ~/.vim/my/base16.vim
 
 " Lightline configuration
 let g:lightline = {
@@ -193,7 +63,7 @@ let g:lightline = {
     \ 'enable': { 'tabline': 1, 'statusline': 1 },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'readonly', 'relativepath', 'modified', 'method' ],
+    \             [ 'readonly', 'relativepath', 'modified' ],
     \             [ 'obsession', 'gitstatus' ] ]
     \ },
     \ 'inactive': {
@@ -205,7 +75,6 @@ let g:lightline = {
     \   'obsession': '%{ObsessionStatus("", "")}',
     \ },
     \ 'component_function': {
-    \   'method': 'NearestMethodOrFunction',
     \   'filetype': 'DevIconsFiletype',
     \   'fileformat': 'DevIconsFileformat',
     \   'gitstatus': 'GitStatus',
@@ -222,21 +91,10 @@ let s:palette.tabline.middle = [['#ffffff', '#606087', 231, 60]]
 let s:palette.tabline.right  = [['#ffffff', '#606087', 231, 60]]
 let s:palette.tabline.tabsel = [['#ffffff', '#af5fff', 231, 135]]
 
-if filereadable(expand("~/.vim/lsp.vim"))
-    source ~/.vim/lsp.vim
-endif
-
 " Prosession config
 let g:prosession_tmux_title = 1
 let g:prosession_tmux_title_format = ":@@@"
 let g:prosession_on_startup = 1
-
-" vista.vim
-let g:vista_update_on_text_changed = 1
-let g:vista_fzf_preview = ['right:50%']
-function! NearestMethodOrFunction() abort
-    return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
 
 " devicons
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
@@ -258,106 +116,7 @@ function! GitStatus()
   return printf('+%d ~%d -%d', a, m, r)
 endfunction
 
-""" vim-latex
-let g:tex_flavor='latex'
-
-""" nvim-treesitter
-if has('nvim')
-lua << EOF
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = {
-        "awk",
-        "c",
-        "go",
-        "just",
-        "latex",
-        "llvm",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "nu",
-        "perl",
-        "python",
-        "rust",
-        "toml",
-        "vim",
-        "vimdoc",
-        "yaml",
-    },
-    highlight = { enable = true },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
-        },
-    },
-}
-EOF
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set nofoldenable                     " Disable folding at startup.
-endif
-
-" conjure
-let g:conjure#filetypes = [
-    \'clojure',
-    \'fennel',
-    \'janet',
-    \'hy',
-    \'julia',
-    \'racket',
-    \'scheme',
-    \'lua',
-    \'lisp',
-    \'python'
-    \]
-
-" copilot
-let g:copilot_filetypes = {
-    \'*': v:false,
-    \}
-
-" zk-nvim
-if has('nvim')
-lua << EOF
-require("zk").setup({
-    picker = "fzf",
-})
-EOF
-endif
-
-
-
-""" Key mappings
-
-" Yank to PRIMARY clipboard
-noremap <Leader>y "*y
-" Paste from PRIMARY clipboard
-noremap <Leader>p "*p
-" Yank to CLIPBOARD clipboard
-noremap <Leader>Y "+y
-" Paste from CLIPBOARD clipboard
-noremap <Leader>P "+p
-
-" Navigate quickfix list
-noremap <Leader>eo :botright copen<CR>
-noremap <Leader>ef :cfirst<CR>
-noremap <Leader>en :cnext<CR>
-noremap <Leader>ep :cprevious<CR>
-
-nmap <Down> <C-E>
-nmap <Up> <C-Y>
-nmap <Left> 20zl
-nmap <Right> 20zr
-
-nmap <C-n>n :NERDTreeToggle<CR>
-nmap <C-n>f :NERDTreeFocus<CR>
-nmap <C-n>m :NERDTreeMirror<CR>
-nmap <C-n>x :NERDTreeFind<CR>
-nmap <C-n>r :NERDTreeRefreshRoot<CR>
+source ~/.vim/my/keymaps.vim
 
 nmap <C-p> :FZF<CR>
 nmap <S-p> :FZF!<CR>
@@ -372,164 +131,5 @@ nmap <Leader>gc :GFiles?<CR>
 cmap <C-h> :History:<CR>
 nmap <C-h> :Helptags<CR>
 
-nmap <C-s> :Obsession<CR>
-nmap <C-s>s :Prosession<Space>
-nmap <C-s>d :ProsessionDelete<CR>
-
-nmap <Leader>v :Vista!!<CR>
-nmap <Leader>vf :Vista finder<CR>
-nmap <Leader>vs :Vista focus<CR>
-
-noremap <Leader>@ :nohl<CR>
-noremap <Leader>w :setl wrap!<CR>
-
-noremap <Leader>W :Goyo<CR>
-
-noremap <Leader>d :e %/..<CR>
-noremap <Leader>D :e .<CR>
-
-noremap <C-w>gn :tabnew %<CR>
-
-nmap <Leader>c :%bd\|edit#\|bd#<CR>
-nmap <Leader>C :%bd<CR>
-
-imap <silent> <c-p> <Plug>(completion_trigger)
-
-nnoremap <C-w>. :call MoveToNextTab()<CR><C-w>H
-nnoremap <C-w>, :call MoveToPrevTab()<CR><C-w>H
-
-nnoremap <C-w>S :call Scratch(0)<CR>
-nnoremap <C-w><C-s> :call Scratch(1)<CR>
-
-nmap <Leader>lce :Copilot enable<CR>
-nmap <Leader>lcd :Copilot disable<CR>
-nmap <Leader>lcs :Copilot status<CR>
-nmap <Leader>lcp :Copilot panel<CR>
-
-imap <C-]>         <Plug>(copilot-dismiss)
-imap <M-C-Right>   <Plug>(copilot-accept-line)
-imap <M-Right>     <Plug>(copilot-accept-word)
-imap <M-Bslash>    <Plug>(copilot-suggest)
-imap <M-[>         <Plug>(copilot-previous)
-imap <M-]>         <Plug>(copilot-next)
-
-nmap <Leader>zo    :ZkNotes { sort = { "modified" }, excludeHrefs = { "daily" } }<CR>
-nmap <Leader>zD    :ZkNotes { sort = { "path-" }, hrefs = { "daily" } }<CR>
-nmap <Leader>zi    :ZkNotes { sort = { "modified" }, tags = { "issue" } }<CR>
-nmap <Leader>znn   :ZkNew<CR>
-vmap <Leader>znn   :'<,'>ZkNewFromTitleSelection<CR>
-vmap <Leader>zni   :'<,'>ZkNewFromTitleSelection { template = "issue.md" }<CR>
-nmap <Leader>zd    :ZkNew { dir = "daily" }<CR>
-nmap <Leader>zt    :ZkTags<CR>
-nmap <Leader>zx    :ZkIndex<CR>
-
-
-autocmd BufRead,BufNewFile $HOME/.aliases set ft=sh
-autocmd BufRead,BufNewFile $HOME/.path set ft=sh
-autocmd BufRead,BufNewFile *.fc set ft=fennec
-autocmd BufRead,BufNewFile *.ll set ft=llvm
-autocmd BufRead,BufNewFile *.td set ft=tablegen
-autocmd BufRead,BufNewFile *.rasi setf css
-autocmd BufRead,BufNewFile Brewfile,Vagrantfile setf ruby
-autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
-autocmd BufRead,BufNewFile devcontainer.json set ft=jsonc
-au VimEnter,BufWinEnter,BufRead,BufNewFile {.,}justfile\c,*.just setlocal filetype=just | setlocal commentstring=#\ %s
-
-autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
-autocmd FileType cpp setlocal shiftwidth=2 tabstop=2
-autocmd FileType cmake setlocal shiftwidth=2 tabstop=2
-autocmd FileType org setlocal shiftwidth=2 tabstop=2
-autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType nu setlocal shiftwidth=2 tabstop=2
-
-if has('nvim')
-lua <<EOF
-vim.filetype.add({
-  extension = {
-    gotmpl = 'gotmpl',
-  },
-  pattern = {
-    [".*/templates/.*%.tpl"] = "helm",
-    [".*/templates/.*%.ya?ml"] = "helm",
-    ["helmfile.*%.ya?ml"] = "helm",
-  },
-})
-EOF
-endif
-
-" Useful utilities
-
-command! DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_
-        \ | diffthis | wincmd p | diffthis
-
-" Highlights parts that belong to the same highlighting group (see also treesitter's :Inspect)
-command! -complete=highlight -nargs=1
-        \ HighlightHighlight execute 'highlight! link ' . <q-args> . ' Search'
-
-function! MoveToPrevTab()
-    "there is only one window
-    if tabpagenr('$') == 1 && winnr('$') == 1
-        return
-    endif
-    "preparing new window
-    let l:tab_nr = tabpagenr('$')
-    let l:cur_buf = bufnr('%')
-    if tabpagenr() != 1
-        close!
-        if l:tab_nr == tabpagenr('$')
-            tabprev
-        endif
-        sp
-    else
-        close!
-        exe "0tabnew"
-    endif
-    "opening current buffer in new window
-    exe "b".l:cur_buf
-endfunc
-
-function! MoveToNextTab()
-    "there is only one window
-    if tabpagenr('$') == 1 && winnr('$') == 1
-        return
-    endif
-    "preparing new window
-    let l:tab_nr = tabpagenr('$')
-    let l:cur_buf = bufnr('%')
-    if tabpagenr() < tab_nr
-        close!
-        if l:tab_nr == tabpagenr('$')
-            tabnext
-        endif
-        sp
-    else
-        close!
-        tabnew
-    endif
-    "opening current buffer in new window
-    exe "b".l:cur_buf
-endfunc
-
-let g:scratch_bufname = 'scratch'
-function! Scratch(fresh)
-    if bufname() == g:scratch_bufname
-        return
-    endif
-    let l:scratch = bufnr(g:scratch_bufname)
-    if l:scratch != -1
-        if a:fresh == 1
-            exe l:scratch . 'bwipe'
-        else
-            exe 'vsplit' g:scratch_bufname
-            return
-        endif
-    endif
-    vsplit
-    noswapfile hide enew
-    setlocal buftype=nofile
-    setlocal bufhidden=hide
-    "setlocal nobuflisted
-    "lcd ~
-    exe 'file' g:scratch_bufname
-endfunction
+source ~/.vim/my/filetypes.vim
+source ~/.vim/my/utilities.vim

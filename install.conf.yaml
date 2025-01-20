@@ -8,19 +8,27 @@
     "~/.config/dotfiles-env":
     "~/.config/nnn/plugins/":
       force: true
+    "~/.config/nvim":
     "~/.scripts":
     "~/.tmux/scripts":
       force: true
     "~/.vim":
 
 - create:
-    - ~/wa
-    - ~/.config/dotfiles-env
-    - ~/.log
-    - ~/.scripts
-    - ~/.tmux/scripts
-    - ~/.tmux/plugins
-    - ~/.vim
+    ~/wa:
+      mode: 0755
+    ~/.config/dotfiles-env:
+      mode: 0755
+    ~/.config/nvim:
+      mode: 0755
+    ~/.scripts:
+      mode: 0755
+    ~/.tmux/scripts:
+      mode: 0755
+    ~/.tmux/plugins:
+      mode: 0755
+    ~/.vim:
+      mode: 0755
 
 - shell:
   - [git submodule update --init --recursive, "Updating submodules"]
@@ -97,6 +105,8 @@
       path: nushell/*
       if: '[ "$(uname)" = Linux ]'
     ~/.config/nvim:
+      glob: true
+      path: nvim/*
     ~/.config/spotify-tui:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/starship.toml: etc/starship.toml
@@ -134,12 +144,7 @@
     ~/.tool-versions:
       path: asdf/tool-versions
       if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
-    ~/.vim/lsp.vim:
-      path: vim/lsp.vim
-      if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
-    ~/.vim/lsp_plugins.vim:
-      path: vim/lsp_plugins.vim
-      if: '[ "$DOTFILES_WITH_LSP" = 1 ]'
+    ~/.vim/my: vim/my
     ~/.vim/vimrc: vim/vimrc
     ~/vusec.ascii:
     ~/.zsh_plugins.txt: zsh/plugins.txt
