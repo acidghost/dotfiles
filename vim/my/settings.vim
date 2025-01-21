@@ -33,7 +33,7 @@ set secure
 
 " set these early to make them available to plugins
 let mapleader = ","
-let maplocalleader = "<"
+let maplocalleader = "\\"
 
 " Save your swp files to a less annoying place than the current directory.
 " If you have .vim-swap in the current directory, it'll use that.
