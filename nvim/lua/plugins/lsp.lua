@@ -180,7 +180,8 @@ return {
         end, opts)
         vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "<leader>lx", vim.lsp.buf.references, opts)
+        -- vim.keymap.set("n", "<leader>lx", vim.lsp.buf.references, opts)
+        vim.keymap.set("n", "<leader>lx", "<cmd>Telescope lsp_references<cr>", opts)
         vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
       end
 
