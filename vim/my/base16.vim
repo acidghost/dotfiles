@@ -9,6 +9,11 @@ function! s:base16_customize() abort
     call Tinted_Hi("@markup.link.url", g:tinted_gui0E, "", g:tinted_cterm0E, "", "underline", "")
     call Tinted_Hi("@property.yaml", g:tinted_gui0E, "", g:tinted_cterm0E, "", "none", "")
     call Tinted_Hi("@string.yaml", g:tinted_gui0B, "", g:tinted_cterm0B, "", "none", "")
+    highligh default link NeoTreeGitUntracked NeoTreeGitIgnored
+    call Tinted_Hi("NeoTreeGitUnstaged", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
+    call Tinted_Hi("MiniIconsPurple", g:tinted_gui0F, "", g:tinted_cterm0F, "", "none", "")
+    call Tinted_Hi("MiniIconsYellow", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
+    call Tinted_Hi("MiniIconsCyan", g:tinted_gui0C, "", g:tinted_cterm0C, "", "none", "")
 endfunction
 
 augroup on_change_colorschema
