@@ -15,6 +15,8 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     commit = treesitter_commit,
+    event = "LazyFile",
+    lazy = vim.fn.argc(-1) == 0,
     opts = {
       ensure_installed = {
         "awk",

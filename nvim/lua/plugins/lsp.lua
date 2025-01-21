@@ -3,6 +3,7 @@ return {
   -- lspconfig
   {
     "neovim/nvim-lspconfig",
+    event = "LazyFile",
     dependencies = {
       "mason.nvim",
       { "williamboman/mason-lspconfig.nvim", config = function() end },
@@ -321,6 +322,7 @@ return {
   {
     "nvimtools/none-ls.nvim",
     dependencies = { "mason.nvim" },
+    event = "LazyFile",
     opts = function(_, opts)
       local nls = require("null-ls")
       opts.root_dir = opts.root_dir
