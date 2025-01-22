@@ -225,9 +225,9 @@ return {
         if opts.inlay_hints.enabled then
           on_supports_method("textDocument/inlayHint", function(client, buffer)
             if
-                vim.api.nvim_buf_is_valid(buffer)
-                and vim.bo[buffer].buftype == ""
-                and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
+              vim.api.nvim_buf_is_valid(buffer)
+              and vim.bo[buffer].buftype == ""
+              and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
             then
               vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
             end
@@ -247,8 +247,8 @@ return {
       end
 
       if
-          type(opts.diagnostics.virtual_text) == "table"
-          and opts.diagnostics.virtual_text.prefix == "icons"
+        type(opts.diagnostics.virtual_text) == "table"
+        and opts.diagnostics.virtual_text.prefix == "icons"
       then
         opts.diagnostics.virtual_text.prefix = "●"
       end
@@ -292,7 +292,7 @@ return {
       local all_mslp_servers = {}
       if have_mason then
         all_mslp_servers =
-            vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+          vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
       end
 
       local ensure_installed = {} ---@type string[]
@@ -326,12 +326,12 @@ return {
     opts = function(_, opts)
       local nls = require("null-ls")
       opts.root_dir = opts.root_dir
-          or require("null-ls.utils").root_pattern(
-            ".null-ls-root",
-            ".neoconf.json",
-            "Makefile",
-            ".git"
-          )
+        or require("null-ls.utils").root_pattern(
+          ".null-ls-root",
+          ".neoconf.json",
+          "Makefile",
+          ".git"
+        )
       opts.sources = vim.list_extend(opts.sources or {}, {
         nls.builtins.formatting.stylua,
         -- TODO: shfmt --filename=${INPUT} -s -bn -i=4

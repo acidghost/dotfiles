@@ -46,8 +46,8 @@ return {
             symbols = {
               modified = "+",
               readonly = "RO",
-              unnamed = "[No Name]", -- Text to show for unnamed buffers.
-              newfile = "New",       -- Text to show for newly created file before first write
+              unnamed = "[No Name]",
+              newfile = "New",
             },
           },
         },

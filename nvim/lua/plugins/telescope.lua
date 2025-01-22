@@ -70,8 +70,7 @@ return {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = (build_cmd ~= "cmake") and "make"
-            or
-            "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+          or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
         enabled = build_cmd ~= nil,
         config = function(plugin)
           on_load("telescope.nvim", function()
@@ -79,18 +78,28 @@ return {
             if not ok then
               local lib = plugin.dir .. "/build/libfzf.so"
               if not vim.uv.fs_stat(lib) then
-                vim.notify("telescope-fzf-native.nvim not built. Rebuilding...", vim.log.levels.WARN)
+                vim.notify(
+                  "telescope-fzf-native.nvim not built. Rebuilding...",
+                  vim.log.levels.WARN
+                )
                 require("lazy").build({ plugins = { plugin }, show = false }):wait(function()
-                  vim.notify("Rebuilding telescope-fzf-native.nvim done.\nPlease restart Neovim.", vim.log.levels.INFO)
+                  vim.notify(
+                    "Rebuilding telescope-fzf-native.nvim done.\nPlease restart Neovim.",
+                    vim.log.levels.INFO
+                  )
                 end)
               else
-                vim.notify("Failed to load telescope-fzf-native.nvim:\n" .. err, vim.log.levels.ERROR)
+                vim.notify(
+                  "Failed to load telescope-fzf-native.nvim:\n" .. err,
+                  vim.log.levels.ERROR
+                )
               end
             end
           end)
         end,
       },
     },
+    -- stylua: ignore
     keys = {
       {
         "<leader>,",
