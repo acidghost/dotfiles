@@ -109,7 +109,7 @@ return {
       },
       { "<leader>/",       pick("live_grep"),                    desc = "Grep (Root Dir)" },
       { "<leader>:",       "<cmd>Telescope command_history<cr>", desc = "Command History" },
-      { "<leader><space>", pick("find_files"),                   desc = "Find Files (Root Dir)" },
+      { "<C-p>",           pick("find_files"),                   desc = "Find Files (Root Dir)" },
       -- find
       {
         "<leader>fb",
@@ -136,6 +136,7 @@ return {
       { "<leader>sC", "<cmd>Telescope commands<cr>",                  desc = "Commands" },
       { "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>",       desc = "Document Diagnostics" },
       { "<leader>sD", "<cmd>Telescope diagnostics<cr>",               desc = "Workspace Diagnostics" },
+      { "<leader>sg", pick("live_grep"),                              desc = "Grep (Root Dir)" },
       { "<leader>sG", pick("live_grep", { root = false }),            desc = "Grep (cwd)" },
       { "<leader>sh", "<cmd>Telescope help_tags<cr>",                 desc = "Help Pages" },
       { "<leader>sH", "<cmd>Telescope highlights<cr>",                desc = "Search Highlight Groups" },
@@ -254,12 +255,15 @@ return {
           end,
           mappings = {
             i = {
-              ["<a-i>"] = find_files_no_ignore,
-              ["<a-h>"] = find_files_with_hidden,
-              ["<C-Down>"] = actions.cycle_history_next,
-              ["<C-Up>"] = actions.cycle_history_prev,
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+              ["<C-i>"] = find_files_no_ignore,
+              ["<C-h>"] = find_files_with_hidden,
+              ["<PageDown>"] = actions.cycle_history_next,
+              ["<PageUp>"] = actions.cycle_history_prev,
               ["<C-f>"] = actions.preview_scrolling_down,
               ["<C-b>"] = actions.preview_scrolling_up,
+              ["<C-d>"] = actions.close,
             },
             n = {
               ["q"] = actions.close,
