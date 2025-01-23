@@ -14,6 +14,8 @@ function! s:base16_customize() abort
     call Tinted_Hi("MiniIconsPurple", g:tinted_gui0F, "", g:tinted_cterm0F, "", "none", "")
     call Tinted_Hi("MiniIconsYellow", g:tinted_gui0A, "", g:tinted_cterm0A, "", "none", "")
     call Tinted_Hi("MiniIconsCyan", g:tinted_gui0C, "", g:tinted_cterm0C, "", "none", "")
+    " fg=135
+    exec 'highlight MyTablinePlus guifg=#af5fff guibg=#' . g:tinted_gui01
 endfunction
 
 augroup on_change_colorschema
