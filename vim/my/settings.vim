@@ -51,3 +51,13 @@ set tags+=.tags
 
 " Disable folding at startup.
 set nofoldenable
+
+if exists('+termguicolors')
+    let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+    "set termguicolors
+endif
+
+if $TERM == "rxvt-unicode-256color"
+    set notermguicolors     " Disable true colors (urxvt fix)
+endif
