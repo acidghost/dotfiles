@@ -379,6 +379,10 @@ return {
 
   {
     "folke/lazydev.nvim",
+    dependencies = {
+      "nvim-lspconfig",
+      "none-ls.nvim",
+    },
     ft = "lua",
     cmd = "LazyDev",
     opts = {
