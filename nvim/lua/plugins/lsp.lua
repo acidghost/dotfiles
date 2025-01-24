@@ -381,6 +381,7 @@ return {
 
   {
     "folke/lazydev.nvim",
+    version = "*",
     dependencies = {
       "nvim-lspconfig",
       "none-ls.nvim",
