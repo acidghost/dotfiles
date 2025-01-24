@@ -58,6 +58,7 @@ return {
         -- LSP Server Settings
         ---@type lspconfig.options
         servers = {
+          bashls = {},
           clangd = {},
           gopls = {},
           helm_ls = {},
@@ -349,6 +350,7 @@ return {
     opts = {
       ensure_installed = {
         "stylua",
+        "shellcheck",
         "shfmt",
       },
     },
