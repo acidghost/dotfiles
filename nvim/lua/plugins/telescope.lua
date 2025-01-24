@@ -208,6 +208,9 @@ return {
         desc = "Goto Symbol (Workspace)",
       },
     },
+    init = function ()
+      vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+    end,
     opts = function()
       local actions = require("telescope.actions")
 
