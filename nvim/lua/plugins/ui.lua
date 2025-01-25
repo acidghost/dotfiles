@@ -37,6 +37,9 @@ return {
         section_separators = { left = "", right = "" },
         always_show_tabline = false,
       },
+      extensions = {
+        "neo-tree",
+      },
       sections = {
         lualine_a = { "mode" },
         lualine_b = { "branch", "diff", "diagnostics" },
