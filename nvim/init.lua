@@ -1,6 +1,7 @@
 vim.cmd.source("~/.vim/my/settings.vim")
 
 require("config.lazy")
+require("config.keymaps")
 
 vim.cmd.source("~/.vim/my/base16.vim")
 
