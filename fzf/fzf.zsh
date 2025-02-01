@@ -30,6 +30,7 @@ source "$fzf_prefix/shell/key-bindings.zsh"
 
 export FZF_TMUX=1
 export FZF_DEFAULT_COMMAND="fd --type f"
+export FZF_DEFAULT_OPTS="--height 40% --tmux center,75%,border-native --layout reverse --border top"
 [ -f ~/.fzf_theme ] && source ~/.fzf_theme
 
 _fzf_compgen_path() {
