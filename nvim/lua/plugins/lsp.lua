@@ -334,6 +334,8 @@ return {
           ".git"
         )
       opts.sources = vim.list_extend(opts.sources or {}, {
+        nls.builtins.formatting.black,
+        nls.builtins.formatting.isort,
         nls.builtins.formatting.stylua,
         -- TODO: shfmt --filename=${INPUT} -s -bn -i=4
         nls.builtins.formatting.shfmt,
@@ -349,6 +351,8 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
+        "black",
+        "isort",
         "stylua",
         "shellcheck",
         "shfmt",
