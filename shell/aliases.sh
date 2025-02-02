@@ -91,6 +91,7 @@ fi
 
 # npx
 alias devcontainer='npx -- @devcontainers/cli'
+alias igir='npx -- igir'
 
 # Platform specific
 case $OSTYPE in
