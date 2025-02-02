@@ -53,7 +53,8 @@ return {
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
-        hijack_netrw_behavior = "open_default",
+        -- seems like w/o disabling, when opening a dir, neo-tree shows twice
+        hijack_netrw_behavior = "disabled",
       },
       default_component_configs = {
         indent = {
