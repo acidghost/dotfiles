@@ -111,9 +111,6 @@
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/starship.toml: etc/starship.toml
     ~/.config/vifm:
-    ~/.default-npm-packages:
-      path: asdf/default-npm-packages
-      if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'
     ~/.default-perl-modules:
       path: asdf/default-perl-modules
       if: '[ "$DOTFILES_WITH_ASDF" = 1 ]'

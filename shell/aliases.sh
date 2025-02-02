@@ -89,6 +89,9 @@ if type monolith &>/dev/null; then
     alias monolith-simple='monolith -afIjv'
 fi
 
+# npx
+alias devcontainer='npx -- @devcontainers/cli'
+
 # Platform specific
 case $OSTYPE in
 linux*)
