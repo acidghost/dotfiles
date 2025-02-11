@@ -94,7 +94,6 @@
     ~/.config/lsd:
     ~/.config/mpv:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
-    ~/.config/neofetch:
     ~/.config/nnn/plugins:
       create: true
       glob: true
