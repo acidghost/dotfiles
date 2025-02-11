@@ -70,7 +70,6 @@ brew "nushell"
 brew "pandoc"                   unless IS_LIGHTWEIGHT
 brew "pastel"
 brew "ripgrep"
-brew "spotify-tui"              if WITH_APPS
 brew "starship"
 brew "thefuck"
 brew "tmux"
