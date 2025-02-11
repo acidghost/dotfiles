@@ -335,6 +335,7 @@ return {
         )
       opts.sources = vim.list_extend(opts.sources or {}, {
         nls.builtins.formatting.black,
+        nls.builtins.formatting.clang_format,
         nls.builtins.formatting.isort,
         nls.builtins.formatting.stylua,
         -- TODO: shfmt --filename=${INPUT} -s -bn -i=4
@@ -352,6 +353,7 @@ return {
     opts = {
       ensure_installed = {
         "black",
+        "clang-format",
         "isort",
         "stylua",
         "shellcheck",
