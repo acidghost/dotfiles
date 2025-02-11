@@ -9,7 +9,7 @@ $env.config = {
     file_format: "plaintext" # "sqlite" or "plaintext"
   }
   filesize: {
-    metric: true # true => KB, MB, GB (ISO standard), false => KiB, MiB, GiB (Windows standard)
+    unit: metric
   }
   edit_mode: vi
 
