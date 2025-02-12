@@ -88,10 +88,6 @@ if (program exists brew) {
   "use brew.nu\n" | save --append $dynamic_env_src
 }
 
-if not ($env.ASDF_DIR | is-empty) {
-  $"source '($env.ASDF_DIR)/asdf.nu'\n" | save --append $dynamic_env_src
-}
-
 if (program exists thefuck) {
   "use thefuck.nu *\n" | save --append $dynamic_env_src
 }
