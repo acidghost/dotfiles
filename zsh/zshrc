@@ -181,11 +181,6 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#vi-forward
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(forward-char)
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(vi-forward-char)
 
-if [ -n "$commands[brew]" ] && [ $WITH_ASDF = 1 ]; then
-    alias brew="env PATH='$(sed -e "s,$(asdf where python | tr -d '\n')/bin:,,g" \
-                                -e "s,$ASDF_DATA_DIR/shims:,,g" <<< "$PATH")' brew"
-fi
-
 # https://gist.github.com/thomd/7667642
 LS_COLORS="\
 rs=0:\
