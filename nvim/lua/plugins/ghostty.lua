@@ -1,5 +1,5 @@
 local path = "/Applications/Ghostty.app/Contents/Resources/vim/vimfiles"
-if not vim.fn.isdirectory(path) then
+if vim.fn.isdirectory(path) == 0 then
   return {}
 end
 return {
