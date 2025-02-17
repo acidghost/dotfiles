@@ -154,17 +154,16 @@ return {
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
       local on_attach = function(client, bufnr)
-        -- FIXME
-        -- vim.keymap.set("n", "<leader>led", vim.diagnostic.open_float, opts)
-        -- vim.keymap.set("n", "<leader>lep", vim.diagnostic.goto_prev, opts)
-        -- vim.keymap.set("n", "<leader>len", vim.diagnostic.goto_next, opts)
-        -- vim.keymap.set("n", "<leader>leq", vim.diagnostic.setloclist, opts)
-
         --Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
         -- Mappings.
         local opts = { noremap = true, silent = true, buffer = bufnr }
+
+        vim.keymap.set("n", "<leader>led", vim.diagnostic.open_float, opts)
+        vim.keymap.set("n", "<leader>lep", vim.diagnostic.goto_prev, opts)
+        vim.keymap.set("n", "<leader>len", vim.diagnostic.goto_next, opts)
+        vim.keymap.set("n", "<leader>leq", vim.diagnostic.setloclist, opts)
 
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, opts)
