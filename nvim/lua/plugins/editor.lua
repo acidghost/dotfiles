@@ -2,7 +2,7 @@ return {
 
   {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
+    version = "*",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
@@ -88,6 +88,7 @@ return {
   -- hunks in a commit.
   {
     "lewis6991/gitsigns.nvim",
+    version = "*",
     event = "LazyFile",
     opts = {
       signs = {

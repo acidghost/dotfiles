@@ -2,6 +2,7 @@ return {
 
   {
     "dhruvasagar/vim-prosession",
+    version = "*",
     dependencies = {
       "tpope/vim-obsession",
     },

@@ -1,6 +1,7 @@
 return {
   {
     "github/copilot.vim",
+    version = "*",
     -- stylua: ignore
     keys = {
       { "<Leader>lce", "<cmd>Copilot enable<cr>",     mode = "n", desc = "Copilot enable" },

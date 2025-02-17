@@ -1,6 +1,7 @@
 return {
   {
     "zk-org/zk-nvim",
+    version = "*",
     config = function()
       require("zk").setup({
         picker = "telescope",

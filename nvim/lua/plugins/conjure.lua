@@ -5,6 +5,7 @@ end
 return {
   {
     "Olical/conjure",
+    version = "*",
     ft = {
       "lua",
       "python",

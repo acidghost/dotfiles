@@ -3,10 +3,15 @@ return {
   -- lspconfig
   {
     "neovim/nvim-lspconfig",
+    version = "*",
     event = "LazyFile",
     dependencies = {
       "mason.nvim",
-      { "williamboman/mason-lspconfig.nvim", config = function() end },
+      {
+        "williamboman/mason-lspconfig.nvim",
+        version = "*",
+        config = function() end,
+      },
     },
     opts = function()
       ---@class PluginLspOpts
@@ -347,6 +352,7 @@ return {
   {
 
     "williamboman/mason.nvim",
+    version = "*",
     cmd = "Mason",
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
