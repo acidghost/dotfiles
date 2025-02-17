@@ -12,6 +12,7 @@ return {
         version = "*",
         config = function() end,
       },
+      "b0o/schemastore.nvim",
     },
     opts = function()
       ---@class PluginLspOpts
@@ -67,7 +68,10 @@ return {
           clangd = {},
           gopls = {},
           helm_ls = {},
-          jsonls = {},
+          jsonls = {
+            schemas = require("schemastore").json.schemas(),
+            validate = { enable = true },
+          },
           nushell = {},
           lua_ls = {
             -- mason = false, -- set to false if you don't want this server to be installed with mason
@@ -117,9 +121,14 @@ return {
           yamlls = {
             settings = {
               yaml = {
-                schemas = {
-                  ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+                schemaStore = {
+                  -- You must disable built-in schemaStore support if you want to use
+                  -- this plugin and its advanced options like `ignore`.
+                  enable = false,
+                  -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                  url = "",
                 },
+                schemas = require("schemastore").yaml.schemas(),
               },
             },
           },
