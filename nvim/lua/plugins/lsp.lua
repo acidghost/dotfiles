@@ -93,6 +93,10 @@ return {
                 doc = {
                   privateName = { "^_" },
                 },
+                format = {
+                  -- since we're using stylua
+                  enable = false,
+                },
                 hint = {
                   enable = true,
                   setType = false,
