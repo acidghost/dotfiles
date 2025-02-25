@@ -10,6 +10,10 @@ local function pick(builtin, opts)
   return function()
     opts = opts or {}
     opts.follow = opts.follow ~= false
+    if opts.buffer_dir == true then
+      opts.cwd = require("telescope.utils").buffer_dir()
+      opts.buffer_dir = nil
+    end
     if opts.cwd and opts.cwd ~= vim.uv.cwd() then
       -- TODO: what's the point of this?
       local function open_cwd_dir()
@@ -107,9 +111,10 @@ return {
         "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>",
         desc = "Switch Buffer",
       },
-      { "<leader>/",       pick("live_grep"),                    desc = "Grep (Root Dir)" },
-      { "<leader>:",       "<cmd>Telescope command_history<cr>", desc = "Command History" },
-      { "<C-p>",           pick("find_files"),                   desc = "Find Files (Root Dir)" },
+      { "<leader>/",    pick("live_grep"),                              desc = "Grep (Root Dir)" },
+      { "<leader>:",    "<cmd>Telescope command_history<cr>",           desc = "Command History" },
+      { "<C-p>",        pick("find_files"),                             desc = "Find Files (Root Dir)" },
+      { "<S-p>",        pick("find_files", { buffer_dir = true }),      desc = "Find Files (Buffer Dir)" },
       -- find
       {
         "<leader>fb",
@@ -121,41 +126,34 @@ return {
         pick("find_files", { cwd = vim.fn.stdpath("config") }),
         desc = "Find Config File",
       },
-      { "<leader>fF", pick("find_files", { root = false }),           desc = "Find Files (cwd)" },
-      { "<leader>fg", "<cmd>Telescope git_files<cr>",                 desc = "Find Files (git-files)" },
-      { "<leader>fr", "<cmd>Telescope oldfiles<cr>",                  desc = "Recent" },
-      { "<leader>fR", pick("oldfiles", { cwd = vim.uv.cwd() }),       desc = "Recent (cwd)" },
+      { "<leader>fg", "<cmd>Telescope git_files<cr>",                   desc = "Find Files (git-files)" },
+      { "<leader>fr", "<cmd>Telescope oldfiles<cr>",                    desc = "Recent" },
+      { "<leader>fR", pick("oldfiles", { cwd = vim.uv.cwd() }),         desc = "Recent (cwd)" },
       -- git
-      { "<leader>gc", "<cmd>Telescope git_commits<CR>",               desc = "Commits" },
-      { "<leader>gs", "<cmd>Telescope git_status<CR>",                desc = "Status" },
+      { "<leader>gc", "<cmd>Telescope git_commits<CR>",                 desc = "Commits" },
+      { "<leader>gs", "<cmd>Telescope git_status<CR>",                  desc = "Status" },
       -- search
-      { '<leader>s"', "<cmd>Telescope registers<cr>",                 desc = "Registers" },
-      { "<leader>sa", "<cmd>Telescope autocommands<cr>",              desc = "Auto Commands" },
-      { "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Buffer" },
-      { "<leader>sc", "<cmd>Telescope command_history<cr>",           desc = "Command History" },
-      { "<leader>sC", "<cmd>Telescope commands<cr>",                  desc = "Commands" },
-      { "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>",       desc = "Document Diagnostics" },
-      { "<leader>sD", "<cmd>Telescope diagnostics<cr>",               desc = "Workspace Diagnostics" },
-      { "<leader>sg", pick("live_grep"),                              desc = "Grep (Root Dir)" },
-      { "<leader>sG", pick("live_grep", { root = false }),            desc = "Grep (cwd)" },
-      { "<leader>sh", "<cmd>Telescope help_tags<cr>",                 desc = "Help Pages" },
-      { "<leader>sH", "<cmd>Telescope highlights<cr>",                desc = "Search Highlight Groups" },
-      { "<leader>sj", "<cmd>Telescope jumplist<cr>",                  desc = "Jumplist" },
-      { "<leader>sk", "<cmd>Telescope keymaps<cr>",                   desc = "Key Maps" },
-      { "<leader>sl", "<cmd>Telescope loclist<cr>",                   desc = "Location List" },
-      { "<leader>sM", "<cmd>Telescope man_pages<cr>",                 desc = "Man Pages" },
-      { "<leader>sm", "<cmd>Telescope marks<cr>",                     desc = "Jump to Mark" },
-      { "<leader>so", "<cmd>Telescope vim_options<cr>",               desc = "Options" },
-      { "<leader>sR", "<cmd>Telescope resume<cr>",                    desc = "Resume" },
-      { "<leader>sq", "<cmd>Telescope quickfix<cr>",                  desc = "Quickfix List" },
-      { "<leader>sw", pick("grep_string", { word_match = "-w" }),     desc = "Word (Root Dir)" },
-      {
-        "<leader>sW",
-        pick("grep_string", { root = false, word_match = "-w" }),
-        desc = "Word (cwd)",
-      },
-      { "<leader>sw", pick("grep_string"),                   mode = "v", desc = "Selection (Root Dir)" },
-      { "<leader>sW", pick("grep_string", { root = false }), mode = "v", desc = "Selection (cwd)" },
+      { '<leader>s"', "<cmd>Telescope registers<cr>",                   desc = "Registers" },
+      { "<leader>sa", "<cmd>Telescope autocommands<cr>",                desc = "Auto Commands" },
+      { "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>",   desc = "Buffer" },
+      { "<leader>sc", "<cmd>Telescope command_history<cr>",             desc = "Command History" },
+      { "<leader>sC", "<cmd>Telescope commands<cr>",                    desc = "Commands" },
+      { "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>",         desc = "Document Diagnostics" },
+      { "<leader>sD", "<cmd>Telescope diagnostics<cr>",                 desc = "Workspace Diagnostics" },
+      { "<leader>sg", pick("live_grep"),                                desc = "Grep (Root Dir)" },
+      { "<leader>sG", pick("live_grep", { buffer_dir = true }),         desc = "Grep (Buffer Dir)" },
+      { "<leader>sh", "<cmd>Telescope help_tags<cr>",                   desc = "Help Pages" },
+      { "<leader>sH", "<cmd>Telescope highlights<cr>",                  desc = "Search Highlight Groups" },
+      { "<leader>sj", "<cmd>Telescope jumplist<cr>",                    desc = "Jumplist" },
+      { "<leader>sk", "<cmd>Telescope keymaps<cr>",                     desc = "Key Maps" },
+      { "<leader>sl", "<cmd>Telescope loclist<cr>",                     desc = "Location List" },
+      { "<leader>sM", "<cmd>Telescope man_pages<cr>",                   desc = "Man Pages" },
+      { "<leader>sm", "<cmd>Telescope marks<cr>",                       desc = "Jump to Mark" },
+      { "<leader>so", "<cmd>Telescope vim_options<cr>",                 desc = "Options" },
+      { "<leader>sR", "<cmd>Telescope resume<cr>",                      desc = "Resume" },
+      { "<leader>sq", "<cmd>Telescope quickfix<cr>",                    desc = "Quickfix List" },
+      { "<leader>sw", pick("grep_string", { word_match = "-w" }),       desc = "Word (Root Dir)" },
+      { "<leader>sw", pick("grep_string"), mode = "v",                  desc = "Selection (Root Dir)" },
       {
         "<leader>uC",
         pick("colorscheme", { enable_preview = true }),
@@ -208,7 +206,7 @@ return {
         desc = "Goto Symbol (Workspace)",
       },
     },
-    init = function ()
+    init = function()
       vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
     end,
     opts = function()
