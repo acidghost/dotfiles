@@ -25,6 +25,7 @@
   "snacks.nvim": { "branch": "main", "commit": "51542bb8f43cbd0ca9d2ff3c5ad8a86fd76475a1" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "2a5ceff981501cff8f46871d5402cd3378a8ab6a" },
   "telescope.nvim": { "branch": "master", "commit": "78857db9e8d819d3cc1a9a7bdc1d39d127a36495" },
+  "trouble.nvim": { "branch": "main", "commit": "748ca2789044607f19786b1d837044544c55e80a" },
   "vim-latex": { "branch": "master", "commit": "08821de4f16625dfe35c9d0d18bb650102e4107f" },
   "vim-obsession": { "branch": "master", "commit": "ed9dfc7c2cc917ace8b24f4f9f80a91e05614b63" },
   "vim-prosession": { "branch": "master", "commit": "1cb2eadde0b79f49eb4b5a54cc78735aea33cbca" },
