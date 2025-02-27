@@ -19,8 +19,8 @@ from functools import partial
 from glob import glob
 from pathlib import Path
 from platform import uname
-from typing import (Callable, Dict, List, NamedTuple, NewType, Optional,
-                    Protocol, Tuple, TypeAlias, TypeVar, Union, cast)
+from typing import (Any, Callable, Dict, List, NamedTuple, NewType, Optional,
+                    Protocol, Tuple, TypeAlias, TypeVar, Union)
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -366,11 +366,11 @@ def select_release(repo: str) -> Result[Dict]:
     )
 
 
-def gh_api_request[T](endpoint: str) -> Result[T]:
+def gh_api_request(endpoint: str) -> Result[Any]:
     url = f"https://api.github.com/{endpoint}"
     try:
         with urlopen(url) as req:
-            return cast(T, json.load(req))
+            return json.load(req)
     except HTTPError as e:
         return Error(f"[!] Failed to make request: {e.reason}")
 
