@@ -1,0 +1,14 @@
+#!/bin/sh
+# Run a Python script with uv, if available, or interpreter in PATH directly.
+#
+# Use as a shebang if you have a script that can optionally work with inline script
+# metadata (e.g. to use dependencies).
+# https://packaging.python.org/en/latest/specifications/inline-script-metadata/
+
+if type uv >/dev/null 2>&1; then
+    exec uv run --script "$@"
+elif type python3 >/dev/null 2>&1; then
+    exec python3 "$@"
+else
+    exec python "$@"
+fi
