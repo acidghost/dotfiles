@@ -267,7 +267,7 @@ try:
                 self.asset = self.assets[evt.option_index]
                 self.notify(
                     self.asset["browser_download_url"],
-                    title=f"Downloading {self.asset["name"]}",
+                    title=f"Downloading {self.asset['name']}",
                 )
                 try:
                     r = download_asset(self.asset, self.cli, self.notify_info)
