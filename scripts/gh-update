@@ -30,9 +30,9 @@ class CLI(NamedTuple):
     yes: bool
     plain: bool
     list_releases: bool
-    no_tui: bool
     repo: str
     dst_filename: str
+    no_tui: bool = False
 
 
 KNOWN_REPOS = {
@@ -381,7 +381,9 @@ def list_releases(repo: str) -> Result[List[Dict]]:
 
 def get_release(repo: str, ver: str = "latest") -> Result[Dict]:
     return gh_api_request(
-        f"{repo}/releases/latest" if ver == "latest" else f"{repo}/releases/tags/{ver}"
+        f"repos/{repo}/releases/latest"
+        if ver == "latest"
+        else f"repos/{repo}/releases/tags/{ver}"
     )
 
 
