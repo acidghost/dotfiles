@@ -1,15 +1,26 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pybang
+# vim: ft=python
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#   "textual>=2.0.0,<3.0.0",
+# ]
+# ///
 import argparse
+import asyncio
 import json
 import os
 import platform
 import subprocess as sp
+import sys
 import tempfile
+from dataclasses import dataclass
 from functools import partial
 from glob import glob
 from pathlib import Path
 from platform import uname
-from typing import Any, Callable, List, NamedTuple, Optional, Union
+from typing import (Callable, Dict, List, NamedTuple, NewType, Optional,
+                    Protocol, Tuple, TypeAlias, TypeVar, Union, cast)
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -19,6 +30,7 @@ class CLI(NamedTuple):
     yes: bool
     plain: bool
     list_releases: bool
+    no_tui: bool
     repo: str
     dst_filename: str
 
@@ -57,6 +69,10 @@ def cli() -> CLI:
     parser.add_argument(
         "-l", "--list", dest="list_releases", action="store_true", help="List releases"
     )
+    if HAS_TUI:
+        parser.add_argument(
+            "--no-tui", action="store_true", help="Do not use the TUI interface"
+        )
     parser.add_argument("repo", help="Remote repository")
     parser.add_argument("dst_filename", nargs="?", help="File to grab from the release")
     args = parser.parse_args()
@@ -81,22 +97,235 @@ def cli() -> CLI:
     return CLI(**vars(args))
 
 
+@dataclass
+class Error:
+    message: str
+    code: int = 1
+
+    def unwrap(self) -> int:
+        print(self.message, file=sys.stderr)
+        return self.code
+
+
+PromptAbort = NewType("PromptAbort", Error)
+
+T = TypeVar("T")
+Result: TypeAlias = Union[T, Error]
+
+
+class NotifyFn(Protocol):
+    """Type of a function used to notify someting to the user"""
+
+    def __call__(self, message: str, title: str = ...) -> None: ...
+
+
+try:
+    from textual import work
+    from textual.app import App, ComposeResult
+    from textual.containers import Center
+    from textual.reactive import Reactive, reactive
+    from textual.widgets import Footer, Header, OptionList, ProgressBar
+
+    class TUI(App):
+
+        quit_timeout: Reactive[int] = reactive(180)
+
+        BINDINGS = [
+            ("q", "quit"),
+            ("ctrl+d", "quit"),
+            ("l", "show_asset_url", "Show asset URL"),
+        ]
+
+        CSS = """
+            Screen {
+                align: center middle;
+            }
+            #main {
+                align: center middle;
+                height: 90%;
+                min-height: 6;
+            }
+            OptionList {
+                height: 50%;
+            }
+            #dedupe {
+                visibility: hidden;
+            }
+            ProgressBar {
+                align: right bottom;
+                width: 100%;
+                visibility: hidden;
+            }
+        """
+
+        def __init__(self, args: CLI, **kwargs):
+            self.cli = args
+            self.exit_error: Optional[Error] = None
+            self.host = Host.uname()
+            super().__init__(**kwargs)
+
+        def compose(self) -> ComposeResult:
+            yield Header()
+            with Center(id="main"):
+                yield VimOptionList(id="select-release")
+                yield VimOptionList(id="select-asset")
+                yield VimOptionList(id="dedupe")
+            yield ProgressBar(show_percentage=False, show_eta=False)
+            yield Footer()
+
+        def on_mount(self) -> None:
+            self.title = "gh-update"
+            self.sub_title = self.cli.repo
+
+            self.container = self.query_one("#main", Center)
+            self.container.set_loading(True)
+
+            self.progress_bar = self.query_one(ProgressBar)
+            self.progress_bar.total = self.quit_timeout
+
+            self.interval = self.set_interval(
+                1 / 60, self.update_quit_timeout, pause=True
+            )
+
+            self.releases_ol = self.query_one("#select-release", OptionList)
+            self.assets_ol = self.query_one("#select-asset", OptionList)
+            self.dedupe_ol = self.query_one("#dedupe", OptionList)
+
+            if self.cli.list_releases:
+                self.assets_ol.visible = False
+                self.releases_ol.styles.height = "100%"
+                self.load_releases()
+            else:
+                self.releases_ol.visible = False
+                self.load_latest_release()
+
+        @work
+        async def load_latest_release(self) -> None:
+            res = await asyncio.to_thread(get_release, self.cli.repo)
+            self.container.set_loading(False)
+            if isinstance(res, Error):
+                self.notify_and_quit(res)
+                return
+            self.release = res
+            self.assets = res["assets"]
+            self.add_assets()
+            self.assets_ol.refresh(layout=True)
+
+        @work
+        async def load_releases(self) -> None:
+            res = await asyncio.to_thread(list_releases, self.cli.repo)
+            self.container.set_loading(False)
+            if isinstance(res, Error):
+                self.notify_and_quit(res)
+                return
+            if len(res) == 0:
+                self.notify_and_quit(Error("No releases!"))
+                return
+            self.releases = res
+            self.releases_ol.add_options(r["tag_name"] for r in res)
+            self.releases_ol.highlighted = 0
+            self.releases_ol.refresh(layout=True)
+
+        def update_quit_timeout(self) -> None:
+            self.quit_timeout -= 1
+
+        def watch_quit_timeout(self, value: int) -> None:
+            if value <= 0:
+                self.quit()
+            self.progress_bar.progress = value
+
+        def add_assets(self) -> None:
+            for i, asset in enumerate(self.assets):
+                self.assets_ol.add_option(f"[bold]{asset['name']}[/bold]")
+                if self.assets_ol.highlighted is None and self.host.is_recommended(
+                    asset["name"].lower()
+                ):
+                    self.assets_ol.highlighted = i
+
+        def action_show_asset_url(self) -> None:
+            self.notify(self.assets[self.assets_ol.highlighted]["browser_download_url"])
+
+        def check_action(
+            self, action: str, parameters: Tuple[object, ...]
+        ) -> bool | None:
+            if action == "show_asset_url":
+                return hasattr(self, "assets")
+            return True
+
+        def on_option_list_option_selected(
+            self, evt: OptionList.OptionSelected
+        ) -> None:
+            if evt.option_list.id == "select-release":
+                self.assets = self.releases[evt.option_index]["assets"]
+                self.assets_ol.clear_options()
+                self.add_assets()
+                self.assets_ol.refresh(layout=True)
+                self.assets_ol.focus()
+                self.assets_ol.visible = True
+                self.releases_ol.styles.height = "50%"
+            elif evt.option_list.id == "select-asset":
+                self.asset = self.assets[evt.option_index]
+                self.notify(
+                    self.asset["browser_download_url"],
+                    title=f"Downloading {self.asset["name"]}",
+                )
+                try:
+                    r = download_asset(self.asset, self.cli, self.notify_info)
+                except Exception as e:
+                    self.notify(f"Failed download: {e}", severity="error")
+                    return
+                if isinstance(r, Error):
+                    self.notify(r.message, severity="error")
+                    return
+                self.notify("Downloaded successfully")
+
+        def notify_and_quit(self, error: Error) -> None:
+            self.exit_error = error
+            self.notify(error.message, severity="error")
+            self.progress_bar.visible = True
+            self.container.visible = False
+            self.interval.resume()
+
+        def notify_info(self, message: str, title: str = "") -> None:
+            self.notify(message, title=title)
+
+        def quit(self) -> None:
+            return self.exit(return_code=self.exit_error.code if self.exit_error else 0)
+
+    class VimOptionList(OptionList):
+        BINDINGS = OptionList.BINDINGS + [
+            ("j", "cursor_down"),
+            ("k", "cursor_up"),
+        ]
+
+    def main_tui(args: CLI) -> int:
+        app = TUI(args)
+        app.run()
+        return app.return_code or 0
+
+    HAS_TUI = True
+except ImportError:
+    HAS_TUI = False
+
+
 def main(args: CLI) -> int:
+    if HAS_TUI and not args.no_tui and not args.yes:
+        return main_tui(args)
+
     if args.list_releases and not args.yes:
         release = select_release(args.repo)
     else:
         release = get_release(args.repo)
 
-    if isinstance(release, int):
-        return release
+    if isinstance(release, Error):
+        return release.unwrap()
 
     print(f"[+] Release: {release['tag_name']} ({release['html_url']})")
     recommend_idx = print_assets(release)
 
     if args.yes:
         if recommend_idx is None:
-            print("[!] Could not recommend anything")
-            return 1
+            return Error("[!] Could not recommend anything").unwrap()
         asset = release["assets"][recommend_idx]
     else:
         prompt = "[?] Select which asset to install (0 to exit"
@@ -105,54 +334,26 @@ def main(args: CLI) -> int:
         prompt += "): "
 
         asset = prompt_list(prompt, recommend_idx, lambda i: release["assets"][i])
-        if isinstance(asset, int):
-            return asset
+        if isinstance(asset, Error):
+            return asset.unwrap()
 
     print("[+] Selection:", asset["name"])
 
-    if args.plain:
-        process_asset = from_plain
-    else:
-        suffixes = Path(asset["name"]).suffixes
-        if suffixes[-2:] == [".tar", ".gz"]:
-            process_asset = from_archive_tar
-        elif suffixes[-1] == ".gz":
-            process_asset = from_gzip
-        elif suffixes[-1] == ".tbz":
-            process_asset = partial(from_archive_tar, flags="j")
-        elif suffixes[-1] == ".zip":
-            uname_system = uname().system
-            if uname_system == "Linux":
-                process_asset = from_archive_zip
-            elif uname_system == "Darwin":
-                process_asset = from_archive_tar
-            else:
-                print(f"[!] I don't know how to handle .zip in {uname_system}")
-                return 1
-        elif suffixes == [] or suffixes[-1] == ".AppImage":
-            process_asset = from_plain
-        else:
-            print(f"[!] Unable to recognize suffixes: {suffixes}")
-            return 1
+    def notify(message: str, title: str = ""):
+        t = f"{title}: " if title else ""
+        print(t + message)
 
-    with tempfile.TemporaryDirectory(prefix="gh-update-") as tmp:
-        with urlopen(asset["browser_download_url"]) as rep:
-            args.dst_dir.mkdir(parents=True, exist_ok=True)
-            r = process_asset(args, rep.read(), tmp)
-            if r is not None:
-                return r
-
-    return 0
+    r = download_asset(asset, args, notify)
+    return r.unwrap() if isinstance(r, Error) else 0
 
 
-def select_release(repo: str) -> Union[dict, int]:
+def select_release(repo: str) -> Result[Dict]:
     releases = list_releases(repo)
-    if isinstance(releases, int):
+    if isinstance(releases, Error):
         return releases
 
     if not releases:
-        print("[!] No releases found")
-        return 1
+        return Error("[!] No releases found")
 
     default = 0
     print("[+] Select a version:")
@@ -165,59 +366,71 @@ def select_release(repo: str) -> Union[dict, int]:
     )
 
 
-def _request(url: str) -> Union[Any, int]:
+def gh_api_request[T](endpoint: str) -> Result[T]:
+    url = f"https://api.github.com/{endpoint}"
     try:
         with urlopen(url) as req:
-            return json.load(req)
+            return cast(T, json.load(req))
     except HTTPError as e:
-        print(f"[!] Failed to make request: {e.reason}")
-        return 1
+        return Error(f"[!] Failed to make request: {e.reason}")
 
 
-def list_releases(repo: str) -> Union[List[dict], int]:
-    url = f"https://api.github.com/repos/{repo}/releases"
-    return _request(url)
+def list_releases(repo: str) -> Result[List[Dict]]:
+    return gh_api_request(f"repos/{repo}/releases")
 
 
-def get_release(repo: str, ver: str = "latest") -> Union[dict, int]:
-    if ver == "latest":
-        release_url = f"https://api.github.com/repos/{repo}/releases/{ver}"
-    else:
-        release_url = f"https://api.github.com/repos/{repo}/releases/tags/{ver}"
-    return _request(release_url)
+def get_release(repo: str, ver: str = "latest") -> Result[Dict]:
+    return gh_api_request(
+        f"{repo}/releases/latest" if ver == "latest" else f"{repo}/releases/tags/{ver}"
+    )
 
 
-def print_assets(release: dict) -> Optional[int]:
-    uname = platform.uname()
-    this_system = uname.system.lower()
-    this_machine = uname.machine.lower()
-    ARCH_X86 = ["x86_64", "amd64"]
-    ARCH_ARM = ["aarch64", "arm64"]
-    if this_machine in ARCH_X86:
-        this_machine = ARCH_X86
-    elif this_machine in ARCH_ARM:
-        this_machine = ARCH_ARM
-    else:
-        this_machine = [this_machine]
+@dataclass
+class Host:
+    system: str
+    machine: List[str]
 
+    @staticmethod
+    def uname() -> "Host":
+        uname = platform.uname()
+        this_system = uname.system.lower()
+        this_machine = uname.machine.lower()
+        ARCH_X86 = ["x86_64", "amd64"]
+        ARCH_ARM = ["aarch64", "arm64"]
+        if this_machine in ARCH_X86:
+            this_machine = ARCH_X86
+        elif this_machine in ARCH_ARM:
+            this_machine = ARCH_ARM
+        else:
+            this_machine = [this_machine]
+        return Host(this_system, this_machine)
+
+    def is_recommended(self, asset: str) -> bool:
+        if self.system in asset:
+            for m in self.machine:
+                if m in asset:
+                    return True
+        return False
+
+
+def print_assets(release: Dict) -> Optional[int]:
+    host = Host.uname()
     recommend_idx = None
     for i, asset in enumerate(release["assets"]):
         name = asset["name"].lower()
-        recommend = " "
-        if this_system in name:
-            for m in this_machine:
-                if m in name:
-                    recommend = "*"
-                    if recommend_idx is None:
-                        recommend_idx = i
-                    break
+        if host.is_recommended(name):
+            recommend = "*"
+            if recommend_idx is None:
+                recommend_idx = i
+        else:
+            recommend = " "
         print(f"    {i+1:02d} {recommend} {asset['browser_download_url']}")
     return recommend_idx
 
 
 def prompt_list[T](
     prompt: str, recommend_idx: Optional[int], extract: Callable[[int], T]
-) -> Union[T, int]:
+) -> Result[Union[T, PromptAbort]]:
     while True:
         i = input(prompt)
         if i == "":
@@ -230,7 +443,7 @@ def prompt_list[T](
             except ValueError:
                 continue
             if i == 0:
-                return 0
+                return PromptAbort(Error("Bye-bye", code=0))
             i -= 1
         try:
             return extract(i)
@@ -238,10 +451,49 @@ def prompt_list[T](
             continue
 
 
+def download_asset(asset: Dict, args: CLI, notify: NotifyFn) -> Result[None]:
+    process_asset = choose_unpack_fn(asset["name"], args.plain)
+    if isinstance(process_asset, Error):
+        return process_asset
+
+    with tempfile.TemporaryDirectory(prefix="gh-update-") as tmp:
+        with urlopen(asset["browser_download_url"]) as rep:
+            args.dst_dir.mkdir(parents=True, exist_ok=True)
+            return process_asset(args, rep.read(), tmp, notify)
+
+
+def choose_unpack_fn(
+    asset: str, force_plain: bool = False
+) -> Result[Callable[[CLI, bytes, str, NotifyFn], Result[None]]]:
+    """Use the asset name to try to infer the kind of asset and how to handle it"""
+    if force_plain:
+        return from_plain
+
+    suffixes = Path(asset).suffixes
+    if suffixes[-2:] == [".tar", ".gz"]:
+        return from_archive_tar
+    elif suffixes[-1] == ".gz":
+        return from_gzip
+    elif suffixes[-1] == ".tbz":
+        return partial(from_archive_tar, flags="j")
+    elif suffixes[-1] == ".zip":
+        uname_system = uname().system
+        if uname_system == "Linux":
+            return from_archive_zip
+        elif uname_system == "Darwin":
+            return from_archive_tar
+        else:
+            return Error(f"[!] I don't know how to handle .zip in {uname_system}")
+    elif suffixes == [] or suffixes[-1] == ".AppImage":
+        return from_plain
+
+    return Error(f"[!] Unable to recognize suffixes: {suffixes}")
+
+
 def from_archive_tar(
-    args: CLI, asset: bytes, tmp: str, flags: str = "z"
-) -> Optional[int]:
-    print(f"[-] Extracting with 'tar -{flags}'")
+    args: CLI, asset: bytes, tmp: str, notify: NotifyFn, flags: str = "z"
+) -> Result[None]:
+    notify(f"[-] Extracting with 'tar -{flags}'")
     sp.run(["tar", f"-x{flags}f", "-", "-C", tmp], check=True, input=asset)
 
     files = [
@@ -251,22 +503,23 @@ def from_archive_tar(
     ]
 
     if len(files) == 0:
-        print(f"[!] No file matches the glob **/{args.dst_filename}")
-        return 1
+        return Error(f"[!] No file matches the glob **/{args.dst_filename}")
 
-    print(f"[-] Found {files}")
+    notify(f"[-] Found {files}")
     sp.run(["chmod", "+x", *files], check=True)
-    print(f"[-] Moving them to {args.dst_dir}")
-    copy_archive_contents(args.dst_dir, files)
+    notify(f"[-] Moving them to {args.dst_dir}")
+    copy_archive_contents(args.dst_dir, files, notify)
 
 
-def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
+def from_archive_zip(
+    args: CLI, asset: bytes, tmp: str, notify: NotifyFn
+) -> Result[None]:
     tmp_p = Path(tmp)
     zipfile = tmp_p / "asset.zip"
-    print(f"[-] Saving .zip to {zipfile}")
+    notify(f"[-] Saving .zip to {zipfile}")
     zipfile.write_bytes(asset)
 
-    print(f"[-] Extracting with 'unzip'")
+    notify(f"[-] Extracting with 'unzip'")
     out_p = tmp_p / "out"
     sp.run(["unzip", "-d", out_p, zipfile], check=True)
 
@@ -277,17 +530,16 @@ def from_archive_zip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     ]
 
     if len(files) == 0:
-        print(f"[!] No file matches the glob **/{args.dst_filename}")
-        return 1
+        return Error(f"[!] No file matches the glob **/{args.dst_filename}")
 
-    print(f"[-] Found {files}")
+    notify(f"[-] Found {files}")
     sp.run(["chmod", "+x", *files], check=True)
-    print(f"[-] Moving them to {args.dst_dir}")
-    copy_archive_contents(args.dst_dir, files)
+    notify(f"[-] Moving them to {args.dst_dir}")
+    copy_archive_contents(args.dst_dir, files, notify)
 
 
-def copy_archive_contents(dst_dir: Path, files: List[str]):
-    group_dupes = {}
+def copy_archive_contents(dst_dir: Path, files: List[str], notify: NotifyFn):
+    group_dupes: Dict[str, List[Path]] = {}
     for file in files:
         file = Path(file)
         if file.name in group_dupes:
@@ -295,18 +547,21 @@ def copy_archive_contents(dst_dir: Path, files: List[str]):
         else:
             group_dupes[file.name] = [file]
 
-    sp.run(
-        [
-            "cp",
-            "-v",
-            *[
-                str(prompt_dedupe(dupes) if len(dupes) > 1 else dupes[0])
-                for dupes in group_dupes.values()
-            ],
-            str(dst_dir),
-        ],
-        check=True,
-    )
+    srcs: List[str] = []
+    dupes: List[List[Path]] = []
+    for ds in group_dupes.values():
+        if len(ds) > 1:
+            dupes.append(ds)
+            if not HAS_TUI:
+                srcs.append(str(prompt_dedupe(ds)))
+        else:
+            srcs.append(str(ds[0]))
+
+    if HAS_TUI and len(dupes) > 0:
+        notify("\n".join(["\n".join([f"- {f}" for f in ds]) for ds in dupes]))
+        return
+
+    sp.run(["cp", "-v", *srcs, str(dst_dir)], check=True)
 
 
 def prompt_dedupe(files: List[Path]) -> Path:
@@ -326,8 +581,8 @@ def prompt_dedupe(files: List[Path]) -> Path:
             continue
 
 
-def from_gzip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
-    print(f"[-] Extracting with 'gunzip -d'")
+def from_gzip(args: CLI, asset: bytes, tmp: str, notify: NotifyFn) -> Result[None]:
+    notify(f"[-] Extracting with 'gunzip -d'")
     p = sp.run(
         ["gunzip", "-d", "-"],
         cwd=tmp,
@@ -337,14 +592,14 @@ def from_gzip(args: CLI, asset: bytes, tmp: str) -> Optional[int]:
     )
 
     dst_filename = args.dst_dir / args.dst_filename
-    print(f"[-] Writing to {dst_filename}")
+    notify(f"[-] Writing to {dst_filename}")
     dst_filename.write_bytes(p.stdout)
     sp.run(["chmod", "+x", str(dst_filename)], check=True)
 
 
-def from_plain(args: CLI, asset: bytes, _) -> Optional[int]:
+def from_plain(args: CLI, asset: bytes, _, notify: NotifyFn) -> Result[None]:
     dst_filename = args.dst_dir / args.dst_filename
-    print(f"[-] Writing plain file to {dst_filename}")
+    notify(f"[-] Writing plain file to {dst_filename}")
     dst_filename.write_bytes(asset)
     sp.run(["chmod", "+x", str(dst_filename)], check=True)
 
