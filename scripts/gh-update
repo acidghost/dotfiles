@@ -428,7 +428,7 @@ def print_assets(release: Dict) -> Optional[int]:
     return recommend_idx
 
 
-def prompt_list[T](
+def prompt_list(
     prompt: str, recommend_idx: Optional[int], extract: Callable[[int], T]
 ) -> Result[Union[T, PromptAbort]]:
     while True:
