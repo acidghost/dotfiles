@@ -355,8 +355,9 @@ return {
         nls.builtins.formatting.clang_format,
         nls.builtins.formatting.isort,
         nls.builtins.formatting.stylua,
-        -- TODO: shfmt --filename=${INPUT} -s -bn -i=4
-        nls.builtins.formatting.shfmt,
+        nls.builtins.formatting.shfmt.with({
+          extra_args = { "-s", "-bn", "-i=4" },
+        }),
       })
     end,
   },
