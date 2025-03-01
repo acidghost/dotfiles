@@ -113,8 +113,8 @@ return {
       },
       { "<leader>/",    pick("live_grep"),                              desc = "Grep (Root Dir)" },
       { "<leader>:",    "<cmd>Telescope command_history<cr>",           desc = "Command History" },
-      { "<C-p>",        pick("find_files"),                             desc = "Find Files (Root Dir)" },
-      { "<S-p>",        pick("find_files", { buffer_dir = true }),      desc = "Find Files (Buffer Dir)" },
+      { "<C-p>p",       pick("find_files"),                             desc = "Find Files (Root Dir)" },
+      { "<C-p>b",       pick("find_files", { buffer_dir = true }),      desc = "Find Files (Buffer Dir)" },
       -- find
       {
         "<leader>fb",
