@@ -60,6 +60,8 @@ if type lsd &>/dev/null; then
     alias lt='lsd --tree'
     alias llt='lsd --tree -lh'
     alias lat='lsd --tree -Alh'
+    alias llg='ll -g'
+    alias lag='la -g'
 fi
 
 type kubectl &>/dev/null && alias k=kubectl
