@@ -6,6 +6,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
+      "window-picker",
     },
     cmd = "Neotree",
     keys = {
@@ -64,6 +65,16 @@ return {
           expander_highlight = "NeoTreeExpander",
         },
       },
+    },
+  },
+
+  {
+    "s1n7ax/nvim-window-picker",
+    name = "window-picker",
+    event = "VeryLazy",
+    version = "*",
+    opts = {
+      hint = "floating-big-letter",
     },
   },
 
