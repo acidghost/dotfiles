@@ -142,4 +142,5 @@
     ~/.vim/vimrc: vim/vimrc
     ~/vusec.ascii:
     ~/.zsh_plugins.txt: zsh/plugins.txt
+    ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
