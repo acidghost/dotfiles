@@ -69,6 +69,10 @@ return {
           gopls = {},
           helm_ls = {},
           jsonls = {
+            init_options = {
+              -- since we use prettier to format json
+              provideFormatter = false,
+            },
             schemas = require("schemastore").json.schemas(),
             validate = { enable = true },
           },
@@ -354,6 +358,7 @@ return {
         nls.builtins.formatting.black,
         nls.builtins.formatting.clang_format,
         nls.builtins.formatting.isort,
+        nls.builtins.formatting.prettier,
         nls.builtins.formatting.stylua,
         nls.builtins.formatting.shfmt.with({
           extra_args = { "-s", "-bn", "-i=4" },
