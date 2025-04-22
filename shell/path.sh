@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 export AWKPATH="$HOME/.awk:$AWKPATH"
-[ -d "$HOME/.local/bin" ] && export PATH="$PATH:$HOME/.local/bin"
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.scripts:$PATH"
 
 # Homebrew
