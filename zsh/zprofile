@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # Make PATH have unique values only
 typeset -U path PATH
 source ~/.shell/path.sh
