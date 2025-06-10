@@ -5,7 +5,7 @@ return {
     version = "*",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
+      { "MunifTanjim/nui.nvim", version = "*" },
       "window-picker",
     },
     cmd = "Neotree",
