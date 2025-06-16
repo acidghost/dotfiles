@@ -340,7 +340,7 @@ def bat [...args] {
   } else {
     error make {msg: "bat is not installed"}
   }
-  let file_args = $args | filter {|f| $f | path exists} | length
+  let file_args = $args | where {path exists} | length
   if $file_args > 1 {
     let style = if ($env | get -i BAT_STYLE | is-not-empty) {
       $"($env.BAT_STYLE),header"
@@ -377,7 +377,7 @@ def broken-symlinks [
     glob --no-dir --no-file --depth=$depth $g
   }
   ls --long --directory --full-paths ...$glob
-    | filter { |it|
+    | where { |it|
       # despite the glob above, ls can return socket files
       if $it.type != symlink { return false }
       if ($it.target | into string) starts-with / and ($it.target | path exists) {

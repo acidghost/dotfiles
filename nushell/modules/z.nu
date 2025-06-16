@@ -114,7 +114,7 @@ export def "z rm" [
   --recursive(-R)           # Remove also all subdirectories
   p: path                   # Path to remove from the datafile
 ] {
-  let dirs = (z list --raw | filter (if $recursive {
+  let dirs = (z list --raw | where (if $recursive {
     { |dir| not ($dir.path | str starts-with $p) }
   } else {
     { |dir| $dir.path != $p }
