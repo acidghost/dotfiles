@@ -125,6 +125,7 @@ return {
               },
             },
           },
+          ruff = {},
           ts_ls = {},
           yamlls = {
             settings = {
@@ -355,9 +356,7 @@ return {
           ".git"
         )
       opts.sources = vim.list_extend(opts.sources or {}, {
-        nls.builtins.formatting.black,
         nls.builtins.formatting.clang_format,
-        nls.builtins.formatting.isort,
         nls.builtins.formatting.prettier,
         nls.builtins.formatting.stylua,
         nls.builtins.formatting.shfmt.with({
@@ -376,12 +375,11 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
-        "black",
         "clang-format",
-        "isort",
         "stylua",
         "shellcheck",
         "shfmt",
+        "ruff",
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
