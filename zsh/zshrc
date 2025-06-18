@@ -69,7 +69,7 @@ fi
 
 [ -n "$commands[zoxide]" ] && eval "$(zoxide init zsh)"
 
-if [ $WITH_ASDF = 1 ]; then
+if [ "$DOTFILES_WITH_ASDF" = 1 ]; then
     asdf_perl_path=$(asdf where perl 2>/dev/null)
     [ -d "$asdf_perl_path/man" ] && export MANPATH="$asdf_perl_path/man:$MANPATH"
     unset asdf_perl_path
