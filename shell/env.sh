@@ -57,6 +57,7 @@ if type nnn &>/dev/null; then
     # XXX: iconlookup is broken with Nerd Fonts v3+
     export NNN_ICONLOOKUP=0
     [ -n "$TERM" ] && export NNN_TERMINAL="$TERM"
+    export NNN_PREVIEWIMGPROG=chafa
     unset NNN_PLUGINS_PATH
 fi
 
