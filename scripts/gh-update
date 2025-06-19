@@ -486,7 +486,7 @@ def choose_unpack_fn(
             return from_archive_tar
         else:
             return Error(f"[!] I don't know how to handle .zip in {uname_system}")
-    elif suffixes == [] or suffixes[-1] == ".AppImage":
+    elif suffixes == [] or suffixes[-1].lower() == ".appimage":
         return from_plain
 
     return Error(f"[!] Unable to recognize suffixes: {suffixes}")
