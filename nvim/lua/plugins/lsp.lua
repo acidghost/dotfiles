@@ -1,3 +1,10 @@
+local mason_version = "*"
+local mason_lspconfig_version = "*"
+if not vim.fn.has("nvim-0.10") then
+  mason_version = "1.11.0"
+  mason_lspconfig_version = "1.32.0"
+end
+
 return {
 
   -- lspconfig
@@ -8,8 +15,8 @@ return {
     dependencies = {
       "mason.nvim",
       {
-        "williamboman/mason-lspconfig.nvim",
-        version = "*",
+        "mason-org/mason-lspconfig.nvim",
+        version = mason_lspconfig_version,
         config = function() end,
       },
       "b0o/schemastore.nvim",
@@ -315,7 +322,7 @@ return {
       local all_mslp_servers = {}
       if have_mason then
         all_mslp_servers =
-          vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+          vim.tbl_keys(require("mason-lspconfig.mappings").get_all().lspconfig_to_package)
       end
 
       local ensure_installed = {} ---@type string[]
@@ -336,7 +343,10 @@ return {
       if have_mason then
         mlsp.setup({
           ensure_installed = vim.tbl_deep_extend("force", ensure_installed, {}),
+          automatic_enable = true,
+          -- XXX: legacy settings for pre v2
           handlers = { setup },
+          automatic_installation = true,
         })
       end
     end,
@@ -368,8 +378,8 @@ return {
 
   {
 
-    "williamboman/mason.nvim",
-    version = "*",
+    "mason-org/mason.nvim",
+    version = mason_version,
     cmd = "Mason",
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
