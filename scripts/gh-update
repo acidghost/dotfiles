@@ -472,7 +472,9 @@ def choose_unpack_fn(
         return from_plain
 
     suffixes = Path(asset).suffixes
-    if suffixes[-2:] == [".tar", ".gz"]:
+    if suffixes == [] or suffixes[-1].lower() == ".appimage":
+        return from_plain
+    elif suffixes[-2:] == [".tar", ".gz"]:
         return from_archive_tar
     elif suffixes[-1] == ".gz":
         return from_gzip
@@ -486,8 +488,6 @@ def choose_unpack_fn(
             return from_archive_tar
         else:
             return Error(f"[!] I don't know how to handle .zip in {uname_system}")
-    elif suffixes == [] or suffixes[-1].lower() == ".appimage":
-        return from_plain
 
     return Error(f"[!] Unable to recognize suffixes: {suffixes}")
 
