@@ -1,5 +1,5 @@
 {
-  "base16-vim": { "branch": "main", "commit": "d100783e156d14d9864e1404dc2cc560a8ac5cde" },
+  "base16-vim": { "branch": "main", "commit": "ea3cbd6c413b5f42149b660e9f3695cb98423fef" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
   "cmp-cmdline": { "branch": "main", "commit": "d250c63aa13ead745e3a40f61fdd3470efde3923" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "99290b3ec1322070bcfb9e846450a46f6efa50f0" },
