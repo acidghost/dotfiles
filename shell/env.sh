@@ -34,6 +34,9 @@ if [ -f "$HOME/.config/dotfiles-env/with_asdf" ]; then
 fi
 export DOTFILES_WITH_ASDF
 
+export GLAMOUR_STYLE=tokyo-night
+export GLOW_TUI=true
+
 if type nnn &>/dev/null; then
     NNN_PLUGINS_PATH="$HOME/.config/nnn/plugins"
     export NNN_OPTS="acdQ"
