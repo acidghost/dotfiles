@@ -386,10 +386,15 @@ return {
     opts = {
       ensure_installed = {
         "clang-format",
+        "gopls",
+        "lua-language-server",
+        "prettier",
+        "pyright",
         "stylua",
         "shellcheck",
         "shfmt",
         "ruff",
+        "yaml-language-server",
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
