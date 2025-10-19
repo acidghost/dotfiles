@@ -66,8 +66,7 @@ if treesitter_branch == "main" then
       build = ":TSUpdate",
       commit = treesitter_commit,
       branch = treesitter_branch,
-      event = "LazyFile",
-      lazy = vim.fn.argc(-1) == 0,
+      lazy = false,
     },
   }
 else
