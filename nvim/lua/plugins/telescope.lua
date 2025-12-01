@@ -1,3 +1,8 @@
+local telescope_version = "*"
+if not vim.fn.has("nvim-0.10") then
+  telescope_version = "v0.1.9"
+end
+
 local build_cmd ---@type string?
 for _, cmd in ipairs({ "make", "cmake", "gmake" }) do
   if vim.fn.executable(cmd) == 1 then
@@ -70,7 +75,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
-    version = false,
+    version = telescope_version,
     dependencies = {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
