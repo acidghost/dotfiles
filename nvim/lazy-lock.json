@@ -33,5 +33,5 @@
   "vim-obsession": { "branch": "master", "commit": "ed9dfc7c2cc917ace8b24f4f9f80a91e05614b63" },
   "vim-prosession": { "branch": "master", "commit": "1cb2eadde0b79f49eb4b5a54cc78735aea33cbca" },
   "window-picker": { "branch": "main", "commit": "6382540b2ae5de6c793d4aa2e3fe6dbb518505ec" },
-  "zk-nvim": { "branch": "main", "commit": "f079de79b4eb489861a41430ca30d705cb4041fe" }
+  "zk-nvim": { "branch": "main", "commit": "8df80d0dc2d66e53b08740361a600746a6e4edcf" }
 }
