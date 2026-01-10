@@ -1,3 +1,8 @@
+local gitsigns_version = "*"
+if not vim.fn.has("nvim-0.11") then
+  gitsigns_version = "1.0.2"
+end
+
 return {
 
   {
@@ -99,7 +104,7 @@ return {
   -- hunks in a commit.
   {
     "lewis6991/gitsigns.nvim",
-    version = "*",
+    version = gitsigns_version,
     event = "LazyFile",
     opts = {
       signs = {
