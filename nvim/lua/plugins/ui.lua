@@ -1,3 +1,8 @@
+local mini_icons_version = "*"
+if not vim.fn.has("nvim-0.9") then
+  mini_icons_version = "0.16.0"
+end
+
 return {
 
   {
@@ -6,7 +11,7 @@ return {
 
   {
     "echasnovski/mini.icons",
-    version = "*",
+    version = mini_icons_version,
     lazy = true,
     opts = {
       file = {

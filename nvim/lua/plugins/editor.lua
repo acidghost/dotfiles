@@ -3,6 +3,11 @@ if not vim.fn.has("nvim-0.11") then
   gitsigns_version = "1.0.2"
 end
 
+local mini_surround_version = "*"
+if not vim.fn.has("nvim-0.9") then
+  mini_surround_version = "0.16.0"
+end
+
 return {
 
   {
@@ -85,7 +90,7 @@ return {
 
   {
     "echasnovski/mini.surround",
-    version = "*",
+    version = mini_surround_version,
     opts = {
       mappings = {
         add = "sa",
