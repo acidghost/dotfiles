@@ -39,7 +39,8 @@ export FORGIT_DIFF_PAGER=$FORGIT_PAGER
 
 [ ! -d ~/.cache ] && mkdir ~/.cache
 
-source ~/.dotfiles/antidote/antidote.zsh
+HERE="${${(%):-%x}:A:h}"
+source "$HERE/../antidote/antidote.zsh"
 
 # set omz variables
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
