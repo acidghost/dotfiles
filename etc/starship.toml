@@ -66,6 +66,7 @@ style = "bg:medium fg:txt"
 format = '([\[$all_status$ahead_behind\] ]($style))'
 
 [hostname]
+disabled = false
 ssh_only = true
 ssh_symbol = "󰒋 "
 format = '[$hostname ($ssh_symbol )]($style)'
