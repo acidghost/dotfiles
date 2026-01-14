@@ -143,4 +143,5 @@
     ~/vusec.ascii:
     ~/.zsh_plugins.txt: zsh/plugins.txt
     ~/.zprofile: zsh/zprofile
+    ~/.zshenv: zsh/zshenv
     ~/.zshrc: zsh/zshrc
