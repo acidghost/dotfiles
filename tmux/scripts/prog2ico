@@ -8,6 +8,9 @@ if [ -z "$prog" ]; then
 fi
 
 case "$prog" in
+    argocd                          ) echo -n "" ;;
+    brew                            ) echo -n "" ;;
+    crush                           ) echo -n "" ;;
     rust|cargo                      ) echo -n "" ;;
     go                              ) echo -n "" ;;
     zsh|bash|sh|nu                  ) echo -n "" ;;
@@ -19,11 +22,12 @@ case "$prog" in
     man|glow*                       ) echo -n "" ;;
     rizin                           ) echo -n "󱁆" ;;
     gdb|rr                          ) echo -n "" ;;
-    bat                             ) echo -n "" ;;
+    bat                             ) echo -n "󰈮" ;;
     *python*|pip[23]                ) echo -n "" ;;
-    meson|cmake|make|ninja          ) echo -n "" ;;
+    just|meson|cmake|make|ninja     ) echo -n "" ;;
     kubectl|k9s                     ) echo -n "󱃾" ;;
     docker*                         ) echo -n "" ;;
+    podman*                         ) echo -n "" ;;
     vagrant                         ) echo -n "" ;;
     sqlite*                         ) echo -n "" ;;
     *mysql*                         ) echo -n "" ;;
