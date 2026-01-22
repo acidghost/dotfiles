@@ -19,6 +19,7 @@ case "$prog" in
     bat                             ) echo -n "󰈮" ;;
     brew                            ) echo -n "" ;;
     cargo|rust                      ) echo -n "" ;;
+    claude                          ) echo -n "" ;;
     cmake|just|make|meson|ninja     ) echo -n "" ;;
     crush                           ) echo -n "" ;;
     delta                           ) echo -n "∆" ;;
