@@ -42,3 +42,5 @@ nnoremap <C-w>, :call MoveToPrevTab()<CR><C-w>H
 
 nnoremap <C-w>S :call Scratch(0)<CR>
 nnoremap <C-w><C-s> :call Scratch(1)<CR>
+
+nnoremap <Leader>gg :call ForgeUrl()<CR>

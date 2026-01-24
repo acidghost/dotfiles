@@ -73,3 +73,15 @@ function! Scratch(fresh)
     "lcd ~
     exe 'file' g:scratch_bufname
 endfunction
+
+function! ForgeUrl()
+    let l:path = expand('%:p')
+    let l:line = line('.')
+    let l:url = trim(system('forge-url ' . shellescape(l:path . ':' . l:line)))
+    if v:shell_error == 0
+        let @+ = l:url
+        echo l:url
+    else
+        echoerr l:url
+    endif
+endfunction
