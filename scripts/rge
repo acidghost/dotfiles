@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""
+rge - Enhanced ripgrep/grep with repository links.
+
+Wraps rg or grep -r output and adds clickable links to online repositories.
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+# Add shared library path (relative to this script's location)
+_lib_path = Path(__file__).resolve().parent.parent / "python"
+sys.path.insert(0, str(_lib_path))
+
+from gitforge import (  # noqa: E402
+    build_file_url,
+    find_git_root,
+    get_repo_info,
+)
+
+# ANSI escape code pattern for color preservation
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def strip_ansi(text: str) -> str:
+    """Remove ANSI escape codes from text."""
+    return ANSI_ESCAPE.sub("", text)
+
+
+def split_at_position(original: str, char_pos: int) -> tuple[str, str]:
+    """
+    Split original line at a character position, preserving ANSI codes.
+
+    Returns (before, after) where the split happens after `char_pos` non-ANSI characters.
+    ANSI codes at the boundary go with the 'before' portion.
+    """
+    before = []
+    after = []
+    count = 0
+    i = 0
+
+    while i < len(original):
+        # Check for ANSI escape sequence
+        ansi_match = ANSI_ESCAPE.match(original, i)
+        if ansi_match:
+            if count < char_pos:
+                before.append(ansi_match.group())
+            else:
+                after.append(ansi_match.group())
+            i = ansi_match.end()
+        else:
+            if count < char_pos:
+                before.append(original[i])
+                count += 1
+            else:
+                after.append(original[i])
+                count += 1
+            i += 1
+
+    return "".join(before), "".join(after)
+
+
+@dataclass
+class ParsedLine:
+    """Parsed grep/rg output line with color preservation."""
+
+    file_path: str  # Clean file path (no ANSI)
+    line_num: int | None  # Line number or None
+    colored_location: str  # Original colored "file:line:" or "file:" prefix
+    colored_content: str  # Original colored content
+
+
+def parse_line(line: str) -> ParsedLine | None:
+    """
+    Parse a grep/rg output line.
+
+    Returns ParsedLine with both clean values and colored originals, or None if unparseable.
+    Handles both `file:line:content` and `file:content` formats.
+    """
+    # Strip ANSI codes for parsing
+    clean_line = strip_ansi(line)
+
+    if not clean_line or clean_line.isspace():
+        return None
+
+    # Try to match file:line:content pattern
+    # Pattern: [./]path:number:content
+    match = re.match(r"^(\./)?([^:]+):(\d+):(.*)$", clean_line)
+    if match:
+        prefix, file_path, line_num, _ = match.groups()
+        # Calculate prefix length: [./]file:line:
+        prefix_len = len(prefix or "") + len(file_path) + 1 + len(line_num) + 1
+        colored_location, colored_content = split_at_position(line, prefix_len)
+        return ParsedLine(
+            file_path=file_path,
+            line_num=int(line_num),
+            colored_location=colored_location,
+            colored_content=colored_content,
+        )
+
+    # Try file:content pattern (no line number)
+    match = re.match(r"^(\./)?([^:]+):(.*)$", clean_line)
+    if match:
+        prefix, file_path, _ = match.groups()
+        # Verify it's actually a file path (not just text with a colon)
+        if Path(file_path).exists():
+            # Calculate prefix length: [./]file:
+            prefix_len = len(prefix or "") + len(file_path) + 1
+            colored_location, colored_content = split_at_position(line, prefix_len)
+            return ParsedLine(
+                file_path=file_path,
+                line_num=None,
+                colored_location=colored_location,
+                colored_content=colored_content,
+            )
+
+    return None
+
+
+def process_line(line: str, mode: str, use_branch: bool = False) -> list[str]:
+    """
+    Process a single line of rg/grep output.
+
+    Returns a list of output lines (may be 1 or 2 depending on mode).
+    Preserves ANSI color codes from the original input.
+    """
+    # Try to parse the line
+    parsed = parse_line(line)
+    if parsed is None:
+        # Unparseable line - pass through unchanged
+        return [line]
+
+    # Resolve file path to absolute, handling cwd
+    file_path = Path(parsed.file_path)
+    if not file_path.is_absolute():
+        file_path = Path.cwd() / file_path
+
+    # Find git root
+    git_root = find_git_root(file_path)
+    if git_root is None:
+        # Not in a git repo - pass through unchanged
+        return [line]
+
+    # Get repo info
+    repo_info = get_repo_info(git_root, use_branch=use_branch)
+    if repo_info is None:
+        # Couldn't get repo info - pass through unchanged
+        return [line]
+
+    # Calculate relative path from repo root
+    try:
+        relative_path = file_path.resolve().relative_to(repo_info.root_path)
+    except ValueError:
+        # File not under repo root (shouldn't happen)
+        return [line]
+
+    # Build URL
+    url = build_file_url(repo_info, relative_path, parsed.line_num)
+
+    # ANSI codes for output formatting
+    RESET = "\x1b[0m"
+    GRAY = "\x1b[90m"
+
+    # Format output based on mode
+    if mode == "replace":
+        # Replace file:line: with URL (gray), keep colored content
+        return [f"{GRAY}{url}{RESET}:{parsed.colored_content}"]
+    else:
+        # Separate line mode (default)
+        # Keep original colored location, add URL (gray), then colored content on next line
+        # Strip trailing colon/separator from colored_location for cleaner output
+        location = parsed.colored_location.rstrip(":")
+        # Also strip any trailing ANSI reset that might be after the colon
+        if location.endswith("\x1b[0m"):
+            location = location[:-4]
+        return [f"{location}{RESET}  {GRAY}{url}{RESET}", parsed.colored_content]
+
+
+def main() -> int:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description="Enhance ripgrep/grep output with repository links.",
+        epilog="Example: rg 'pattern' | rge",
+    )
+    parser.add_argument(
+        "-b",
+        "--branch",
+        action="store_true",
+        help="Use branch name instead of commit hash in URLs",
+    )
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "-r",
+        "--replace",
+        action="store_true",
+        help="Replace file path with link",
+    )
+    mode_group.add_argument(
+        "-s",
+        "--separate",
+        action="store_true",
+        help="Show link on separate line after path (default)",
+    )
+
+    args = parser.parse_args()
+
+    # Determine mode
+    mode = "replace" if args.replace else "separate"
+
+    # Process stdin line by line
+    try:
+        for line in sys.stdin:
+            line = line.rstrip("\n")
+            output_lines = process_line(line, mode, use_branch=args.branch)
+            for output_line in output_lines:
+                print(output_line)
+    except KeyboardInterrupt:
+        return 130
+    except BrokenPipeError:
+        # Handle pipe closed (e.g., head)
+        return 0
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

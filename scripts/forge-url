@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""
+forge-url - Generate forge (GitHub/GitLab/Bitbucket) URLs for files.
+
+Accepts file paths as arguments or from stdin, outputs the web URL for each file.
+Supports optional line numbers in file:line format (e.g., src/main.py:42).
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+# Add shared library path (relative to this script's location)
+_lib_path = Path(__file__).resolve().parent.parent / "python"
+sys.path.insert(0, str(_lib_path))
+
+from gitforge import (  # noqa: E402
+    build_file_url,
+    find_git_root,
+    get_repo_info,
+)
+
+
+def parse_path_with_line(path_str: str) -> tuple[str, int | None]:
+    """
+    Parse a path that may include a line number suffix.
+
+    Handles formats like:
+    - src/main.py -> ("src/main.py", None)
+    - src/main.py:42 -> ("src/main.py", 42)
+
+    Returns (path, line_number).
+    """
+    # Try to match path:line format
+    match = re.match(r"^(.+):(\d+)$", path_str)
+    if match:
+        path, line = match.groups()
+        # Make sure the path part doesn't look like a Windows drive letter
+        if len(path) > 1 or not path.isalpha():
+            return path, int(line)
+    return path_str, None
+
+
+def process_path(path_str: str, use_branch: bool = False) -> str | None:
+    """
+    Process a single path and return its forge URL.
+
+    Returns the URL string, or None if the path couldn't be processed
+    (error is printed to stderr).
+    """
+    # Parse optional line number
+    path_part, line_num = parse_path_with_line(path_str.strip())
+
+    if not path_part:
+        return None
+
+    # Resolve to absolute path
+    file_path = Path(path_part)
+    if not file_path.is_absolute():
+        file_path = Path.cwd() / file_path
+
+    # Check if path exists (for better error messages)
+    if not file_path.exists():
+        print(f"error: {path_part}: file not found", file=sys.stderr)
+        return None
+
+    # Find git root
+    git_root = find_git_root(file_path)
+    if git_root is None:
+        print(f"error: {path_part}: not in a git repository", file=sys.stderr)
+        return None
+
+    # Get repo info
+    repo_info = get_repo_info(git_root, use_branch=use_branch)
+    if repo_info is None:
+        print(f"error: {path_part}: no remote origin configured", file=sys.stderr)
+        return None
+
+    # Calculate relative path from repo root
+    try:
+        relative_path = file_path.resolve().relative_to(repo_info.root_path)
+    except ValueError:
+        print(f"error: {path_part}: file not under repository root", file=sys.stderr)
+        return None
+
+    # Build and return URL
+    return build_file_url(repo_info, relative_path, line_num)
+
+
+def main() -> int:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description="Generate forge URLs for files.",
+    )
+    parser.add_argument(
+        "-b",
+        "--branch",
+        action="store_true",
+        help="Use branch name instead of commit hash in URLs",
+    )
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        help="File paths (reads from stdin if none provided)",
+    )
+
+    args = parser.parse_args()
+
+    # Collect paths from arguments or stdin
+    if args.paths:
+        paths = args.paths
+    else:
+        # Read from stdin
+        try:
+            paths = [line.strip() for line in sys.stdin if line.strip()]
+        except KeyboardInterrupt:
+            return 130
+
+    if not paths:
+        return 0
+
+    # Process each path
+    exit_code = 0
+    for path_str in paths:
+        url = process_path(path_str, use_branch=args.branch)
+        if url:
+            print(url)
+        else:
+            exit_code = 1
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())
