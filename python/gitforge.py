@@ -12,6 +12,7 @@ from __future__ import annotations
 import re
 import subprocess
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -28,6 +29,15 @@ class GitRepoInfo:
     branch: str | None  # Symbolic ref, None if detached HEAD
     host_type: Literal["github", "gitlab", "bitbucket", "unknown"]
     base_web_url: str
+
+
+@dataclass(frozen=True)
+class BlameInfo:
+    """Blame information for a specific line."""
+
+    commit: str  # The commit that last changed this line
+    author: str  # Author name
+    author_date: datetime  # Author timestamp
 
 
 @lru_cache(maxsize=1024)
@@ -223,3 +233,79 @@ def build_file_url(
             url += f"#L{line}"
 
     return url
+
+
+def get_blame_info(git_root: Path, file_path: Path, line: int) -> BlameInfo | None:
+    """
+    Get blame info for a specific line using git blame --porcelain.
+
+    Args:
+        git_root: Path to the git repository root.
+        file_path: Path to the file (relative to git root).
+        line: Line number to get blame for.
+
+    Returns:
+        BlameInfo with commit, author, and date, or None if unavailable.
+    """
+    output = run_git_command(
+        git_root, "blame", "-L", f"{line},{line}", "--porcelain", str(file_path)
+    )
+    if not output:
+        return None
+
+    # Parse porcelain output
+    commit = None
+    author = None
+    author_time = None
+
+    for output_line in output.split("\n"):
+        if commit is None:
+            # First line is: <commit> <original-line> <final-line> [<num-lines>]
+            parts = output_line.split()
+            if parts:
+                commit = parts[0]
+        elif output_line.startswith("author "):
+            author = output_line[7:]
+        elif output_line.startswith("author-time "):
+            try:
+                author_time = int(output_line[12:])
+            except ValueError:
+                pass
+
+    if commit and author and author_time is not None:
+        author_date = datetime.fromtimestamp(author_time, tz=timezone.utc)
+        return BlameInfo(commit=commit, author=author, author_date=author_date)
+
+    return None
+
+
+def build_blame_url(
+    repo_info: GitRepoInfo, relative_path: Path, line: int, use_branch: bool = False
+) -> str:
+    """
+    Build a blame URL for viewing line history.
+
+    Args:
+        repo_info: Repository information.
+        relative_path: Path relative to repository root.
+        line: Line number.
+        use_branch: If True, use branch name in URL; otherwise use commit hash.
+
+    Returns:
+        Blame URL string.
+
+    Raises:
+        ValueError: If the host type is Bitbucket (not supported).
+    """
+    path_str = str(relative_path)
+    ref = repo_info.ref if use_branch else repo_info.commit
+
+    if repo_info.host_type == "github":
+        return f"{repo_info.base_web_url}/blame/{ref}/{path_str}#L{line}"
+    elif repo_info.host_type == "gitlab":
+        return f"{repo_info.base_web_url}/-/blame/{ref}/{path_str}#L{line}"
+    elif repo_info.host_type == "bitbucket":
+        raise ValueError("Blame URLs not supported for Bitbucket")
+    else:
+        # Default to GitHub-style
+        return f"{repo_info.base_web_url}/blame/{ref}/{path_str}#L{line}"

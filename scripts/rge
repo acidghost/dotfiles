@@ -18,8 +18,10 @@ _lib_path = Path(__file__).resolve().parent.parent / "python"
 sys.path.insert(0, str(_lib_path))
 
 from gitforge import (  # noqa: E402
+    build_blame_url,
     build_file_url,
     find_git_root,
+    get_blame_info,
     get_repo_info,
 )
 
@@ -122,7 +124,9 @@ def parse_line(line: str) -> ParsedLine | None:
     return None
 
 
-def process_line(line: str, mode: str, use_branch: bool = False) -> list[str]:
+def process_line(
+    line: str, mode: str, use_branch: bool = False, use_blame: bool = False
+) -> list[str]:
     """
     Process a single line of rg/grep output.
 
@@ -159,12 +163,41 @@ def process_line(line: str, mode: str, use_branch: bool = False) -> list[str]:
         # File not under repo root (shouldn't happen)
         return [line]
 
-    # Build URL
-    url = build_file_url(repo_info, relative_path, parsed.line_num)
-
     # ANSI codes for output formatting
     RESET = "\x1b[0m"
     GRAY = "\x1b[90m"
+
+    # Handle blame mode
+    if use_blame and parsed.line_num is not None:
+        blame_info = get_blame_info(git_root, relative_path, parsed.line_num)
+        if blame_info is not None:
+            try:
+                blame_url = build_blame_url(
+                    repo_info, relative_path, parsed.line_num, use_branch=use_branch
+                )
+                # Format date as YYYY-MM-DD
+                date_str = blame_info.author_date.strftime("%Y-%m-%d")
+                blame_suffix = f"  ({blame_info.author}, {date_str})"
+
+                if mode == "replace":
+                    return [
+                        f"{GRAY}{blame_url}{RESET}:{parsed.colored_content}{GRAY}{blame_suffix}{RESET}"
+                    ]
+                else:
+                    # Separate line mode
+                    location = parsed.colored_location.rstrip(":")
+                    if location.endswith("\x1b[0m"):
+                        location = location[:-4]
+                    return [
+                        f"{location}{RESET}  {GRAY}{blame_url}{blame_suffix}{RESET}",
+                        parsed.colored_content,
+                    ]
+            except ValueError:
+                # Blame URL not supported (e.g., Bitbucket), fall back to normal
+                pass
+
+    # Build regular file URL (fallback or non-blame mode)
+    url = build_file_url(repo_info, relative_path, parsed.line_num)
 
     # Format output based on mode
     if mode == "replace":
@@ -193,6 +226,12 @@ def main() -> int:
         action="store_true",
         help="Use branch name instead of commit hash in URLs",
     )
+    parser.add_argument(
+        "-B",
+        "--blame",
+        action="store_true",
+        help="Show blame URL with author/date for the line",
+    )
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
         "-r",
@@ -216,7 +255,9 @@ def main() -> int:
     try:
         for line in sys.stdin:
             line = line.rstrip("\n")
-            output_lines = process_line(line, mode, use_branch=args.branch)
+            output_lines = process_line(
+                line, mode, use_branch=args.branch, use_blame=args.blame
+            )
             for output_line in output_lines:
                 print(output_line)
     except KeyboardInterrupt:
