@@ -89,7 +89,7 @@ def cli() -> CLI:
         _, args.dst_filename = args.repo.split("/", 2)
 
     if args.dst_filename is None:
-        print(f"[!] Could not infer asset filename (dst_filename)")
+        print("[!] Could not infer asset filename (dst_filename)")
         exit(1)
 
     args.dst_dir = args.dst_dir.expanduser()
@@ -521,7 +521,7 @@ def from_archive_zip(
     notify(f"[-] Saving .zip to {zipfile}")
     zipfile.write_bytes(asset)
 
-    notify(f"[-] Extracting with 'unzip'")
+    notify("[-] Extracting with 'unzip'")
     out_p = tmp_p / "out"
     sp.run(["unzip", "-d", out_p, zipfile], check=True)
 
@@ -584,7 +584,7 @@ def prompt_dedupe(files: List[Path]) -> Path:
 
 
 def from_gzip(args: CLI, asset: bytes, tmp: str, notify: NotifyFn) -> Result[None]:
-    notify(f"[-] Extracting with 'gunzip -d'")
+    notify("[-] Extracting with 'gunzip -d'")
     p = sp.run(
         ["gunzip", "-d", "-"],
         cwd=tmp,
