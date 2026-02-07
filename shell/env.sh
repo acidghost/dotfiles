@@ -77,3 +77,8 @@ if [ -z "$LANG" ]; then
         export LC_ALL=en_US.UTF-8
     fi
 fi
+
+if [ -f ~/.shell/env.local.sh ]; then
+    # shellcheck source=./env.local.sh
+    source ~/.shell/env_local.sh
+fi
