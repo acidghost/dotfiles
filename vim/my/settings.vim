@@ -22,7 +22,7 @@ set sidescrolloff=5
 set autoread       " Reload files on change
 set history=1000   " More history
 set list           " Highlight non whitespace characters
-set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
+set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,nbsp:_
 set noshowmode     " Hide mode in bottom line given lightline
 set colorcolumn=100 " Vertical column
 set textwidth=90   " Used when formatting text
