@@ -5,12 +5,13 @@
 # Note: This plugin needs a "NNN_FIFO" to work. See man.
 #
 # Dependencies:
-#   - Supports 6 independent methods to preview with:
+#   - Supports 7 independent methods to preview with:
 #       - tmux (>=3.0), or
 #       - kitty with allow_remote_control and listen_on set in kitty.conf, or
 #       - wezterm (https://wezfurlong.org/wezterm), or
 #       - QuickLook on WSL (https://github.com/QL-Win/QuickLook), or
 #       - Windows Terminal (https://github.com/Microsoft/Terminal | https://aka.ms/terminal) with WSL, or
+#       - zellij (https://github.com/zellij-org/zellij) or
 #       - $NNN_TERMINAL set to a terminal (it's xterm by default).
 #   - less or $NNN_PAGER
 #   - tree or exa/eza or (GNU) ls
@@ -160,6 +161,8 @@ start_preview() {
         exists mpv && ENVVARS+=("NNN_PREVIEWVIDEO=sixel")
     elif [ -n "$WT_SESSION" ]; then
         NNN_TERMINAL=winterm
+    elif [ -n "$ZELLIJ" ]; then
+        NNN_TERMINAL=zellij
     else
         NNN_TERMINAL="${NNN_TERMINAL:-xterm}"
     fi
@@ -182,7 +185,7 @@ start_preview() {
         tmux) # tmux splits are inverted
             ENVVARS=("${ENVVARS[@]/#/-e}")
             if [ "$NNN_SPLIT" = "v" ]; then split="h"; else split="v"; fi
-            tmux split-window "${ENVVARS[@]}" -d"$split" -p"$NNN_SPLITSIZE" "$0" "$1" ;;
+            tmux split-window -l"$NNN_SPLITSIZE"% "${ENVVARS[@]}" -d"$split" -p"$NNN_SPLITSIZE" "$0" "$1" ;;
         kitty) # Setting the layout for the new window. It will be restored after the script ends.
             ENVVARS=("${ENVVARS[@]/#/--env=}")
             kitty @ goto-layout splits
@@ -207,6 +210,17 @@ EOF
         winterm)
             if [ "$NNN_SPLIT" = "h" ]; then split="H"; else split="V"; fi
             wt -w 0 sp -$split -s"0.$NNN_SPLITSIZE" "$command" \; -w 0 mf previous 2>/dev/null ;;
+        zellij)
+            case "$NNN_SPLIT" in
+              h)
+                direction="down" ;;
+              *) 
+                direction=right ;;
+            esac
+            zellij run --name "nnn preview" --close-on-exit \
+              --direction "$direction" -- env "${ENVVARS[@]}" "$0" "$1" &
+            (sleep 0.2 && zellij action focus-previous-pane) &
+            ;;
         *)  if [ -n "$2" ]; then
                 env "${ENVVARS[@]}" QUICKLOOK=1 "$0" "$1" &
             else
@@ -380,9 +394,9 @@ preview_file() {
         elif exists tree; then
             fifo_pager tree --filelimit "$(find . -maxdepth 1 | wc -l)" -L 3 -C -F --dirsfirst --noreport
         elif exists exa; then
-            fifo_pager exa -T --group-directories-first --colour=always -L 3
+            fifo_pager exa -T --group-directories-first --colour=always -L 3 .
         elif exists eza; then # eza is a community fork of exa (exa is unmaintained)
-            fifo_pager eza -T --group-directories-first --colour=always -L 3
+            fifo_pager eza -T --group-directories-first --colour=always -L 3 .
         else
             fifo_pager ls -F --group-directories-first --color=always
         fi
