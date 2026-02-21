@@ -78,7 +78,7 @@ if [ -z "$LANG" ]; then
     fi
 fi
 
-if [ -f ~/.shell/env.local.sh ]; then
-    # shellcheck source=./env.local.sh
+if [ -f ~/.shell/env_local.sh ]; then
+    # shellcheck source=./env_local.sh
     source ~/.shell/env_local.sh
 fi
