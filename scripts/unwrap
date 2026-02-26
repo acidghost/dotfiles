@@ -1,0 +1,13 @@
+#!/bin/bash
+if [[ $1 =~ -h|--help ]]; then
+    echo "$(basename "$0"): drop args while start with -, exec the rest"
+    exit
+fi
+args=("$@")
+i=0
+while [[ ${args[$i]} =~ ^- ]]; do ((i++)); done
+if [[ $i -lt ${#args[@]} ]]; then
+    exec "${args[@]:$i}"
+fi
+echo "$(basename "$0"): nothing to run" >&2
+exit 1
