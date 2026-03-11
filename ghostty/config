@@ -2,12 +2,16 @@ font-family = "Fira Code"
 font-thicken = true
 mouse-hide-while-typing = true
 macos-option-as-alt = left
-window-decoration = false
+macos-titlebar-style = tabs
+macos-icon = retro
+scrollback-limit = 10000
+window-inherit-working-directory = false
+window-save-state = always
 
 # disable default bindings just using alt/opt
 keybind = alt+left=unbind
 keybind = alt+right=unbind
 
-keybind = ctrl+t>d=toggle_window_decorations
-keybind = ctrl+t>t=toggle_quick_terminal
-keybind = ctrl+t>c=open_config
+keybind = global:ctrl+shift+t=toggle_quick_terminal
+keybind = global:ctrl+super+t=new_window
+keybind = ctrl+t>b=text:ghostty +boo
