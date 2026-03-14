@@ -92,9 +92,6 @@ if type monolith &>/dev/null; then
     alias monolith-simple='monolith -afIjv'
 fi
 
-# npx
-alias igir='npx -- igir'
-
 # Platform specific
 case $OSTYPE in
 linux*)
