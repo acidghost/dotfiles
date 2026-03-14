@@ -1,0 +1,9 @@
+[settings]
+disable_backends = ["asdf", "vfox"]
+lockfile = true
+
+[tools]
+devcontainer-cli = "latest"
+go = "latest"
+node = "24"
+perl = "latest"

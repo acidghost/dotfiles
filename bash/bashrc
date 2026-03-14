@@ -52,6 +52,7 @@ export AWKPATH="$HOME/.awk:$AWKPATH"
 source ~/.shell/env.sh
 
 type atuin &>/dev/null && eval "$(atuin init bash --disable-up-arrow)"
+type mise &>/dev/null && eval "$(mise activate bash)"
 type starship &>/dev/null && eval "$(starship init bash)"
 type zoxide &>/dev/null && eval "$(zoxide init bash)"
 

@@ -137,3 +137,8 @@ if (program exists zk) {
    alias zkcd = cd $env.ZK_NOTEBOOK_DIR
   " | save --append $dynamic_env_src
 }
+
+if (program exists mise) {
+  mise activate nu | save -f ~/.cache/nushell/mise.nu
+  "source ~/.cache/nushell/mise.nu\n" | save --append $dynamic_env_src
+}

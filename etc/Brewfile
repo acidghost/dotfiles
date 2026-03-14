@@ -5,7 +5,6 @@ end
 IS_DARWIN       = system "[ $(uname) = Darwin ]"
 IS_LIGHTWEIGHT  = has? :IS_LIGHTWEIGHT
 WITH_APPS       = has? :WITH_APPS
-WITH_ASDF       = has? :WITH_ASDF
 WITH_LSP        = has? :WITH_LSP
 WITH_VIRT       = has? :WITH_VIRT
 
@@ -88,12 +87,4 @@ if WITH_VIRT
     brew "podman"
     brew "qemu"
     cask "utm"                  if IS_DARWIN
-end
-
-if WITH_ASDF
-    # asdf nodejs
-    brew "gpg"
-    # asdf ruby
-    brew "openssl"
-    brew "readline"
 end

@@ -26,14 +26,6 @@ export BAT_STYLE=numbers,grid
 # accomodate for "less -J"
 # alias bat="bat --terminal-width -2"
 
-DOTFILES_WITH_ASDF=0
-if [ -f "$HOME/.config/dotfiles-env/with_asdf" ]; then
-    DOTFILES_WITH_ASDF=1
-    export ASDF_DATA_DIR="$HOME/.asdf"
-    export PATH="$ASDF_DATA_DIR/shims:$PATH"
-fi
-export DOTFILES_WITH_ASDF
-
 export GLAMOUR_STYLE=tokyo-night
 export GLOW_TUI=true
 
