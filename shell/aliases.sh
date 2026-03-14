@@ -12,6 +12,7 @@ alias ta='tmux attach'
 alias tat='tmux attach -t'
 alias ts='tmux new-session -s'
 alias tsh='tmux new-session -s "$(basename "$PWD")"'
+alias tshd='tsh -d'
 
 alias ga='git add'
 alias gd='git diff'
@@ -92,7 +93,6 @@ if type monolith &>/dev/null; then
 fi
 
 # npx
-alias devcontainer='npx -- @devcontainers/cli'
 alias igir='npx -- igir'
 
 # Platform specific
