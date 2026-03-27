@@ -113,7 +113,17 @@ elif [ $PROMPT_PROVIDER = starship ]; then
 fi
 
 zle -N toggle-prompt
-bindkey '^P' toggle-prompt
+bindkey '^Pp' toggle-prompt
+
+if [ $PROMPT_PROVIDER = starship ]; then
+    function toggle-prompt-langs {
+        starship toggle golang
+        starship toggle nodejs
+        starship toggle python
+    }
+    zle -N toggle-prompt-langs
+    bindkey '^Pl' toggle-prompt-langs
+fi
 
 _z_jump() {
     local res

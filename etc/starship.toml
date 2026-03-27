@@ -166,6 +166,7 @@ symbol = " "
 symbol = " "
 
 [golang]
+disabled = true
 symbol = " "
 
 [guix_shell]
@@ -202,6 +203,7 @@ symbol = "󰆥 "
 symbol = " "
 
 [nodejs]
+disabled = true
 symbol = " "
 
 [package]
@@ -209,6 +211,7 @@ disabled = true
 symbol = "󰏗 "
 
 [python]
+disabled = true
 symbol = " "
 
 [rlang]
