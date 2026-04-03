@@ -6,7 +6,7 @@ format = """
 $os[](bg:dark fg:black)\
 $directory[](bg:medium fg:dark)\
 $git_branch$git_status[](fg:medium)\
-( ($shell )$all)\
+( ($shell )${custom.venv}$all)\
 $fill\
 ([](fg:danger)$status[](fg:danger))\
 [](fg:light)\
@@ -138,6 +138,12 @@ style_user = "bg:light fg:txt"
 style_root = "bg:light fg:danger"
 format = "[($user@)]($style)"
 
+[custom.venv]
+command = "printenv VIRTUAL_ENV_PROMPT"
+when = 'test -n "$VIRTUAL_ENV"'
+format = "[ $output ]($style)"
+style = "yellow bold"
+
 
 ### NerdFonts preset symbols
 
@@ -168,6 +174,8 @@ symbol = " "
 [golang]
 disabled = true
 symbol = " "
+format = '[$symbol($version )]($style)'
+version_format = "$minor"
 
 [guix_shell]
 symbol = " "
@@ -205,6 +213,8 @@ symbol = " "
 [nodejs]
 disabled = true
 symbol = " "
+format = '[$symbol($version )]($style)'
+version_format = "$major"
 
 [package]
 disabled = true
@@ -213,6 +223,8 @@ symbol = "󰏗 "
 [python]
 disabled = true
 symbol = " "
+format = '[${symbol}${pyenv_prefix}(${version} )]($style)'
+version_format = "$minor"
 
 [rlang]
 symbol = "󰟔 "
