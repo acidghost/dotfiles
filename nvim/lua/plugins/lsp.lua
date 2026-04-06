@@ -318,7 +318,12 @@ return {
             return
           end
         end
-        require("lspconfig")[server].setup(server_opts)
+        if vim.fn.has("nvim-0.11") then
+          vim.lsp.config(server, server_opts)
+          vim.lsp.enable(server)
+        else
+          require("lspconfig")[server].setup(server_opts)
+        end
       end
 
       -- get all the servers that are available through mason-lspconfig
