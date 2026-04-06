@@ -2,9 +2,11 @@ local lspconfig_version = "*"
 local mason_version = "*"
 local mason_lspconfig_version = "*"
 if not vim.fn.has("nvim-0.10") then
-  lspconfig_version = "2.5.0"
   mason_version = "1.11.0"
   mason_lspconfig_version = "1.32.0"
+end
+if not vim.fn.has("nvim-0.11") then
+  lspconfig_version = "2.5.0"
 end
 
 return {
