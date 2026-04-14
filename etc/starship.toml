@@ -139,7 +139,7 @@ style_root = "bg:light fg:danger"
 format = "[($user@)]($style)"
 
 [custom.venv]
-command = "printenv VIRTUAL_ENV_PROMPT"
+command = 'test -n "$VIRTUAL_ENV_PROMPT" && printenv VIRTUAL_ENV_PROMPT || printf "venv"'
 when = 'test -n "$VIRTUAL_ENV"'
 format = "[ $output ]($style)"
 style = "yellow bold"
