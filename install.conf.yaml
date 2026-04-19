@@ -21,6 +21,8 @@
       mode: 0755
     ~/.config/nvim:
       mode: 0755
+    ~/.pi/agent:
+      mode: 0755
     ~/.scripts:
       mode: 0755
     ~/.tmux/scripts:
@@ -116,6 +118,7 @@
       path: nushell/*
       if: '[ "$(uname)" = Darwin ]'
     ~/.p10k.zsh: zsh/p10k.zsh
+    ~/.pi/agent/extensions: pi/extensions
     ~/.scripts:
       glob: true
       path: scripts/*

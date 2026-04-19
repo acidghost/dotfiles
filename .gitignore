@@ -1,4 +1,7 @@
 __pycache__
+node_modules/
+
+btop/btop.log
 mpv/watch_later
 shell/env_local.sh
 vifm/vifm-help.txt
