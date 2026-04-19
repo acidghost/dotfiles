@@ -3,6 +3,7 @@ disable_backends = ["asdf", "vfox"]
 lockfile = true
 
 [tools]
+bun = "latest"
 devcontainer-cli = "latest"
 go = "latest"
 node = "24"
