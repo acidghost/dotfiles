@@ -115,6 +115,7 @@
       glob: true
       path: nushell/*
       if: '[ "$(uname)" = Darwin ]'
+    ~/.p10k.zsh: zsh/p10k.zsh
     ~/.scripts:
       glob: true
       path: scripts/*
@@ -122,7 +123,6 @@
     ~/.scripts/tmux-list-keys: tmux/scripts/tmux-list-keys
     ~/.scripts/tmux-restore: tmux/scripts/tmux-restore
     ~/.shell:
-    ~/.p10k.zsh: zsh/p10k.zsh
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/scripts:
       glob: true
