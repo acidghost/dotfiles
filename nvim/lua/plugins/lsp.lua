@@ -126,7 +126,6 @@ return {
               },
             },
           },
-          pyright = {},
           rust_analyzer = {
             settings = {
               ["rust-analyzer"] = {
@@ -405,7 +404,6 @@ return {
         "gopls",
         "lua-language-server",
         "prettier",
-        "pyright",
         "stylua",
         "shellcheck",
         "shfmt",
