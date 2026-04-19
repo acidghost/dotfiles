@@ -17,6 +17,7 @@ autocmd FileType json setlocal shiftwidth=2 tabstop=2
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2
 autocmd FileType nu setlocal shiftwidth=2 tabstop=2
 autocmd FileType org setlocal shiftwidth=2 tabstop=2
+autocmd FileType templ setlocal shiftwidth=4 tabstop=4 noexpandtab
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 
 if has('nvim')
