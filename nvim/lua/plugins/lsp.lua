@@ -76,6 +76,9 @@ return {
         ---@type lspconfig.options
         servers = {
           bashls = {},
+          biome = {
+            mason = false,
+          },
           clangd = {},
           gopls = {},
           helm_ls = {},
@@ -376,7 +379,9 @@ return {
         )
       opts.sources = vim.list_extend(opts.sources or {}, {
         nls.builtins.formatting.clang_format,
-        nls.builtins.formatting.prettier,
+        nls.builtins.formatting.prettier.with({
+          filetypes = { "html", "yaml", "markdown" },
+        }),
         nls.builtins.formatting.stylua,
         nls.builtins.formatting.shfmt.with({
           extra_args = { "-s", "-bn", "-i=4" },
