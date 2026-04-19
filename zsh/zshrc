@@ -29,9 +29,6 @@ forgit_restore=fgcf
 forgit_clean=fgclean
 forgit_stash_show=fgss
 
-export ZSH_TMUX_FIXTERM=true
-export ZSH_TMUX_UNICODE=true
-
 # forgit
 export FORGIT_PAGER="delta --features=forgit"
 export FORGIT_SHOW_PAGER=$FORGIT_PAGER
