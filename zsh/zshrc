@@ -62,6 +62,7 @@ compinit
 
 antidote load
 
+[ -d ~/.local/share/nvim/mason/bin ] && export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 [ -n "$commands[mise]" ] && eval "$(mise activate zsh)"
 
 if [ $PROMPT_PROVIDER = starship ]; then

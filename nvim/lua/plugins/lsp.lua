@@ -393,6 +393,8 @@ return {
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
     opts = {
+      -- Manually manage path so mise-managed tools come first
+      PATH = "skip",
       ensure_installed = {
         "clang-format",
         "gopls",
