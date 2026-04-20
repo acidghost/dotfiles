@@ -2,6 +2,8 @@ __pycache__
 node_modules/
 
 btop/btop.log
+mise/config.local.toml
+mise/mise.local.lock
 mpv/watch_later
 shell/env_local.sh
 vifm/vifm-help.txt
