@@ -172,7 +172,7 @@ symbol = " "
 symbol = " "
 
 [golang]
-disabled = true
+disabled = false
 symbol = " "
 format = '[$symbol($version )]($style)'
 version_format = "$minor"
@@ -211,7 +211,7 @@ symbol = "󰆥 "
 symbol = " "
 
 [nodejs]
-disabled = true
+disabled = false
 symbol = " "
 format = '[$symbol($version )]($style)'
 version_format = "$major"
@@ -221,7 +221,7 @@ disabled = true
 symbol = "󰏗 "
 
 [python]
-disabled = true
+disabled = false
 symbol = " "
 format = '[${symbol}${pyenv_prefix}(${version} )]($style)'
 version_format = "$minor"
