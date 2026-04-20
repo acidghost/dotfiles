@@ -21,7 +21,9 @@ return {
       {
         "mason-org/mason-lspconfig.nvim",
         version = mason_lspconfig_version,
-        config = function() end,
+        opts = {
+          automatic_enable = true,
+        },
       },
       "b0o/schemastore.nvim",
     },
@@ -76,9 +78,7 @@ return {
         ---@type lspconfig.options
         servers = {
           bashls = {},
-          biome = {
-            mason = false,
-          },
+          biome = {},
           clangd = {},
           gopls = {},
           helm_ls = {},
@@ -92,7 +92,6 @@ return {
           },
           nushell = {},
           lua_ls = {
-            -- mason = false, -- set to false if you don't want this server to be installed with mason
             -- Use this to add any additional keymaps
             -- for specific lsp servers
             -- ---@type LazyKeysSpec[]
@@ -139,7 +138,9 @@ return {
             },
           },
           ruff = {},
+          shellcheck = {},
           ts_ls = {},
+          ty = {},
           yamlls = {
             settings = {
               yaml = {
@@ -328,37 +329,13 @@ return {
         end
       end
 
-      -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      local all_mslp_servers = {}
-      if have_mason then
-        all_mslp_servers =
-          vim.tbl_keys(require("mason-lspconfig.mappings").get_all().lspconfig_to_package)
-      end
-
-      local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(servers) do
         if server_opts then
           server_opts = server_opts == true and {} or server_opts
           if server_opts.enabled ~= false then
-            -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-            if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-              setup(server)
-            else
-              ensure_installed[#ensure_installed + 1] = server
-            end
+            setup(server)
           end
         end
-      end
-
-      if have_mason then
-        mlsp.setup({
-          ensure_installed = vim.tbl_deep_extend("force", ensure_installed, {}),
-          automatic_enable = true,
-          -- XXX: legacy settings for pre v2
-          handlers = { setup },
-          automatic_installation = true,
-        })
       end
     end,
   },
@@ -396,44 +373,11 @@ return {
     cmd = "Mason",
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
+    ---@type MasonSettings
     opts = {
       -- Manually manage path so mise-managed tools come first
       PATH = "skip",
-      ensure_installed = {
-        "clang-format",
-        "gopls",
-        "lua-language-server",
-        "prettier",
-        "stylua",
-        "shellcheck",
-        "shfmt",
-        "ruff",
-        "yaml-language-server",
-      },
     },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      mr:on("package:install:success", function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger({
-            event = "FileType",
-            buf = vim.api.nvim_get_current_buf(),
-          })
-        end, 100)
-      end)
-
-      mr.refresh(function()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end)
-    end,
   },
 
   {
