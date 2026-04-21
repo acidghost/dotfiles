@@ -1,5 +1,6 @@
 [settings]
 disable_backends = ["asdf", "vfox"]
+install_before = "7d"
 lockfile = true
 
 [tools]
