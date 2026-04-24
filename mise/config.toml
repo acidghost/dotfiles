@@ -4,14 +4,18 @@ install_before = "7d"
 lockfile = true
 
 [tools]
+atuin = "latest"
 bun = "latest"
 devcontainer-cli = "latest"
 go = "latest"
+lsd = "latest"
 lua-language-server = "latest"
 node = "24"
 perl = "latest"
 ruff = "latest"
 shellcheck = "latest"
 shfmt = "latest"
+starship = "latest"
 stylua = "latest"
 ty = "latest"
+zoxide = "latest"
