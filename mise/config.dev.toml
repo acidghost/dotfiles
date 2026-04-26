@@ -1,0 +1,12 @@
+[tools]
+bun = "latest"
+devcontainer-cli = "latest"
+go = "latest"
+lua-language-server = "latest"
+node = "24"
+perl = "latest"
+ruff = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+stylua = "latest"
+ty = "latest"
