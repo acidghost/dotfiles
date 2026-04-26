@@ -55,6 +55,9 @@ fi
 
 [ -d "$OMZ_COMPDIR" ] && fpath=("$OMZ_COMPDIR" $fpath)
 
+[ -d ~/.local/share/mise-aux ] && \
+    fpath=(~/.local/share/mise-aux $fpath)
+
 compinit
 
 antidote load
