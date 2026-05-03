@@ -2,6 +2,7 @@
 bun = "latest"
 devcontainer-cli = "latest"
 go = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
 lua-language-server = "latest"
 node = "24"
 perl = "latest"
