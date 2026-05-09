@@ -68,6 +68,7 @@
     ~/Brewfile:
       path: etc/Brewfile
       if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
+    ~/.bunfig.toml: etc/bunfig.toml
     ~/.config/alacritty:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/atuin:
@@ -107,6 +108,7 @@
       glob: true
       path: nvim/*
     ~/.config/starship.toml: etc/starship.toml
+    ~/.config/uv:
     ~/.config/vifm:
     ~/.gitconfig:
     ~/Library/Application Support/Code/User:
@@ -117,6 +119,7 @@
       glob: true
       path: nushell/*
       if: '[ "$(uname)" = Darwin ]'
+    ~/.npmrc: etc/npmrc
     ~/.p10k.zsh: zsh/p10k.zsh
     ~/.pi/agent/extensions: pi/extensions
     ~/.scripts:
