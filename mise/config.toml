@@ -6,6 +6,7 @@ lockfile = true
 [tools]
 atuin = "latest"
 bat = "latest"
+delta = "latest"
 fd = "latest"
 lsd = "latest"
 ripgrep = "latest"
