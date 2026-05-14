@@ -346,7 +346,7 @@ devcontainer-exec() {
 container-forward-port() {
     local CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
     local container=$1 port=$2 proto=${3:-tcp}
-    socat "$proto-listen:$port" \
+    socat "$proto-listen:$port,fork,reuseaddr" \
         system:"$CONTAINER_ENGINE exec -i '$container' socat - '$proto\:localhost\:$port'"
 }
 
