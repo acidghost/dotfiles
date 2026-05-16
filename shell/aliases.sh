@@ -23,6 +23,9 @@ alias gl='git pull'
 alias gst='git status'
 alias glo='git log --oneline'
 
+type a555less &>/dev/null && alias aless=a555less
+type a555watch &>/dev/null && alias awatch=a555watch
+
 alias e='$EDITOR'
 # alias objdump='objdump -M intel'
 
