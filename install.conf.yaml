@@ -100,6 +100,7 @@
       glob: true
       path: nnn/plugins/*
     ~/.config/nnn/plugins/.iconlookup: nnn/plugins/.iconlookup
+    ~/.config/nono: nono
     ~/.config/nushell:
       glob: true
       path: nushell/*

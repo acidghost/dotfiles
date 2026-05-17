@@ -1,0 +1,17 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "crush"
+  },
+  "extends": [
+    "personal"
+  ],
+  "filesystem": {
+    "allow": [],
+    "read": [
+      "~/.crush/",
+      "~/.config/crush/",
+      "~/.local/share/crush/"
+    ]
+  }
+}

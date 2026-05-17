@@ -1,0 +1,17 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "pi"
+  },
+  "extends": [
+    "personal"
+  ],
+  "filesystem": {
+    "allow": [
+      "~/.pi/agent"
+    ],
+    "read": [
+      "~/.dotfiles/pi"
+    ]
+  }
+}

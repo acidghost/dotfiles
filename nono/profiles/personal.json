@@ -1,0 +1,42 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "personal"
+  },
+  "extends": [
+    "default"
+  ],
+  "groups": {
+    "include": [
+      "git_config",
+      "go_runtime",
+      "user_caches_linux",
+      "user_caches_macos"
+    ]
+  },
+  "filesystem": {
+    "allow": [
+      "~/go/pkg/mod/cache"
+    ],
+    "read": [
+      "~/.config/gh",
+      "~/.local/share/mise/installs"
+    ],
+    "read_file": [
+      "~/.gitconfig.private"
+    ]
+  },
+  "env_credentials": {
+    "github_token_public_readonly": "GITHUB_TOKEN"
+  },
+  "network": {
+    "allow_domain": [
+      "api.github.com",
+      "api.z.ai",
+      "chatgpt.com"
+    ]
+  },
+  "workdir": {
+    "access": "readwrite"
+  }
+}
