@@ -4,26 +4,11 @@
     "name": "personal"
   },
   "extends": [
-    "default"
+    "base"
   ],
-  "groups": {
-    "include": [
-      "git_config",
-      "go_runtime",
-      "user_caches_linux",
-      "user_caches_macos"
-    ]
-  },
   "filesystem": {
-    "allow": [
-      "~/go/pkg/mod/cache"
-    ],
     "read": [
-      "~/.config/gh",
-      "~/.local/share/mise/installs"
-    ],
-    "read_file": [
-      "~/.gitconfig.private"
+      "~/.config/gh"
     ]
   },
   "env_credentials": {
@@ -35,8 +20,5 @@
       "api.z.ai",
       "chatgpt.com"
     ]
-  },
-  "workdir": {
-    "access": "readwrite"
   }
 }

@@ -1,0 +1,31 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "base"
+  },
+  "extends": [
+    "default"
+  ],
+  "groups": {
+    "include": [
+      "git_config",
+      "go_runtime",
+      "user_caches_linux",
+      "user_caches_macos"
+    ]
+  },
+  "filesystem": {
+    "allow": [
+      "~/go/pkg/mod/cache"
+    ],
+    "read": [
+      "~/.local/share/mise/installs"
+    ],
+    "read_file": [
+      "~/.gitconfig.private"
+    ]
+  },
+  "workdir": {
+    "access": "readwrite"
+  }
+}
