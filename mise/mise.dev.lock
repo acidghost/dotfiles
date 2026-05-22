@@ -101,7 +101,7 @@ checksum = "sha256:20d2ceafb4ed41b96b879010927b28bc92a5be57a7c1801ce365a9ca51d32
 url = "https://dl.google.com/go/go1.26.3.windows-amd64.zip"
 
 [[tools."go:golang.org/x/tools/gopls"]]
-version = "0.21.1"
+version = "0.22.0"
 backend = "go:golang.org/x/tools/gopls"
 
 [[tools.lua-language-server]]
