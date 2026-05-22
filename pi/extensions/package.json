@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
-    "@mariozechner/pi-coding-agent": "^0.67.68",
+    "@earendil-works/pi-coding-agent": "^0.74.0",
     "@types/bun": "latest"
   }
 }
