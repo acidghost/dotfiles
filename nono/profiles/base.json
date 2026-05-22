@@ -16,9 +16,13 @@
   },
   "filesystem": {
     "allow": [
+      "~/.config/nono/profile-drafts",
       "~/go/pkg/mod/cache"
     ],
     "read": [
+      "~/.agents/skills",
+      "~/.config/nono/packages",
+      "~/.config/nono/profiles",
       "~/.local/share/mise/installs"
     ],
     "read_file": [
