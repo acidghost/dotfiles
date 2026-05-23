@@ -2,10 +2,6 @@
 name: managing-dependencies
 description: "Use when adding, updating, or evaluating npm/pip/go dependencies. Triggers on: npm install, pip install, go get, adding packages to manifests, reviewing lockfile changes, comparing package alternatives, or assessing package trustworthiness."
 license: CC0-1.0
-compatibility: Any agent with Python 3.10+
-metadata:
-  author: andrew
-  version: "2.0"
 ---
 
 # Managing Dependencies
