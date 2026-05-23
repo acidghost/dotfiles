@@ -31,7 +31,7 @@ export default function(pi: ExtensionAPI) {
 
         const choice = await ctx.ui.select(
             `Execute bash command?\n\n  ${command}`,
-            ["Allow", "Block", "Allow All (this session)"],
+            ["Allow", "Block"],
         );
 
         if (!choice || choice === "Block") {
