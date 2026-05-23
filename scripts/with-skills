@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+"""Temporarily link skill dirs into ~/.agents/skills/, run a command, then clean up."""
+
+import fnmatch
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+SCRIPT_DIR = Path(os.path.realpath(__file__)).parent
+SRC_ROOT = Path(os.environ.get("WITH_SKILLS_SRC", SCRIPT_DIR / "../skills")).resolve()
+DEST_ROOT = Path(os.environ.get("WITH_SKILLS_DEST", os.path.expanduser("~/.agents/skills")))
+
+
+def short_path(d: Path) -> str:
+    """Relative path after the last 'skills/' segment, e.g. 'engineering/diagnose'."""
+    parts = d.relative_to(SRC_ROOT).parts
+    for i, p in enumerate(parts):
+        if p == "skills" and i + 1 < len(parts):
+            return str(Path(*parts[i + 1 :]))
+    return str(Path(*parts))
+
+
+def resolve_patterns(patterns: list[str]) -> list[Path]:
+    """Match glob patterns against dirs under SRC_ROOT by basename or short path."""
+    dirs = sorted(d for d in SRC_ROOT.rglob("*") if d.is_dir())
+    matched: list[Path] = []
+    for pattern in patterns:
+        found = False
+        for d in dirs:
+            sp = short_path(d)
+            if fnmatch.fnmatch(d.name, pattern) or fnmatch.fnmatch(sp, pattern):
+                if d not in matched:
+                    matched.append(d)
+                found = True
+        if not found:
+            print(f"warning: no match for '{pattern}'", file=sys.stderr)
+    return matched
+
+
+def link(src: Path) -> tuple[str, Path | None]:
+    """Link a directory into DEST_ROOT. Returns (name, backed_up_path_or_None)."""
+    name = src.name
+    dest = DEST_ROOT / name
+    backup = None
+
+    if dest.is_symlink():
+        if dest.resolve() == src.resolve():
+            return name, None
+        dest.unlink()
+    elif dest.exists():
+        backup = dest.with_name(f".{name}.bak")
+        shutil.move(str(dest), str(backup))
+
+    try:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.symlink_to(src)
+    except OSError as e:
+        print(f"error linking {name}: {e}", file=sys.stderr)
+        if backup:
+            shutil.move(str(backup), str(dest))
+        return name, None
+
+    print(f"linked: {name}")
+    return name, backup
+
+
+def unlink(name: str, backup: Path | None) -> None:
+    """Remove a linked dir, restoring any backup."""
+    dest = DEST_ROOT / name
+    if dest.is_symlink():
+        dest.unlink()
+        print(f"unlinked: {name}")
+    if backup and backup.exists():
+        shutil.move(str(backup), str(DEST_ROOT / name))
+        print(f"restored: {name}")
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    if not args or args[0] in ("-h", "--help"):
+        print("usage: with-skills <pattern>... -- <command> [args...]")
+        print()
+        print("Temporarily links dirs into ~/.agents/skills/, runs the command,")
+        print("then reverts all links (restores any backups).")
+        print()
+        print("  pattern   glob matched against dir names or paths after 'skills/'")
+        print("  --        separator between patterns and command")
+        print()
+        print("examples:")
+        print("  with-skills grill-me -- pi")
+        print("  with-skills engineering -- pi")
+        print("  with-skills mattpocock -- pi")
+        print("  with-skills engineering/* productivity/* -- pi")
+        sys.exit(0 if args else 1)
+
+    try:
+        sep = args.index("--")
+    except ValueError:
+        print("error: missing -- separator before command", file=sys.stderr)
+        sys.exit(1)
+
+    patterns, command = args[:sep], args[sep + 1 :]
+
+    if not patterns:
+        print("error: no patterns specified", file=sys.stderr)
+        sys.exit(1)
+    if not command:
+        print("error: no command specified after --", file=sys.stderr)
+        sys.exit(1)
+
+    skills = resolve_patterns(patterns)
+    if not skills:
+        print("error: no dirs matched", file=sys.stderr)
+        sys.exit(1)
+
+    linked: list[tuple[str, Path | None]] = []
+    for skill in skills:
+        name, backup = link(skill)
+        if backup is not None or (DEST_ROOT / name).is_symlink():
+            linked.append((name, backup))
+
+    exit_code = 0
+    try:
+        exit_code = subprocess.call(command)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        for name, backup in reversed(linked):
+            unlink(name, backup)
+
+    sys.exit(exit_code)
+
+
+if __name__ == "__main__":
+    main()

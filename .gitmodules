@@ -11,3 +11,6 @@
 [submodule "ble.sh"]
 	path = ble.sh
 	url = https://github.com/akinomyoga/ble.sh.git
+[submodule "skills/mattpocock"]
+	path = skills/mattpocock
+	url = https://github.com/mattpocock/skills.git
