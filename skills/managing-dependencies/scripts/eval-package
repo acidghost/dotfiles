@@ -1,0 +1,524 @@
+#!/usr/bin/env python3
+"""Evaluate a package for risk across ecosyste.ms and OpenSSF Scorecard."""
+
+import argparse
+import json
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Optional
+
+
+# ---------------------------------------------------------------------------
+# Types
+# ---------------------------------------------------------------------------
+
+
+class RiskLevel(str, Enum):
+    GREEN = "green"
+    YELLOW = "yellow"
+    RED = "red"
+
+
+class Verdict(str, Enum):
+    PASS = "PASS"
+    REVIEW = "REVIEW"
+    ESCALATE = "ESCALATE"
+
+
+EMOJI: dict[RiskLevel, str] = {
+    RiskLevel.GREEN: "🟢",
+    RiskLevel.YELLOW: "🟡",
+    RiskLevel.RED: "🔴",
+}
+
+REGISTRY_FOR: dict[str, str] = {
+    "npm": "npmjs.org",
+    "pip": "pypi.org",
+    "go": "proxy.golang.org",
+}
+
+
+@dataclass
+class EcosysteMsData:
+    dependent_repos: int = 0
+    dependent_packages: int = 0
+    latest_version: str = "unknown"
+    latest_release_at: Optional[str] = None
+    first_release_at: Optional[str] = None
+    maintainers: int = 0
+    repo_url: str = ""
+    licenses: str = "none"
+    advisories: int = 0
+    archived: bool = False
+    versions: int = 0
+    # Version-specific fields (populated when --version is used)
+    evaluated_version: Optional[str] = None
+    version_published_at: Optional[str] = None
+    version_is_latest: Optional[bool] = None
+    version_dependency_count: int = 0
+
+
+@dataclass
+class ScorecardData:
+    overall: Optional[float] = None
+    maintained: Optional[int] = None
+    dangerous_workflow: Optional[int] = None
+    code_review: Optional[int] = None
+
+
+@dataclass
+class RiskSignal:
+    name: str
+    value: str
+    level: RiskLevel
+
+
+@dataclass
+class EvaluationResult:
+    ecosystem: str
+    package: str
+    version: Optional[str]
+    eco: EcosysteMsData
+    scorecard: ScorecardData
+    signals: list[RiskSignal] = field(default_factory=list)
+    reds: int = 0
+    yellows: int = 0
+    verdict: Verdict = Verdict.PASS
+
+
+# ---------------------------------------------------------------------------
+# API helpers
+# ---------------------------------------------------------------------------
+
+
+def fetch_json(url: str, *, quiet: bool = False) -> Optional[dict[str, Any]]:
+    """Fetch JSON from a URL. Returns None on any failure.
+
+    When quiet=True, suppresses error messages (for best-effort calls).
+    """
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "eval-package/2.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        if not quiet:
+            if e.code == 404:
+                print(f"error: not found (404) — {url}", file=sys.stderr)
+            elif e.code >= 500:
+                print(f"error: server error ({e.code}) — {url}", file=sys.stderr)
+                print(
+                    "       the registry may be temporarily unavailable",
+                    file=sys.stderr,
+                )
+            else:
+                print(f"error: HTTP {e.code} — {url}", file=sys.stderr)
+        return None
+    except (urllib.error.URLError, json.JSONDecodeError, TimeoutError, OSError):
+        return None
+
+
+def parse_ecosyste_ms(raw: dict[str, Any]) -> EcosysteMsData:
+    """Extract the fields we care about from the ecosyste.ms payload."""
+    licenses = raw.get("normalized_licenses") or []
+    return EcosysteMsData(
+        dependent_repos=raw.get("dependent_repos_count", 0),
+        dependent_packages=raw.get("dependent_packages_count", 0),
+        latest_version=raw.get("latest_release_number", "unknown"),
+        latest_release_at=raw.get("latest_release_published_at"),
+        first_release_at=raw.get("first_release_published_at"),
+        maintainers=len(raw.get("maintainers") or []),
+        repo_url=raw.get("repository_url") or "",
+        licenses=", ".join(licenses) if licenses else "none",
+        advisories=len(raw.get("advisories") or []),
+        archived=(raw.get("repo_metadata") or {}).get("archived", False),
+        versions=raw.get("versions_count", 0),
+    )
+
+
+def parse_scorecard(raw: dict[str, Any]) -> ScorecardData:
+    """Extract the fields we care about from the OpenSSF Scorecard payload."""
+    checks: dict[str, int] = {}
+    for check in raw.get("checks", []):
+        checks[check["name"]] = check.get("score", 0)
+    return ScorecardData(
+        overall=raw.get("score"),
+        maintained=checks.get("Maintained"),
+        dangerous_workflow=checks.get("Dangerous-Workflow"),
+        code_review=checks.get("Code-Review"),
+    )
+
+
+def github_repo_path(repo_url: str) -> Optional[str]:
+    """Extract 'owner/repo' from a GitHub URL, or None."""
+    m = re.search(r"github\.com/([^/]+/[^/]+)", repo_url)
+    return m.group(1).rstrip("/") if m else None
+
+
+# ---------------------------------------------------------------------------
+# Scoring
+# ---------------------------------------------------------------------------
+
+
+def _parse_iso_date(value: Optional[str]) -> Optional[datetime]:
+    """Best-effort ISO-8601 parse. Returns None on failure."""
+    if not value:
+        return None
+    try:
+        # Handle trailing Z or timezone offsets
+        ts = value[:19]
+        return datetime.strptime(ts, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+    except (ValueError, IndexError):
+        return None
+
+
+def _days_since(dt: Optional[datetime]) -> Optional[int]:
+    if dt is None:
+        return None
+    now = datetime.now(timezone.utc)
+    return (now - dt).days
+
+
+def score_age(first_release_at: Optional[str]) -> RiskLevel:
+    days = _days_since(_parse_iso_date(first_release_at))
+    if days is None:
+        return RiskLevel.YELLOW
+    if days >= 365:
+        return RiskLevel.GREEN
+    if days >= 90:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_last_release(latest_release_at: Optional[str]) -> RiskLevel:
+    days = _days_since(_parse_iso_date(latest_release_at))
+    if days is None:
+        return RiskLevel.YELLOW
+    if days <= 365:
+        return RiskLevel.GREEN
+    if days <= 730:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_maintainers(count: int) -> RiskLevel:
+    if count >= 3:
+        return RiskLevel.GREEN
+    if count == 2:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_dependent_repos(count: int) -> RiskLevel:
+    if count >= 5000:
+        return RiskLevel.GREEN
+    if count >= 500:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_versions(count: int) -> RiskLevel:
+    if count >= 10:
+        return RiskLevel.GREEN
+    if count >= 3:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_advisories(count: int) -> RiskLevel:
+    if count == 0:
+        return RiskLevel.GREEN
+    if count <= 2:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+def score_archived(archived: bool) -> RiskLevel:
+    return RiskLevel.RED if archived else RiskLevel.GREEN
+
+
+def score_scorecard(score: Optional[float]) -> RiskLevel:
+    if score is None:
+        return RiskLevel.YELLOW  # unknown ≠ bad
+    if score >= 7:
+        return RiskLevel.GREEN
+    if score >= 4:
+        return RiskLevel.YELLOW
+    return RiskLevel.RED
+
+
+# ---------------------------------------------------------------------------
+# Core evaluation
+# ---------------------------------------------------------------------------
+
+
+def evaluate(
+    ecosystem: str, package: str, version: Optional[str] = None
+) -> EvaluationResult:
+    registry = REGISTRY_FOR.get(ecosystem)
+    if registry is None:
+        print(
+            f"error: unsupported ecosystem '{ecosystem}'. Use npm, pip, or go.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Always fetch package-level data for aggregate signals
+    encoded = urllib.parse.quote(package, safe="")
+    base_url = (
+        f"https://packages.ecosyste.ms/api/v1/registries/{registry}/packages/{encoded}"
+    )
+    raw_eco = fetch_json(base_url)
+    if raw_eco is None:
+        print(
+            f"error: could not fetch data for '{package}' from ecosyste.ms/{registry}",
+            file=sys.stderr,
+        )
+        print("       verify the package name and try again", file=sys.stderr)
+        sys.exit(1)
+
+    eco = parse_ecosyste_ms(raw_eco)
+
+    # If a specific version is requested, fetch version-level data
+    if version is not None:
+        encoded_ver = urllib.parse.quote(version, safe="")
+        ver_url = f"{base_url}/versions/{encoded_ver}"
+        raw_ver = fetch_json(ver_url)
+        if raw_ver is None:
+            print(
+                f"error: version '{version}' not found for '{package}'",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        eco.evaluated_version = raw_ver.get("number", version)
+        eco.version_published_at = raw_ver.get("published_at")
+        eco.version_is_latest = raw_ver.get("latest")
+        eco.version_dependency_count = len(raw_ver.get("dependencies") or [])
+
+    # Scorecard — best effort
+    sc = ScorecardData()
+    if gh_path := github_repo_path(eco.repo_url):
+        if raw_sc := fetch_json(
+            f"https://api.scorecard.dev/projects/github.com/{gh_path}",
+            quiet=True,
+        ):
+            sc = parse_scorecard(raw_sc)
+
+    # Build signals
+    signals: list[RiskSignal] = [
+        RiskSignal(
+            "Age (first release)",
+            _date_display(eco.first_release_at),
+            score_age(eco.first_release_at),
+        ),
+        RiskSignal(
+            "Last release",
+            _date_display(eco.latest_release_at),
+            score_last_release(eco.latest_release_at),
+        ),
+        RiskSignal(
+            "Maintainers",
+            str(eco.maintainers),
+            score_maintainers(eco.maintainers),
+        ),
+        RiskSignal(
+            "Dependent repos",
+            f"{eco.dependent_repos:,}",
+            score_dependent_repos(eco.dependent_repos),
+        ),
+        RiskSignal(
+            "Versions published",
+            str(eco.versions),
+            score_versions(eco.versions),
+        ),
+        RiskSignal(
+            "Advisories",
+            str(eco.advisories),
+            score_advisories(eco.advisories),
+        ),
+        RiskSignal(
+            "Archived",
+            str(eco.archived).lower(),
+            score_archived(eco.archived),
+        ),
+        RiskSignal(
+            "OpenSSF score",
+            _score_display(sc.overall),
+            score_scorecard(sc.overall),
+        ),
+    ]
+
+    reds = sum(1 for s in signals if s.level == RiskLevel.RED)
+    yellows = sum(1 for s in signals if s.level == RiskLevel.YELLOW)
+
+    if reds > 0:
+        verdict = Verdict.ESCALATE
+    elif yellows >= 2:
+        verdict = Verdict.REVIEW
+    else:
+        verdict = Verdict.PASS
+
+    return EvaluationResult(
+        ecosystem=ecosystem,
+        package=package,
+        version=version,
+        eco=eco,
+        scorecard=sc,
+        signals=signals,
+        reds=reds,
+        yellows=yellows,
+        verdict=verdict,
+    )
+
+
+def _date_display(value: Optional[str]) -> str:
+    if not value:
+        return "unknown"
+    return value[:10]
+
+
+def _score_display(value: Optional[float]) -> str:
+    if value is None:
+        return "unavailable"
+    return str(value)
+
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+
+
+def print_human(result: EvaluationResult) -> None:
+    r = result
+    eco = r.eco
+
+    print()
+    print("  PACKAGE RISK EVALUATION")
+    print()
+    print(f"  {r.ecosystem}  ·  {r.package}")
+    if eco.evaluated_version:
+        latest_marker = " (latest)" if eco.version_is_latest else " (not latest)"
+        print(
+            f"  version: {eco.evaluated_version}{latest_marker}  ·  license: {eco.licenses}"
+        )
+        if eco.version_published_at:
+            print(f"  published: {eco.version_published_at[:10]}")
+        print(f"  dependencies: {eco.version_dependency_count}")
+    else:
+        print(f"  latest: {eco.latest_version}  ·  license: {eco.licenses}")
+    print(f"  repo: {eco.repo_url}")
+    print()
+    print(f"  {'SIGNAL':<22s} {'VALUE':<14s} RISK")
+
+    for signal in r.signals:
+        emoji = EMOJI[signal.level]
+        print(f"  {signal.name:<22s} {signal.value:<14s} {emoji}")
+
+    print()
+
+    if r.verdict == Verdict.PASS:
+        print("  ✅  VERDICT: PASS — no significant risk flags detected")
+    elif r.verdict == Verdict.REVIEW:
+        print(
+            f"  ⚠️  VERDICT: REVIEW — {r.yellows} yellow flags detected. Review before adding."
+        )
+        print("     See flagged signals above. Justify or find alternatives.")
+    else:
+        print(
+            f"  🚫  VERDICT: ESCALATE — {r.reds} red flag(s) and {r.yellows} yellow flag(s) detected."
+        )
+        print("     Do not add without explicit override. Present alternatives.")
+    print()
+
+
+def print_json(result: EvaluationResult) -> None:
+    r = result
+    eco = r.eco
+    sc = r.scorecard
+
+    output: dict[str, Any] = {
+        "ecosystem": r.ecosystem,
+        "package": r.package,
+        "version": r.version,
+        "latest": eco.latest_version,
+        "license": eco.licenses,
+        "dependent_repos": eco.dependent_repos,
+        "dependent_packages": eco.dependent_packages,
+        "maintainers": eco.maintainers,
+        "versions": eco.versions,
+        "advisories": eco.advisories,
+        "archived": eco.archived,
+        "repo": eco.repo_url,
+        "scorecard": {
+            "overall": sc.overall,
+            "maintained": sc.maintained,
+            "dangerous_workflow": sc.dangerous_workflow,
+            "code_review": sc.code_review,
+        },
+    }
+    if eco.evaluated_version:
+        output["evaluated_version"] = {
+            "number": eco.evaluated_version,
+            "published_at": eco.version_published_at,
+            "is_latest": eco.version_is_latest,
+            "dependency_count": eco.version_dependency_count,
+        }
+    output["flags"] = {
+        s.name.lower()
+        .replace(" ", "_")
+        .replace("(", "")
+        .replace(")", ""): s.level.value
+        for s in r.signals
+    }
+    output["summary"] = {
+        "reds": r.reds,
+        "yellows": r.yellows,
+        "verdict": r.verdict.value,
+    }
+    print(json.dumps(output, indent=2))
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Evaluate a package for risk across ecosyste.ms and OpenSSF Scorecard.",
+        epilog=(
+            "For Go packages, use the full module path: "
+            "eval-package go github.com/gin-gonic/gin"
+        ),
+    )
+    parser.add_argument(
+        "ecosystem",
+        choices=["npm", "pip", "go"],
+        help="Package ecosystem",
+    )
+    parser.add_argument("package", help="Package name (or Go module path)")
+    parser.add_argument("--version", help="Evaluate a specific version")
+    parser.add_argument("--json", action="store_true", help="Output structured JSON")
+
+    args = parser.parse_args()
+
+    result = evaluate(args.ecosystem, args.package, args.version)
+
+    if args.json:
+        print_json(result)
+    else:
+        print_human(result)
+
+    if result.verdict == Verdict.ESCALATE:
+        sys.exit(2)
+    elif result.verdict == Verdict.REVIEW:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
