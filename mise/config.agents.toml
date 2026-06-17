@@ -1,2 +1,3 @@
-[tools]
-"npm:@earendil-works/pi-coding-agent" = "latest"
+[tools."npm:@earendil-works/pi-coding-agent"]
+version = "latest"
+minimum_release_age = "1d"
