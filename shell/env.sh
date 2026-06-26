@@ -29,6 +29,8 @@ export BAT_STYLE=numbers,grid
 export GLAMOUR_STYLE=tokyo-night
 export GLOW_TUI=true
 
+export HOURS_THEME=custom:purple
+
 if type nnn &>/dev/null; then
     NNN_PLUGINS_PATH="$HOME/.config/nnn/plugins"
     export NNN_OPTS="acdQ"

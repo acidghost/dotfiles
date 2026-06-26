@@ -116,6 +116,9 @@
       glob: true
       path: vscode/*
       if: '[ "$DOTFILES_WITH_APPS" = 1 ] && [ "$(uname)" = Darwin ]'
+    ~/Library/Application Support/hours:
+      path: hours
+      if: '[ "$(uname)" = Darwin ]'
     ~/Library/Application Support/nushell:
       glob: true
       path: nushell/*
