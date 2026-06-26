@@ -33,5 +33,5 @@ checksum = "sha256:f78f7038f9f6426f642834aa2f32d2e950863b02b627cdfe6161168b49a95
 url = "https://github.com/openai/codex/releases/download/rust-v0.141.0/codex-x86_64-pc-windows-msvc.exe.zst"
 
 [[tools."npm:@earendil-works/pi-coding-agent"]]
-version = "0.79.7"
+version = "0.80.2"
 backend = "npm:@earendil-works/pi-coding-agent"
