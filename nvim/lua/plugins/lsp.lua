@@ -399,7 +399,6 @@ return {
 
   {
     "folke/trouble.nvim",
-    version = "*",
     opts = {},
     cmd = "Trouble",
     keys = {
