@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@biomejs/biome": "2.5.0",
+    "@biomejs/biome": "2.5.1",
     "@earendil-works/pi-coding-agent": "0.80.2",
     "@types/bun": "latest"
   }
