@@ -61,6 +61,10 @@ fi
 # fix for okular icons
 export QT_QPA_PLATFORMTHEME=qt5ct
 
+# Semgrep settings
+export SEMGREP_ENABLE_VERSION_CHECK=no
+export SEMGREP_SEND_METRICS=off
+
 # Locale settings
 if [ -z "$LANG" ]; then
     # shellcheck disable=SC2154 # $container is defined in /etc/environment
