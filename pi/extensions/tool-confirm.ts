@@ -1,7 +1,8 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export default function (pi: ExtensionAPI) {
-    let enabled = true;
+    // biome-ignore lint/complexity/useLiteralKeys: index signature
+    let enabled = (process.env["NONO_CAP_FILE"] ?? "").trim().length === 0;
 
     pi.on("session_start", () => {
         enabled = true;
