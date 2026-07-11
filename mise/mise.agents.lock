@@ -40,5 +40,5 @@ url = "https://github.com/openai/codex/releases/download/rust-v0.144.1/codex-pac
 url_api = "https://api.github.com/repos/openai/codex/releases/assets/471838305"
 
 [[tools."npm:@earendil-works/pi-coding-agent"]]
-version = "0.80.2"
+version = "0.80.6"
 backend = "npm:@earendil-works/pi-coding-agent"
