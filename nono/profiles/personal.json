@@ -6,17 +6,8 @@
   "extends": [
     "base"
   ],
-  "filesystem": {
-    "read": [
-      "~/.config/gh"
-    ]
-  },
-  "env_credentials": {
-    "github_token_public_readonly": "GITHUB_TOKEN"
-  },
   "network": {
     "allow_domain": [
-      "api.github.com",
       "api.z.ai",
       "chatgpt.com"
     ]
