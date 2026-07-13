@@ -30,6 +30,13 @@
       "~/.gitconfig.private"
     ]
   },
+  "network": {
+    "allow_domain": [
+      "packages.ecosyste.ms",
+      "api.scorecard.dev",
+      "api.deps.dev"
+    ]
+  },
   "workdir": {
     "access": "readwrite"
   }
