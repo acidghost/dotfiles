@@ -165,4 +165,11 @@ return {
       end,
     },
   },
+
+  {
+    "acidghost/ddd.nvim",
+    keys = {
+      { "<leader>...", "<cmd>DDD<cr>", desc = "Focus mode" },
+    },
+  },
 }
