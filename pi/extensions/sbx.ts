@@ -98,7 +98,7 @@ function isSandboxMode(value: string): value is SandboxMode {
 }
 
 function isProbablySandboxDenial(output: string): boolean {
-    return /Operation not permitted|Permission denied|EACCES|EPERM|sandbox|landlock|seatbelt|nono:/i.test(
+    return /Operation not permitted|Permission denied|EACCES|EPERM|sandbox|landlock|seatbelt|nono:|Forbidden: host .+ is not in the allowlist/i.test(
         output,
     );
 }
