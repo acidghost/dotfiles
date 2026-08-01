@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""Extract an SPDX SBOM from a container image attestation."""
+
+from __future__ import annotations
+from dataclasses import dataclass
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any, Sequence
+
+ATTESTATION_TYPE = "attestation-manifest"
+SPDX_PREDICATE_TYPE = "https://spdx.dev/Document"
+DIGEST_PATTERN = re.compile(r"^([a-z0-9][a-z0-9+._-]*):([A-Fa-f0-9]+)$")
+
+
+class SbomAttestationError(Exception):
+    """An expected error while locating or extracting an SBOM."""
+
+
+@dataclass
+class CLI:
+    image: str
+    tag: str
+    platform_os: str
+    platform_arch: str
+    output: Path
+
+
+def parse_args(argv: Sequence[str] | None = None) -> CLI:
+    parser = argparse.ArgumentParser(
+        description="Extract an SPDX SBOM from an image's platform attestation.",
+        epilog=("Example: %(prog)s ghcr.io/org/app 1.2.3 --os linux --arch amd64"),
+    )
+    parser.add_argument("image", help="image repository, without a tag")
+    parser.add_argument("tag", help="image tag")
+    parser.add_argument("--os", default="linux", dest="platform_os", help="platform OS")
+    parser.add_argument(
+        "--arch", default="amd64", dest="platform_arch", help="platform architecture"
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        default=Path("-"),
+        help="output file or - (default: stdout)",
+    )
+    return CLI(**vars(parser.parse_args(argv)))
+
+
+def run_skopeo(*args: str) -> str:
+    """Run skopeo and return its standard output."""
+    command = ["skopeo", *args]
+    try:
+        result = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except FileNotFoundError as error:
+        raise SbomAttestationError("skopeo was not found on PATH") from error
+    except subprocess.CalledProcessError as error:
+        detail = error.stderr.strip() or error.stdout.strip() or "no error output"
+        raise SbomAttestationError(f"skopeo failed: {detail}") from error
+    return result.stdout
+
+
+def parse_json(data: str, description: str) -> Any:
+    try:
+        return json.loads(data)
+    except json.JSONDecodeError as error:
+        raise SbomAttestationError(f"invalid JSON in {description}: {error}") from error
+
+
+def read_json(path: Path, description: str) -> Any:
+    try:
+        with path.open(encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError as error:
+        raise SbomAttestationError(f"{description} is missing: {path}") from error
+    except json.JSONDecodeError as error:
+        raise SbomAttestationError(f"invalid JSON in {description}: {error}") from error
+
+
+def manifests(document: Any, description: str) -> list[dict[str, Any]]:
+    if not isinstance(document, dict) or not isinstance(
+        document.get("manifests"), list
+    ):
+        raise SbomAttestationError(f"{description} does not contain a manifests list")
+    entries = document["manifests"]
+    if not all(isinstance(entry, dict) for entry in entries):
+        raise SbomAttestationError(f"{description} contains an invalid manifest entry")
+    return entries
+
+
+def exactly_one(items: list[dict[str, Any]], description: str) -> dict[str, Any]:
+    if not items:
+        raise SbomAttestationError(f"no {description} found")
+    if len(items) > 1:
+        raise SbomAttestationError(f"multiple {description}s found")
+    return items[0]
+
+
+def digest(entry: dict[str, Any], description: str) -> str:
+    value = entry.get("digest")
+    if not isinstance(value, str) or not DIGEST_PATTERN.fullmatch(value):
+        raise SbomAttestationError(f"{description} has an invalid digest")
+    return value
+
+
+def blob_path(layout: Path, blob_digest: str) -> Path:
+    match = DIGEST_PATTERN.fullmatch(blob_digest)
+    if not match:
+        raise SbomAttestationError(f"invalid blob digest: {blob_digest!r}")
+    algorithm, value = match.groups()
+    return layout / "blobs" / algorithm / value
+
+
+def extract_sbom(image: str, tag: str, platform_os: str, platform_arch: str) -> Any:
+    source = f"docker://{image}:{tag}"
+    index = parse_json(run_skopeo("inspect", "--raw", source), "image index")
+
+    platform_entries = [
+        entry
+        for entry in manifests(index, "image index")
+        if isinstance(entry.get("platform"), dict)
+        and entry["platform"].get("os") == platform_os
+        and entry["platform"].get("architecture") == platform_arch
+    ]
+    image_digest = digest(
+        exactly_one(platform_entries, "platform image"), "platform image"
+    )
+
+    attestation_entries = [
+        entry
+        for entry in manifests(index, "image index")
+        if isinstance(entry.get("annotations"), dict)
+        and entry["annotations"].get("vnd.docker.reference.type") == ATTESTATION_TYPE
+        and entry["annotations"].get("vnd.docker.reference.digest") == image_digest
+    ]
+    attestation_digest = digest(
+        exactly_one(attestation_entries, "attestation manifest"), "attestation manifest"
+    )
+
+    with tempfile.TemporaryDirectory(prefix="sbom-attestation-") as directory:
+        layout = Path(directory) / "attestation"
+        run_skopeo(
+            "copy", f"docker://{image}@{attestation_digest}", f"oci:{layout}:sbom"
+        )
+
+        layout_index = read_json(layout / "index.json", "OCI layout index")
+        attestation_manifest = exactly_one(
+            manifests(layout_index, "OCI layout index"), "OCI attestation manifest"
+        )
+        manifest = read_json(
+            blob_path(layout, digest(attestation_manifest, "OCI attestation manifest")),
+            "OCI attestation manifest",
+        )
+
+        if not isinstance(manifest, dict) or not isinstance(
+            manifest.get("layers"), list
+        ):
+            raise SbomAttestationError(
+                "OCI attestation manifest does not contain a layers list"
+            )
+        spdx_layers = [
+            layer
+            for layer in manifest["layers"]
+            if isinstance(layer, dict)
+            and isinstance(layer.get("annotations"), dict)
+            and layer["annotations"].get("in-toto.io/predicate-type")
+            == SPDX_PREDICATE_TYPE
+        ]
+        layer = exactly_one(spdx_layers, "SPDX attestation layer")
+        envelope = read_json(
+            blob_path(layout, digest(layer, "SPDX attestation layer")),
+            "SPDX attestation layer",
+        )
+
+    if not isinstance(envelope, dict) or "predicate" not in envelope:
+        raise SbomAttestationError(
+            "SPDX attestation envelope does not contain a predicate"
+        )
+    return envelope["predicate"]
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
+    try:
+        sbom = extract_sbom(args.image, args.tag, args.platform_os, args.platform_arch)
+        if args.output.name == "-":
+            outfile = sys.stdout
+        else:
+            outfile = args.output.open("w")
+        json.dump(sbom, outfile)
+    except SbomAttestationError as error:
+        print(f"{Path(sys.argv[0]).name}: error: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
