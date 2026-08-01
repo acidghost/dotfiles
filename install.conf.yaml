@@ -108,6 +108,7 @@
     ~/.config/nvim:
       glob: true
       path: nvim/*
+    ~/.config/pip:
     ~/.config/starship.toml: etc/starship.toml
     ~/.config/uv:
     ~/.config/vifm:
