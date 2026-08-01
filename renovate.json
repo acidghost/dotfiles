@@ -4,6 +4,9 @@
     "local>acidghost/renovate-config",
     "customManagers:biomeVersions"
   ],
+  "schedule": [
+    "* 0-6 * * 6"
+  ],
   "packageRules": [
     {
       "matchDepNames": [
