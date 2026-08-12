@@ -53,6 +53,7 @@ alias rsync-all="rsync -rlptzv --progress --delete"
 
 type jless &>/dev/null && alias yless='jless --yaml'
 type jq &>/dev/null && alias jqc='jq --color-always'
+type yq &>/dev/null && alias yqj='yq "to_json(0)"'
 
 # set aliases for programs packaged under a different name (e.g. in ubuntu)
 if ! type fd &>/dev/null && type fdfind &>/dev/null; then alias fd=fdfind; fi
