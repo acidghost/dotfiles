@@ -4,7 +4,7 @@ mouse-hide-while-typing = true
 macos-option-as-alt = left
 macos-titlebar-style = tabs
 macos-icon = retro
-scrollback-limit = 10000
+scrollback-limit = 10000000
 window-inherit-working-directory = false
 window-save-state = always
 
