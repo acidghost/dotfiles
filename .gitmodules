@@ -5,9 +5,11 @@
 [submodule "antidote"]
 	path = antidote
 	url = https://github.com/mattmc3/antidote.git
+	branch = v2.3.0
 [submodule "ble.sh"]
 	path = ble.sh
 	url = https://github.com/akinomyoga/ble.sh.git
 [submodule "skills/mattpocock"]
 	path = skills/mattpocock
 	url = https://github.com/mattpocock/skills.git
+	branch = v1.2.3
