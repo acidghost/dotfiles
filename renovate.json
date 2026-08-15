@@ -28,6 +28,7 @@
     },
     {
       "matchDepNames": [
+        "@earendil-works/pi-coding-agent",
         "pi"
       ],
       "minimumReleaseAge": "1d"
@@ -37,6 +38,13 @@
         "/^pi/.+$/"
       ],
       "commitMessagePrefix": "[pi]"
+    },
+    {
+      "matchDepNames": [
+        "@earendil-works/pi-coding-agent",
+        "pi"
+      ],
+      "groupName": "pi-coding-agent"
     }
   ]
 }
