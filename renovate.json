@@ -7,12 +7,23 @@
   "schedule": [
     "* 0-6 * * 6"
   ],
+  "commitMessageAction": "",
+  "commitMessageTopic": "{{depName}}",
+  "mise": {
+    "commitMessagePrefix": "[mise]"
+  },
   "packageRules": [
     {
       "matchDepNames": [
         "@earendil-works/pi-coding-agent"
       ],
       "minimumReleaseAge": "1d"
+    },
+    {
+      "matchFileNames": [
+        "/^pi/.+$/"
+      ],
+      "commitMessagePrefix": "[pi]"
     }
   ]
 }
