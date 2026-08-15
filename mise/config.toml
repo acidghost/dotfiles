@@ -4,7 +4,7 @@ minimum_release_age = "7d"
 lockfile = true
 
 [tools]
-atuin = "18.18.1"
+atuin = "18.19.0"
 bat = "0.26.1"
 delta = "0.19.2"
 fd = "10.4.2"
