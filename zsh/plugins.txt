@@ -1,19 +1,19 @@
-ohmyzsh/ohmyzsh path:lib
-ohmyzsh/ohmyzsh path:plugins/colored-man-pages
-ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/gitignore
-ohmyzsh/ohmyzsh path:plugins/kubectl
-ohmyzsh/ohmyzsh path:plugins/rust
-ohmyzsh/ohmyzsh path:plugins/thefuck
-ohmyzsh/ohmyzsh path:plugins/tmux
-ohmyzsh/ohmyzsh path:plugins/vagrant
-ohmyzsh/ohmyzsh path:plugins/vi-mode
-ohmyzsh/ohmyzsh path:plugins/web-search
+ohmyzsh/ohmyzsh path:lib pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/colored-man-pages pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/git pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/gitignore pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/kubectl pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/rust pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/thefuck pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/tmux pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/vagrant pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/vi-mode pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
+ohmyzsh/ohmyzsh path:plugins/web-search pin:b54a71977574cfcf659cc2f15a5e6422f17a8da7 # HEAD
 
-tinted-theming/base16-shell
-tinted-theming/base16-fzf kind:clone
+tinted-theming/base16-shell pin:62c20480f861c623a20ed119c630bb4f7e44a99e # HEAD
+tinted-theming/base16-fzf kind:clone pin:86ef37b952ef1abbe82803d2d6d7a9b7ac8a07f4 # HEAD
 
-wfxr/forgit
+wfxr/forgit pin:15db0016623b87472c0b6ff7488b123a74b82c7e # 26.08.0
 
-zsh-users/zsh-autosuggestions
-zdharma-continuum/fast-syntax-highlighting kind:defer
+zsh-users/zsh-autosuggestions pin:e52ee8ca55bcc56a17c828767a3f98f22a68d4eb # v0.7.1
+zdharma-continuum/fast-syntax-highlighting kind:defer pin:5ecd353c81214f82bdeca5483fab6ccc5a2d5494 # v1.56

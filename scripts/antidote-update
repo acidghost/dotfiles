@@ -1,0 +1,356 @@
+#!/usr/bin/env python3
+"""
+antidote-update - Update zsh plugins from zsh/plugins.txt via antidote.
+
+Bundle lines use the antidote format with an optional trailing tag comment:
+
+    <owner/repo> [kind:...] [path:...] [pin:<40-char sha>] # <tag>
+
+A "# <tag>" comment marks a bundle as tag-pinned: the tag is resolved via the
+GitHub API and written back as pin:<sha> so the comment always records the tag
+the pin points at. Repos without tags can be pinned with a "# HEAD" comment,
+which tracks the default-branch tip. Lines without a comment are left alone
+and follow their default branch (updated by `antidote update`).
+
+Usage:
+    antidote-update                 # bump pinned bundles to their latest tag
+    antidote-update -n              # dry run, show what would change
+    antidote-update --resolve       # only re-resolve existing tag comments
+    antidote-update --pin <tag>     # pin matching bundles to <tag> instead
+    antidote-update --pin HEAD      # pin bundles to the default-branch tip
+    antidote-update --apply         # also run antidote to sync pins + update
+    antidote-update [-n] [--apply] [--resolve] [--pin TAG] [--file PATH] [repo ...]
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_FILE = REPO_ROOT / "zsh" / "plugins.txt"
+DEFAULT_ANTIDOTE = REPO_ROOT / "antidote" / "antidote"
+
+# <spec> # <tag>  (the tag is the first word of the comment)
+PINNED_RE = re.compile(r"^(?P<spec>\S.*?)\s+#\s*(?P<comment>\S.*)$")
+TAG_RE = re.compile(r"^[\w.+/=-]+$")
+SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def log(msg: str) -> None:
+    print(msg, file=sys.stderr)
+
+
+def version_key(tag: str) -> Tuple:
+    """Sort key ranking tags numerically: v1.10 > v1.9 > v1 > alpha."""
+    parts = re.findall(r"\d+", tag)
+    return (1, tuple(int(p) for p in parts)) if parts else (0, ())
+
+
+@dataclass
+class Bundle:
+    lineno: int
+    raw: str
+    repo: str = ""
+    spec: str = ""  # annotations only, repo stripped
+    old_pin: str = ""
+    new_pin: str = ""
+    tag: str = ""  # current tag comment
+    new_tag: str = ""
+    status: str = "ok"  # ok | updated | unchanged | error | skipped
+    note: str = ""
+
+    @property
+    def pinned(self) -> bool:
+        return bool(self.tag)
+
+
+class GitHub:
+    """Minimal read-only GitHub API client."""
+
+    TIMEOUT = 30
+    RETRIES = 2
+
+    def __init__(self) -> None:
+        self._cache: Dict[str, Any] = {}
+        self._headers = {"Accept": "application/vnd.github+json"}
+        # GH_TOKEN is preferred, but fall back to GITHUB_TOKEN (CI convention).
+        token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+        if token:
+            self._headers["Authorization"] = f"token {token}"
+
+    def get(self, endpoint: str) -> Optional[Any]:
+        """GET an API endpoint; returns None on 404, exits loudly on 5xx."""
+        if endpoint in self._cache:
+            return self._cache[endpoint]
+        url = f"https://api.github.com/{endpoint}"
+        req = Request(url, headers=self._headers)
+        data: Optional[Any] = None
+        for attempt in range(1, self.RETRIES + 1):
+            try:
+                with urlopen(req, timeout=self.TIMEOUT) as resp:
+                    data = json.load(resp)
+                break
+            except HTTPError as e:
+                if e.code == 404:
+                    break  # normal miss (e.g. repos without releases)
+                try:
+                    msg = json.load(e).get("message", "")
+                except Exception:
+                    msg = e.reason
+                log(f"error: GET {endpoint}: HTTP {e.code}: {msg}")
+                break
+            except OSError as e:  # URLError, timeouts, connection resets
+                if attempt < self.RETRIES:
+                    continue
+                log(f"error: GET {endpoint}: {e}")
+        self._cache[endpoint] = data
+        return data
+
+    def latest_tag(self, repo: str) -> Optional[str]:
+        release = self.get(f"repos/{repo}/releases/latest")
+        if isinstance(release, dict) and "tag_name" in release:
+            return release["tag_name"]
+        tags = self.get(f"repos/{repo}/tags?per_page=100")
+        if isinstance(tags, list) and tags:
+            names = [t["name"] for t in tags if isinstance(t, dict)]
+            return max(names, key=version_key)  # API order is not guaranteed
+        return "HEAD"  # no tags: fall back to the default-branch tip
+
+    def tag_commit(self, repo: str, tag: str) -> Optional[str]:
+        """Resolve a tag (or HEAD) to its dereferenced commit SHA (40 chars)."""
+        if tag == "HEAD":
+            info = self.get(f"repos/{repo}")
+            branch = info.get("default_branch") if isinstance(info, dict) else None
+            if not branch:
+                return None
+            ref = self.get(f"repos/{repo}/git/ref/heads/{branch}")
+            if not isinstance(ref, dict) or "object" not in ref:
+                return None
+            sha = ref["object"].get("sha", "")
+            return sha if SHA_RE.match(sha) else None
+        ref = self.get(f"repos/{repo}/git/ref/tags/{tag}")
+        if not ref or "object" not in ref:
+            return None
+        obj = ref["object"]
+        if obj.get("type") == "tag":  # annotated: dereference to the commit
+            tagged = self.get(obj["url"].removeprefix("https://api.github.com/"))
+            if not tagged or "object" not in tagged:
+                return None
+            obj = tagged["object"]
+        sha = obj.get("sha", "")
+        return sha if SHA_RE.match(sha) else None
+
+
+def parse_line(line: str) -> Tuple[str, str, str]:
+    """Return (repo, spec, tag_comment) for a bundle line."""
+    m = PINNED_RE.match(line)
+    if m:
+        spec, comment = m.group("spec").strip(), m.group("comment").strip()
+    else:
+        spec, comment = line.strip(), ""
+    parts = spec.split()
+    repo = parts[0] if parts else ""
+    annotations = " ".join(parts[1:])
+    tag = comment.split()[0] if comment else ""
+    return repo, annotations, tag
+
+
+def rebuild(bundle: Bundle) -> str:
+    spec = " ".join(filter(None, [bundle.repo, bundle.spec]))
+    tokens = spec.split()
+    pin = f"pin:{bundle.new_pin}"
+    out = [t for t in tokens if not t.startswith("pin:")]
+    out.append(pin)
+    line = " ".join(out)
+    if bundle.new_tag:
+        line = f"{line} # {bundle.new_tag}"
+    return line
+
+
+def process(lines: List[str], gh: GitHub, args: CLI) -> List[Bundle]:
+    bundles: List[Bundle] = []
+    for i, line in enumerate(lines, 1):
+        raw = line.rstrip("\n")
+        repo, spec, tag = parse_line(raw)
+        b = Bundle(lineno=i, raw=raw, repo=repo, spec=spec, tag=tag)
+        bundles.append(b)
+        if not repo or repo.startswith("#"):
+            continue
+        if not re.fullmatch(r"[\w.-]+/[\w.-]+", repo):
+            continue  # not a github owner/repo (path, url, ...): skip
+        if args.repos and repo not in args.repos:
+            continue
+        if not b.pinned and not (args.pin and args.repos):
+            b.status = "skipped"
+            b.note = "no tag comment, follows default branch"
+            continue
+        if b.pinned and not args.pin and not TAG_RE.match(tag):
+            b.status = "error"
+            b.note = f"invalid tag comment '{tag}'"
+            continue
+
+        target = args.pin if args.pin else (
+            tag if args.resolve else gh.latest_tag(repo)
+        )
+        if not target:
+            b.status = "error"
+            b.note = "could not determine a ref (repo missing?)"
+            continue
+        sha = gh.tag_commit(repo, target)
+        if not sha:
+            b.status = "error"
+            b.note = f"could not resolve tag '{target}'"
+            continue
+
+        b.new_tag, b.new_pin = target, sha
+        m = re.search(r"\bpin:([0-9a-f]{7,40})\b", spec)
+        b.old_pin = m.group(1) if m else ""
+        if b.old_pin.lower() == sha.lower() and tag == target:
+            b.status = "unchanged"
+            b.note = f"already at {target}"
+        else:
+            b.status = "updated"
+            b.note = (
+                f"{tag or 'unpinned'} -> {target}"
+                if tag != target
+                else f"pin refreshed for {target}"
+            )
+    return bundles
+
+
+def apply_antidote(args: CLI) -> int:
+    antidote = Path(args.antidote).resolve()
+    if not antidote.exists():
+        log(f"error: antidote not found at {antidote}")
+        return 1
+    zsh = shutil.which("zsh")
+    if not zsh:
+        log("error: zsh is required to run antidote")
+        return 1
+    cmds = [
+        ("bundle", [zsh, str(antidote), "bundle"]),
+        ("update", [zsh, str(antidote), "update", "--bundles"]),
+    ]
+    for name, cmd in cmds:
+        log(f"antidote: running '{name}'")
+        stdin_ctx = (
+            Path(args.file).open("r") if name == "bundle" else nullstdin()
+        )
+        with stdin_ctx as stdin:
+            proc = subprocess.run(cmd, stdin=stdin)
+        if proc.returncode != 0:
+            log(f"error: antidote {name} failed")
+            return proc.returncode
+    return 0
+
+
+class nullstdin:
+    """context manager yielding devnull for subprocess stdin"""
+
+    def __enter__(self):
+        self.f = open("/dev/null", "r")
+        return self.f
+
+    def __exit__(self, *exc):
+        self.f.close()
+
+
+@dataclass
+class CLI:
+    file: Path = DEFAULT_FILE
+    dry_run: bool = False
+    resolve: bool = False
+    pin: Optional[str] = None
+    apply: bool = False
+    antidote: Path = DEFAULT_ANTIDOTE
+    repos: List[str] = field(default_factory=list)
+
+
+def cli() -> CLI:
+    parser = argparse.ArgumentParser(
+        description="Update tag-pinned zsh bundles in the antidote plugins file."
+    )
+    parser.add_argument(
+        "-f", "--file", type=Path, default=DEFAULT_FILE,
+        help=f"plugins file (default: {DEFAULT_FILE})",
+    )
+    parser.add_argument(
+        "-n", "--dry-run", action="store_true",
+        help="show changes without writing the file",
+    )
+    parser.add_argument(
+        "--resolve", action="store_true",
+        help="re-resolve the existing tag comments to SHAs (no bumping)",
+    )
+    parser.add_argument(
+        "--pin", metavar="TAG",
+        help="pin to a specific tag instead of the latest one",
+    )
+    parser.add_argument(
+        "--apply", action="store_true",
+        help="run antidote bundle + update --bundles afterwards",
+    )
+    parser.add_argument(
+        "--antidote", type=Path, default=DEFAULT_ANTIDOTE,
+        help="antidote executable to use with --apply",
+    )
+    parser.add_argument(
+        "repos", nargs="*", metavar="repo",
+        help="only process these owner/repo bundles",
+    )
+    args = parser.parse_args()
+    if args.pin and args.resolve:
+        parser.error("--pin and --resolve are mutually exclusive")
+    if args.pin and not TAG_RE.match(args.pin):
+        parser.error(f"invalid tag '{args.pin}'")
+    return CLI(**vars(args))
+
+
+def main() -> int:
+    args = cli()
+    if not args.file.exists():
+        log(f"error: file not found: {args.file}")
+        return 1
+    lines = args.file.read_text().splitlines()
+
+    gh = GitHub()
+    bundles = process(lines, gh, args)
+
+    changed = 0
+    for b in bundles:
+        if b.status in ("ok", "skipped") and not b.note:
+            continue
+        icon = {"updated": "[*]", "error": "[!]", "skipped": "[-]"}.get(
+            b.status, "[+]"
+        )
+        log(f"{icon} {b.repo or '(blank)'}: {b.status}"
+            + (f" - {b.note}" if b.note else ""))
+        if b.status == "updated":
+            lines[b.lineno - 1] = rebuild(b)
+            changed += 1
+
+    if changed:
+        if args.dry_run:
+            log(f"dr: {changed} bundle(s) would be updated in {args.file}")
+        else:
+            args.file.write_text("\n".join(lines) + "\n")
+            log(f"updated {changed} bundle(s) in {args.file}")
+
+    if args.apply and not args.dry_run:
+        return apply_antidote(args)
+    return 0 if not any(b.status == "error" for b in bundles) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

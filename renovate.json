@@ -19,6 +19,20 @@
   "mise": {
     "commitMessagePrefix": "[mise]"
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update tag-pinned zsh plugins in antidote plugins.txt",
+      "managerFilePatterns": [
+        "/^zsh\\/plugins\\.txt$/"
+      ],
+      "matchStrings": [
+        "(?<depName>[\\w.-]+/[\\w.-]+)[^\\n#]*?\\s*pin:(?<currentDigest>[0-9a-f]{40})\\s#\\s((?<currentValue>v?\\d[\\w.+]*)|HEAD)"
+      ],
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "loose"
+    }
+  ],
   "packageRules": [
     {
       "matchDepNames": [
@@ -45,6 +59,19 @@
         "pi"
       ],
       "groupName": "pi-coding-agent"
+    },
+    {
+      "matchFileNames": [
+        "zsh/plugins.txt"
+      ],
+      "commitMessagePrefix": "[zsh]"
+    },
+    {
+      "description": "Merge once smoke CI is green",
+      "matchManagers": ["mise", "git-submodules", "bun"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
     }
   ]
 }
