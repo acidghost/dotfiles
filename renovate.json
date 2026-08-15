@@ -22,7 +22,13 @@
   "packageRules": [
     {
       "matchDepNames": [
-        "@earendil-works/pi-coding-agent"
+        "biome"
+      ],
+      "commitMessagePrefix": "[mise]"
+    },
+    {
+      "matchDepNames": [
+        "pi"
       ],
       "minimumReleaseAge": "1d"
     },
