@@ -1,7 +1,7 @@
 {
     "telemetry.telemetryLevel": "crash",
-    "terminal.external.osxExec": "Alacritty.app",
-    "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+    "terminal.external.osxExec": "Ghostty.app",
+    "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",
     "terminal.integrated.defaultProfile.linux": "zsh",
     "vim.leader": ",",
     "vim.normalModeKeyBindings": [
@@ -155,7 +155,8 @@
     "vim.hlsearch": true,
     "vim.foldfix": true,
     "editor.lineNumbers": "relative",
-    "editor.fontFamily": "Hack Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "FiraCode Nerd Font Mono, Hack Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "editor.autoIndent": "full",
@@ -263,12 +264,11 @@
     "dotfiles.targetPath": "~/.dotfiles",
     "dotfiles.repository": "acidghost/dotfiles",
     "github.copilot.enable": {
-        "*": true,
+        "*": false,
         "plaintext": false,
         "markdown": false,
         "scminput": false
     },
-    "github.copilot.editor.enableAutoCompletions": true,
     "notebook.output.textLineLimit": 100,
     "notebook.output.scrolling": true,
     "notebook.cellToolbarLocation": {
