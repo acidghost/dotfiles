@@ -1,3 +1,5 @@
 {
-  "extraPaths": ["python"]
+  "extraPaths": [
+    "python"
+  ]
 }
