@@ -140,7 +140,6 @@
       path: tmux/scripts/*
       exclude:
         - tmux/scripts/tmux-*
-    ~/.tmux/plugins/tpm: tmux/tpm
     ~/.vim/my: vim/my
     ~/.vim/vimrc: vim/vimrc
     ~/vusec.ascii:
