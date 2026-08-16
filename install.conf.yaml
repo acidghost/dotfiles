@@ -126,6 +126,7 @@
       if: '[ "$(uname)" = Darwin ]'
     ~/.npmrc: etc/npmrc
     ~/.p10k.zsh: zsh/p10k.zsh
+    ~/.pi/agent/AGENTS.md: agents/AGENTS.md
     ~/.pi/agent/extensions: pi/extensions
     ~/.scripts:
       glob: true

@@ -23,6 +23,7 @@
       "~/.agents/skills",
       "~/.config/nono/packages",
       "~/.config/nono/profiles",
+      "~/.dotfiles/agents/AGENTS.md",
       "~/.dotfiles/skills",
       "~/.local/share/mise/installs"
     ],
