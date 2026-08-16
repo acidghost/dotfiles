@@ -8,11 +8,12 @@ atuin = "18.19.0"
 bat = "0.26.1"
 delta = "0.19.2"
 fd = "10.4.2"
+jq = "1.8.2"
 lsd = "1.2.0"
 ripgrep = "15.2.0"
 starship = "1.26.0"
-zoxide = "0.10.0"
 yq = "4.53.3"
+zoxide = "0.10.0"
 
 [tools."github:tmuxpack/tpack"]
 minimum_release_age = "3d"
