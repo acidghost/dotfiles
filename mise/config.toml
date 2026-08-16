@@ -12,6 +12,7 @@ lsd = "1.2.0"
 ripgrep = "15.2.0"
 starship = "1.26.0"
 zoxide = "0.10.0"
+yq = "4.53.3"
 
 [tools."github:tmuxpack/tpack"]
 minimum_release_age = "3d"
