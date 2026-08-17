@@ -17,6 +17,8 @@
 - create:
     ~/wa:
       mode: 0755
+    ~/.claude:
+      mode: 0755
     ~/.config/dotfiles-env:
       mode: 0755
     ~/.config/nvim:
@@ -69,6 +71,10 @@
       path: etc/Brewfile
       if: '[ "$DOTFILES_WITH_BREW" = 1 ]'
     ~/.bunfig.toml: etc/bunfig.toml
+    ~/.claude/CLAUDE.md: agents/AGENTS.md
+    ~/.claude/CLAUDE.local.md:
+      path: agents/AGENTS.local.md
+      if: '[ -f agents/AGENTS.local.md ]'
     ~/.config/alacritty:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/atuin:

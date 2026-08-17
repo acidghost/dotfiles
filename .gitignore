@@ -1,6 +1,7 @@
 __pycache__
 node_modules/
 
+agents/AGENTS.local.md
 btop/btop.log
 mise/config.local.toml
 mise/mise.local.lock

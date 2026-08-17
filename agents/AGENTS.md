@@ -60,3 +60,7 @@ Under `nono`, network access is mediated by a proxy. Some quirks:
   - use REST APIs directly via `curl` instead of `gh`
   - often read-only (`HEAD`, `GET`)
   - proxy authenticates for us, no need for `Authorization` header
+
+## Additional resources
+
+- @AGENTS.local.md (if there is one)
