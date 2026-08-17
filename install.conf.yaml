@@ -62,6 +62,10 @@
   - [make -C ble.sh, "Creating ble.sh script"]
 
 - link:
+    ~/.agents:
+      create: true
+      glob: true
+      path: agents/*
     ~/.amethyst:
       path: etc/amethyst.json
       if: '[ $(uname) = Darwin ]'
@@ -96,6 +100,7 @@
     ~/.config/fzf:
     ~/.config/ghostty:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
+    ~/.config/git:
     ~/.config/helix:
     ~/.config/lsd:
     ~/.config/mise:
@@ -118,7 +123,6 @@
     ~/.config/starship.toml: etc/starship.toml
     ~/.config/uv:
     ~/.config/vifm:
-    ~/.gitconfig:
     ~/Library/Application Support/Code/User:
       glob: true
       path: vscode/*

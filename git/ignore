@@ -1,0 +1,5 @@
+# vim: ft=gitignore
+**/.claude/settings.local.json
+**/.claude/.cc-writes/
+**/mise.local.toml
+.plans/

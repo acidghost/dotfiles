@@ -61,6 +61,18 @@ Under `nono`, network access is mediated by a proxy. Some quirks:
   - often read-only (`HEAD`, `GET`)
   - proxy authenticates for us, no need for `Authorization` header
 
+## Plans
+
+When asked to save a plan, write it under `.plans/` in the repo root (globally
+git-ignored via `~/.config/git/ignore`, so it is never committed). Name files
+`YYYY-MM-DD-short-slug.<ext>`.
+
+For HTML plans, start from the template at `~/.agents/plan-template.html`: copy
+it and replace the placeholder content. It is a standalone file with inline CSS,
+optimized for reading — single column, serif body text, light/dark aware, with
+a slider to widen the page for large tables.
+Markdown plans are fine when no formatting is needed.
+
 ## Additional resources
 
 - @AGENTS.local.md (if there is one)

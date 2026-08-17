@@ -20,11 +20,10 @@
       "~/go/pkg/mod/cache"
     ],
     "read": [
-      "~/.agents/skills",
+      "~/.agents",
       "~/.config/nono/packages",
       "~/.config/nono/profiles",
-      "~/.dotfiles/agents/AGENTS.md",
-      "~/.dotfiles/agents/AGENTS.local.md",
+      "~/.dotfiles/agents",
       "~/.dotfiles/skills",
       "~/.local/share/mise/installs"
     ],
