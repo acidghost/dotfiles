@@ -10,6 +10,7 @@
     "include": [
       "git_config",
       "go_runtime",
+      "mise_manager",
       "user_caches_linux",
       "user_caches_macos"
     ]
@@ -24,8 +25,7 @@
       "~/.config/nono/packages",
       "~/.config/nono/profiles",
       "~/.dotfiles/agents",
-      "~/.dotfiles/skills",
-      "~/.local/share/mise/installs"
+      "~/.dotfiles/skills"
     ],
     "read_file": [
       "~/.gitconfig.private"
