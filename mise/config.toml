@@ -2,6 +2,7 @@
 disable_backends = ["asdf", "vfox"]
 minimum_release_age = "7d"
 lockfile = true
+locked = true
 
 [tools]
 atuin = "18.20.1"
