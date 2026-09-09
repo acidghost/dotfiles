@@ -2,6 +2,7 @@
 # 3 days matches renovate's config
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
+  "@earendil-works/chord",
   "@earendil-works/pi-agent-core",
   "@earendil-works/pi-ai",
   "@earendil-works/pi-client",
