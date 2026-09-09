@@ -2,10 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>acidghost/renovate-config",
-    "local>acidghost/renovate-config:mise-biome"
-  ],
-  "schedule": [
-    "* 0-6 * * 6"
+    "local>acidghost/renovate-config:mise-biome",
+    "schedule:daily"
   ],
   "commitMessageAction": "",
   "commitMessageTopic": "{{depName}}",
