@@ -5,7 +5,7 @@ lockfile = true
 locked = true
 
 [tools]
-atuin = "18.20.1"
+atuin = "18.21.0"
 bat = "0.26.1"
 delta = "0.19.2"
 fd = "10.4.2"
