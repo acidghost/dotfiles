@@ -1,5 +1,5 @@
 [tools]
-biome = "2.5.11"
+biome = "2.5.12"
 bun = "1.4.1"
 devcontainer-cli = "0.89.0"
 go = "1.27.1"
