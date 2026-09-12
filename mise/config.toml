@@ -18,4 +18,4 @@ zoxide = "0.10.0"
 
 [tools."github:tmuxpack/tpack"]
 minimum_release_age = "3d"
-version = "2.0.4"
+version = "v2.0.6"
