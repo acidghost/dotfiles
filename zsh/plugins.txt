@@ -13,7 +13,7 @@ ohmyzsh/ohmyzsh path:plugins/web-search pin:b54a71977574cfcf659cc2f15a5e6422f17a
 tinted-theming/base16-shell pin:62c20480f861c623a20ed119c630bb4f7e44a99e # HEAD
 tinted-theming/base16-fzf kind:clone pin:86ef37b952ef1abbe82803d2d6d7a9b7ac8a07f4 # HEAD
 
-wfxr/forgit pin:15db0016623b87472c0b6ff7488b123a74b82c7e # 26.08.0
+wfxr/forgit pin:3fe2a163343270b1b0e631bf35c12a7d98093464 # 26.09.0
 
 zsh-users/zsh-autosuggestions pin:e52ee8ca55bcc56a17c828767a3f98f22a68d4eb # v0.7.1
 zdharma-continuum/fast-syntax-highlighting kind:defer pin:5ecd353c81214f82bdeca5483fab6ccc5a2d5494 # v1.56
