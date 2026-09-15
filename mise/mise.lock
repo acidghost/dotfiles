@@ -221,63 +221,63 @@ url = "https://github.com/sharkdp/fd/releases/download/v10.5.0/fd-v10.5.0-x86_64
 url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/530482901"
 
 [[tools."github:tmuxpack/tpack"]]
-version = "2.0.4"
+version = "2.0.6"
 backend = "github:tmuxpack/tpack"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-arm64"]
-checksum = "sha256:7abe43d2923d203206bcbbec21cb11a59a174e14917f56106b877bf715dbffe3"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575547"
+checksum = "sha256:cb61dce698ce2df760cf6c04871fce0ba8785a24a462fb19c681b650b3c352a7"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160250"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-arm64-musl"]
-checksum = "sha256:7abe43d2923d203206bcbbec21cb11a59a174e14917f56106b877bf715dbffe3"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575547"
+checksum = "sha256:cb61dce698ce2df760cf6c04871fce0ba8785a24a462fb19c681b650b3c352a7"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160250"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-x64"]
-checksum = "sha256:337713e472dcc88c26689f5f44d5274715e2ef389cc1f881fbf8137fad7d5b57"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575545"
+checksum = "sha256:936eb4bfaad8e301348970bf0f7afcacd57a737435c6e1cc7beda616d29230a0"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160247"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-x64-baseline"]
-checksum = "sha256:337713e472dcc88c26689f5f44d5274715e2ef389cc1f881fbf8137fad7d5b57"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575545"
+checksum = "sha256:936eb4bfaad8e301348970bf0f7afcacd57a737435c6e1cc7beda616d29230a0"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160247"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-x64-musl"]
-checksum = "sha256:337713e472dcc88c26689f5f44d5274715e2ef389cc1f881fbf8137fad7d5b57"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575545"
+checksum = "sha256:936eb4bfaad8e301348970bf0f7afcacd57a737435c6e1cc7beda616d29230a0"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160247"
 
 [tools."github:tmuxpack/tpack"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:337713e472dcc88c26689f5f44d5274715e2ef389cc1f881fbf8137fad7d5b57"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575545"
+checksum = "sha256:936eb4bfaad8e301348970bf0f7afcacd57a737435c6e1cc7beda616d29230a0"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160247"
 
 [tools."github:tmuxpack/tpack"."platforms.macos-arm64"]
-checksum = "sha256:c136618615a66cffb3937eb0dd90d36e3dc8782f108817b6ceb8ff3fad5c36f3"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575543"
+checksum = "sha256:19a14475a091f01dde9e5ec96932e99d864b94d2d8d62a225da8b8e41e468bb9"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160248"
 
 [tools."github:tmuxpack/tpack"."platforms.macos-x64"]
-checksum = "sha256:e5ea897827f23f58ab31a84512378bca98bf1393e9ba638be0473bd6100e272b"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575546"
+checksum = "sha256:f406b07bcfa87c4009d44e42d6688dbd41a35b84838cfac2d61f30a1e2b9fe59"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160249"
 
 [tools."github:tmuxpack/tpack"."platforms.macos-x64-baseline"]
-checksum = "sha256:e5ea897827f23f58ab31a84512378bca98bf1393e9ba638be0473bd6100e272b"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575546"
+checksum = "sha256:f406b07bcfa87c4009d44e42d6688dbd41a35b84838cfac2d61f30a1e2b9fe59"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160249"
 
 [tools."github:tmuxpack/tpack"."platforms.windows-x64"]
-checksum = "sha256:9c07fe795ae06b61319bc4cc75f3e93b68d12cf5b4e23982396956db0991a04b"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_freebsd_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575575"
+checksum = "sha256:ba5ee33e198a61bca2d6d70f788d9ed6129a8699cfd71db7174418c6bcb2fe4c"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_freebsd_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160259"
 
 [tools."github:tmuxpack/tpack"."platforms.windows-x64-baseline"]
-checksum = "sha256:9c07fe795ae06b61319bc4cc75f3e93b68d12cf5b4e23982396956db0991a04b"
-url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.4/tpack_2.0.4_freebsd_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/506575575"
+checksum = "sha256:ba5ee33e198a61bca2d6d70f788d9ed6129a8699cfd71db7174418c6bcb2fe4c"
+url = "https://github.com/tmuxpack/tpack/releases/download/v2.0.6/tpack_2.0.6_freebsd_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tmuxpack/tpack/releases/assets/533160259"
 
 [[tools.jq]]
 version = "1.8.2"
