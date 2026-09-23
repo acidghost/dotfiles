@@ -67,6 +67,22 @@ return {
         -- seems like w/o disabling, when opening a dir, neo-tree shows twice
         hijack_netrw_behavior = "disabled",
       },
+      commands = {
+        open_and_close_neotree = function(state)
+          require("neo-tree.sources.filesystem.commands").open(state)
+          local tree = state.tree
+          local success, node = pcall(tree.get_node, tree)
+          if success and node.type == "file" then
+            require("neo-tree.command").execute({ action = "close" })
+          end
+        end,
+      },
+      window = {
+        mappings = {
+          ["<CR>"] = "open_and_close_neotree",
+          ["<S-CR>"] = "open",  -- keep a binding to open WITHOUT closing
+        },
+      },
       default_component_configs = {
         indent = {
           with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
