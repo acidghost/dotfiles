@@ -45,7 +45,7 @@
       "matchManagers": [
         "mise"
       ],
-      "extractVersion": "^rust-v(<?version>.+)"
+      "extractVersion": "^rust-v(?<version>.+)"
     },
     {
       "matchDepNames": [
