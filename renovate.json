@@ -40,6 +40,15 @@
     },
     {
       "matchDepNames": [
+        "codex"
+      ],
+      "matchManagers": [
+        "mise"
+      ],
+      "extractVersion": "^rust-v(<?version>.+)"
+    },
+    {
+      "matchDepNames": [
         "@earendil-works/pi-coding-agent",
         "pi"
       ],
