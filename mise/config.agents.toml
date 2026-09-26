@@ -1,5 +1,5 @@
 [tools.codex]
-version = "0.154.0"
+version = "0.155.1"
 minimum_release_age = "1d"
 
 [tools.pi]
