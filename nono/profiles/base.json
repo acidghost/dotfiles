@@ -11,8 +11,14 @@
       "git_config",
       "go_runtime",
       "mise_manager",
-      { "name": "user_caches_macos", "when": "macos" },
-      { "name": "user_caches_linux", "when": "linux" }
+      {
+        "name": "user_caches_macos",
+        "when": "macos"
+      },
+      {
+        "name": "user_caches_linux",
+        "when": "linux"
+      }
     ]
   },
   "filesystem": {
