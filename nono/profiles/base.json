@@ -11,8 +11,8 @@
       "git_config",
       "go_runtime",
       "mise_manager",
-      "user_caches_linux",
-      "user_caches_macos"
+      { "name": "user_caches_macos", "when": "macos" },
+      { "name": "user_caches_linux", "when": "linux" }
     ]
   },
   "filesystem": {
@@ -25,7 +25,8 @@
       "~/.config/nono/packages",
       "~/.config/nono/profiles",
       "~/.dotfiles/agents",
-      "~/.dotfiles/skills"
+      "~/.dotfiles/skills",
+      "~/wa"
     ],
     "read_file": [
       "~/.gitconfig.private"
@@ -33,6 +34,8 @@
   },
   "network": {
     "allow_domain": [
+      "bun.com",
+      "hub.docker.com",
       "packages.ecosyste.ms",
       "api.scorecard.dev",
       "api.deps.dev"
