@@ -1,7 +1,9 @@
 [settings]
+auto_install = false
 disable_backends = ["asdf", "vfox"]
 minimum_release_age = "7d"
 lockfile = true
+pin = true
 
 [tools]
 atuin = "18.22.0"
