@@ -91,6 +91,8 @@ const STARTED_INSIDE_NONO = Object.hasOwn(process.env, "NONO_CAP_FILE");
 const allowedRoots = new Set<string>();
 const approvedPathAccess = new Set<string>();
 
+type Approval = <T>(signal: AbortSignal | undefined, prompt: () => Promise<T>) => Promise<T>;
+
 type SandboxMode = "off" | "confirm" | "nono";
 
 function isSandboxMode(value: string): value is SandboxMode {
@@ -184,6 +186,8 @@ async function requirePathApproval(
     ctx: ExtensionContext,
     operation: "read" | "write" | "edit",
     targetPath: string,
+    approve: Approval,
+    signal: AbortSignal | undefined,
 ): Promise<void> {
     if (await isAllowedByRoot(targetPath)) return;
 
@@ -197,19 +201,22 @@ async function requirePathApproval(
         );
     }
 
-    const ok = await ctx.ui.confirm(
-        `Approve ${operation} outside allowed directories?`,
-        [
-            `Path: ${normalizeForDisplay(canonical)}`,
-            "",
-            `Allowed roots this session:`,
-            ...Array.from(allowedRoots).map((root) => `- ${normalizeForDisplay(root)}`),
-            "",
-            "Use /add-dir <path> to allow a directory for the rest of this session.",
-        ].join("\n"),
+    const ok = await approve(signal, () =>
+        ctx.ui.confirm(
+            `Approve ${operation} outside allowed directories?`,
+            [
+                `Path: ${normalizeForDisplay(canonical)}`,
+                "",
+                `Allowed roots this session:`,
+                ...Array.from(allowedRoots).map((root) => `- ${normalizeForDisplay(root)}`),
+                "",
+                "Use /add-dir <path> to allow a directory for the rest of this session.",
+            ].join("\n"),
+            { signal },
+        ),
     );
 
-    if (!ok) throw new Error(`${operation} denied by user for ${targetPath}`);
+    if (!ok || signal?.aborted) throw new Error(`${operation} denied by user for ${targetPath}`);
     approvedPathAccess.add(key);
 }
 
@@ -222,48 +229,60 @@ function detectImageMimeType(filePath: string): string | null {
     return null;
 }
 
-function createGatedReadOperations(ctx: ExtensionContext): ReadOperations {
+function createGatedReadOperations(
+    ctx: ExtensionContext,
+    approve: Approval,
+    signal: AbortSignal | undefined,
+): ReadOperations {
     return {
         async access(filePath) {
-            await requirePathApproval(ctx, "read", filePath);
+            await requirePathApproval(ctx, "read", filePath, approve, signal);
             await access(filePath, constants.R_OK);
         },
         async readFile(filePath) {
-            await requirePathApproval(ctx, "read", filePath);
+            await requirePathApproval(ctx, "read", filePath, approve, signal);
             return readFile(filePath);
         },
         async detectImageMimeType(filePath) {
-            await requirePathApproval(ctx, "read", filePath);
+            await requirePathApproval(ctx, "read", filePath, approve, signal);
             return detectImageMimeType(filePath);
         },
     };
 }
 
-function createGatedWriteOperations(ctx: ExtensionContext): WriteOperations {
+function createGatedWriteOperations(
+    ctx: ExtensionContext,
+    approve: Approval,
+    signal: AbortSignal | undefined,
+): WriteOperations {
     return {
         async mkdir(dir) {
-            await requirePathApproval(ctx, "write", dir);
+            await requirePathApproval(ctx, "write", dir, approve, signal);
             await mkdir(dir, { recursive: true });
         },
         async writeFile(filePath, content) {
-            await requirePathApproval(ctx, "write", filePath);
+            await requirePathApproval(ctx, "write", filePath, approve, signal);
             await writeFile(filePath, content, "utf8");
         },
     };
 }
 
-function createGatedEditOperations(ctx: ExtensionContext): EditOperations {
+function createGatedEditOperations(
+    ctx: ExtensionContext,
+    approve: Approval,
+    signal: AbortSignal | undefined,
+): EditOperations {
     return {
         async access(filePath) {
-            await requirePathApproval(ctx, "edit", filePath);
+            await requirePathApproval(ctx, "edit", filePath, approve, signal);
             await access(filePath, constants.R_OK | constants.W_OK);
         },
         async readFile(filePath) {
-            await requirePathApproval(ctx, "edit", filePath);
+            await requirePathApproval(ctx, "edit", filePath, approve, signal);
             return readFile(filePath);
         },
         async writeFile(filePath, content) {
-            await requirePathApproval(ctx, "edit", filePath);
+            await requirePathApproval(ctx, "edit", filePath, approve, signal);
             await writeFile(filePath, content, "utf8");
         },
     };
@@ -330,7 +349,10 @@ function createNonoBashOperations(profile: string): BashOperations {
     };
 }
 
-function createApprovedFallbackBashOperations(ctx: ExtensionContext): BashOperations {
+function createApprovedFallbackBashOperations(
+    ctx: ExtensionContext,
+    approve: Approval,
+): BashOperations {
     const sandbox = createNonoBashOperations(NONO_PROFILE);
     const host = createLocalBashOperations();
 
@@ -349,19 +371,22 @@ function createApprovedFallbackBashOperations(ctx: ExtensionContext): BashOperat
 
             if (!ctx?.hasUI) return sandboxResult;
 
-            const ok = await ctx.ui.confirm(
-                "Run Bash outside nono sandbox?",
-                [
-                    "The sandboxed command appears to have been denied by nono or the OS sandbox.",
-                    "",
-                    "Command:",
-                    command,
-                    "",
-                    "Run it outside the nono sandbox?",
-                ].join("\n"),
+            const ok = await approve(options.signal, () =>
+                ctx.ui.confirm(
+                    "Run Bash outside nono sandbox?",
+                    [
+                        "The sandboxed command appears to have been denied by nono or the OS sandbox.",
+                        "",
+                        "Command:",
+                        command,
+                        "",
+                        "Run it outside the nono sandbox?",
+                    ].join("\n"),
+                    { signal: options.signal },
+                ),
             );
 
-            if (!ok) return sandboxResult;
+            if (!ok || options.signal?.aborted) return sandboxResult;
 
             options.onData(
                 Buffer.from(
@@ -379,15 +404,40 @@ function allowedRootsSummary(): string {
         .join("\n");
 }
 
-async function requireBashConfirmation(ctx: ExtensionContext, command: string): Promise<void> {
+async function requireBashConfirmation(
+    ctx: ExtensionContext,
+    command: string,
+    approve: Approval,
+    signal: AbortSignal | undefined,
+): Promise<void> {
     if (!ctx.hasUI) throw new Error("Bash blocked: no UI is available for confirmation.");
 
-    const choice = await ctx.ui.select(`Execute bash command?\n\n  ${command}`, ["Allow", "Block"]);
-    if (!choice || choice === "Block") throw new Error("Bash blocked by user.");
+    const choice = await approve(signal, () =>
+        ctx.ui.select(`Execute bash command?\n\n  ${command}`, ["Allow", "Block"], { signal }),
+    );
+    if (choice !== "Allow" || signal?.aborted) throw new Error("Bash blocked by user.");
 }
 
 export default async function (pi: ExtensionAPI) {
     let mode: SandboxMode = STARTED_INSIDE_NONO ? "off" : "nono";
+
+    // Pi's TUI has one selector slot; a second dialog replaces the first without
+    // resolving it. Queue approvals, not tool calls (which can still run in parallel).
+    let lastApproval: Promise<void> = Promise.resolve();
+    const approve: Approval = async (signal, prompt) => {
+        const previous = lastApproval;
+        let release!: () => void;
+        lastApproval = new Promise<void>((resolve) => {
+            release = resolve;
+        });
+        await previous;
+        try {
+            if (signal?.aborted) throw new Error("Approval cancelled.");
+            return await prompt();
+        } finally {
+            release();
+        }
+    };
 
     const publishState = () => {
         pi.events.emit("nono:sbx:state", Object.freeze({ mode, enabled: mode !== "off" }));
@@ -467,7 +517,7 @@ export default async function (pi: ExtensionAPI) {
             if (mode !== "nono") return baseRead.execute(id, params, signal, onUpdate);
 
             const tool = createReadTool(PI_START_CWD, {
-                operations: createGatedReadOperations(ctx),
+                operations: createGatedReadOperations(ctx, approve, signal),
             });
             return tool.execute(id, params, signal, onUpdate);
         },
@@ -479,7 +529,7 @@ export default async function (pi: ExtensionAPI) {
             if (mode !== "nono") return baseWrite.execute(id, params, signal, onUpdate);
 
             const tool = createWriteTool(PI_START_CWD, {
-                operations: createGatedWriteOperations(ctx),
+                operations: createGatedWriteOperations(ctx, approve, signal),
             });
             return tool.execute(id, params, signal, onUpdate);
         },
@@ -491,7 +541,7 @@ export default async function (pi: ExtensionAPI) {
             if (mode !== "nono") return baseEdit.execute(id, params, signal, onUpdate);
 
             const tool = createEditTool(PI_START_CWD, {
-                operations: createGatedEditOperations(ctx),
+                operations: createGatedEditOperations(ctx, approve, signal),
             });
             return tool.execute(id, params, signal, onUpdate);
         },
@@ -502,7 +552,7 @@ export default async function (pi: ExtensionAPI) {
         async execute(id, params, signal, onUpdate, ctx) {
             if (mode === "off") return baseBash.execute(id, params, signal, onUpdate);
             if (mode === "confirm") {
-                await requireBashConfirmation(ctx, params.command);
+                await requireBashConfirmation(ctx, params.command, approve, signal);
                 return baseBash.execute(id, params, signal, onUpdate);
             }
 
@@ -513,17 +563,21 @@ export default async function (pi: ExtensionAPI) {
                         "Outside-sandbox Bash requires approval, but no UI is available.",
                     );
 
-                const ok = await ctx.ui.confirm(
-                    "Run Bash outside nono sandbox?",
-                    [`Command:`, command].join("\n"),
+                const ok = await approve(signal, () =>
+                    ctx.ui.confirm(
+                        "Run Bash outside nono sandbox?",
+                        [`Command:`, command].join("\n"),
+                        { signal },
+                    ),
                 );
-                if (!ok) throw new Error("Outside-sandbox Bash blocked by user.");
+                if (!ok || signal?.aborted)
+                    throw new Error("Outside-sandbox Bash blocked by user.");
 
                 return hostBash.execute(id, { ...params, command }, signal, onUpdate);
             }
 
             const tool = createBashTool(PI_START_CWD, {
-                operations: createApprovedFallbackBashOperations(ctx),
+                operations: createApprovedFallbackBashOperations(ctx, approve),
             });
             return tool.execute(id, params, signal, onUpdate);
         },
@@ -531,7 +585,7 @@ export default async function (pi: ExtensionAPI) {
 
     pi.on("user_bash", (_event, ctx) => {
         if (mode !== "nono") return;
-        return { operations: createApprovedFallbackBashOperations(ctx) };
+        return { operations: createApprovedFallbackBashOperations(ctx, approve) };
     });
 
     pi.on("session_start", (_event, ctx) => {
