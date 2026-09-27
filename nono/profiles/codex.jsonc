@@ -1,0 +1,44 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "codex"
+  },
+  "extends": [
+    "personal"
+  ],
+  "groups": {
+    "include": [
+      {
+        "name": "codex_macos",
+        "when": "macos"
+      }
+    ]
+  },
+  "security": {
+    "signal_mode": "isolated",
+    "capability_elevation": false
+  },
+  "filesystem": {
+    "allow": [
+      "~/.codex"
+    ]
+  },
+  "open_urls": {
+    "allow_origins": [
+      "https://auth.openai.com"
+    ],
+    "allow_localhost": true
+  },
+  "allow_launch_services": true,
+  "rollback": {
+    "exclude_patterns": [
+      "node_modules",
+      ".next",
+      "__pycache__",
+      "target"
+    ],
+    "exclude_globs": [
+      "*.tmp.[0-9]*.[0-9]*"
+    ]
+  }
+}
