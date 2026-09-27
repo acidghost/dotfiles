@@ -38,7 +38,7 @@ When starting (personal) projects:
 - `just` as a task runner (alternative to `make`)
 - `biome` for linting and formatting web files
 - `uv` to manage Python projects and venvs; `ruff` to lint, `ty` to type-check
-- `bun` instead of `node` for all-in-one devex
+- `bun` instead of `node` for all-in-one devex; docs index https://bun.com/llms.txt
 - `go`, `templ`, `htmx` stack for cloud-native apps that need a web ui
   - `golangci-lint` for linting
   - start from [this template](https://github.com/acidghost/go-start)
