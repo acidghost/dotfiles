@@ -19,6 +19,8 @@
       mode: 0755
     ~/.claude:
       mode: 0755
+    ~/.codex:
+      mode: 0755
     ~/.config/dotfiles-env:
       mode: 0755
     ~/.config/nvim:
@@ -77,6 +79,10 @@
     ~/.bunfig.toml: etc/bunfig.toml
     ~/.claude/CLAUDE.md: agents/AGENTS.md
     ~/.claude/CLAUDE.local.md:
+      path: agents/AGENTS.local.md
+      if: '[ -f agents/AGENTS.local.md ]'
+    ~/.codex/AGENTS.md: agents/AGENTS.md
+    ~/.codex/AGENTS.local.md:
       path: agents/AGENTS.local.md
       if: '[ -f agents/AGENTS.local.md ]'
     ~/.config/alacritty:
