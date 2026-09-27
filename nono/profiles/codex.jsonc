@@ -18,6 +18,11 @@
     "signal_mode": "isolated",
     "capability_elevation": false
   },
+  "environment": {
+    "set_vars": {
+      "CODEX_CA_CERTIFICATE": "/etc/ssl/cert.pem"
+    }
+  },
   "filesystem": {
     "allow": [
       "~/.codex"
