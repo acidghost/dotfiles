@@ -1,0 +1,136 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "gh-approval"
+  },
+  "command_policies": {
+    "approval_backends": {
+      "nono-hitl": {
+        "type": "webhook",
+        "url": "http://127.0.0.1:8765/hooks/nono",
+        "timeout_secs": 60
+      }
+    },
+    "approval_defaults": {
+      "backend": "nono-hitl",
+      "timeout_secs": 60
+    },
+    "commands": {
+      "git": {
+        "can_use": ["ssh", "ssh-keygen"],
+        "from": {
+          "session": {
+            "sandbox": {
+              "fs_read": [
+                ".",
+                "@git:common-dir",
+                "@git:toplevel",
+                "~/.config/git",
+                "/opt/homebrew"
+              ],
+              "fs_read_file": [
+                "@git:config-files"
+              ],
+              "fs_write": [
+                "@git:common-dir",
+                "@git:toplevel",
+                "/tmp"
+              ]
+            },
+            "invocation_policy": {
+              "default": "approve",
+              "allow": [
+                { "argv": { "prefix": ["diff"] } },
+                { "argv": { "prefix": ["log"] } },
+                { "argv": { "prefix": ["show"] } },
+                { "argv": { "prefix": ["status"] } }
+              ]
+            }
+          },
+          "gh": {
+            "sandbox": {
+              "fs_read": [
+                ".",
+                "@git:common-dir",
+                "@git:toplevel",
+                "/opt/homebrew"
+              ],
+              "fs_read_file": [
+                "@git:config-files"
+              ]
+            },
+            "invocation_policy": {
+              "default": "deny",
+              "allow": [
+                { "argv": { "prefix": ["rev-parse"] } },
+                { "argv": { "exact": ["remote", "-v"] } },
+                { "argv": { "exact": ["config", "--get-regexp", "^remote\\..*\\.gh-resolved$"] } }
+              ]
+            }
+          }
+        }
+      },
+      "ssh": {
+        "from": {
+          "git": {
+            "sandbox": {
+              "environment": {
+                "allow_vars": [
+                  "PATH",
+                  "HOME",
+                  "USER",
+                  "LOGNAME",
+                  "SHELL",
+                  "TERM",
+                  "COLORTERM",
+                  "LANG",
+                  "LC_*",
+                  "TZ"
+                ]
+              },
+              "fs_read": [
+                "~/.ssh/"
+              ],
+              "credentials": ["secretive-signing-agent"],
+              "network": {
+                "allow_all": true
+              }
+            }
+          }
+        }
+      },
+      "ssh-keygen": {
+        "from": {
+          "git": {
+            "sandbox": {
+              "fs_read": [
+                "$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys"
+              ],
+              "fs_write": ["/tmp"],
+              "credentials": ["secretive-signing-agent"]
+            },
+            "invocation_policy": {
+              "default": "deny",
+              "allow": [
+                { "argv": { "prefix": ["-Y", "sign", "-n", "git", "-f"] } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "credentials": {
+      "secretive-signing-agent": {
+        "type": "local-socket",
+        "path": "$HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh",
+        "mode": "connect",
+        "env_var": "SSH_AUTH_SOCK"
+      }
+    }
+  },
+  "network": {
+    "tls_intercept": {
+      "ca_lifecycle": "trusted"
+    }
+  }
+}

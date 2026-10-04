@@ -1,0 +1,27 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "gh-creds"
+  },
+  "environment": {
+    "deny_vars": [
+      "GH_TOKEN",
+      "GITHUB_TOKEN",
+      "GH_ENTERPRISE_TOKEN"
+    ]
+  },
+  "credential_capture": {
+    "github": {
+      "command": [
+        "gh-auth-cli",
+        "token",
+        "--non-interactive",
+        "--min-validity",
+        "20m"
+      ],
+      "timeout_secs": 15,
+      "cache_ttl_secs": 900,
+      "cache_path_regex": "^/repos/([^/]+)"
+    }
+  }
+}

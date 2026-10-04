@@ -1,0 +1,114 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "gh-approval"
+  },
+  "extends": [
+    "gh-creds"
+  ],
+  "command_policies": {
+    "approval_backends": {
+      "nono-hitl": {
+        "type": "webhook",
+        "url": "http://127.0.0.1:8765/hooks/nono",
+        "timeout_secs": 60
+      }
+    },
+    "approval_defaults": {
+      "backend": "nono-hitl",
+      "timeout_secs": 60
+    },
+    "commands": {
+      "gh": {
+        "can_use": ["git"],
+        "from": {
+          "session": {
+            "sandbox": {
+              "fs_read": [
+                ".",
+                "$XDG_CONFIG_HOME/gh"
+              ],
+              "network": {
+                "allow_domain": [
+                  "api.github.com"
+                ]
+              },
+              "environment": {
+                "allow_vars": [
+                  "PATH",
+                  "HOME",
+                  "USER",
+                  "LOGNAME",
+                  "SHELL",
+                  "TERM",
+                  "COLORTERM",
+                  "LANG",
+                  "LC_*",
+                  "TZ",
+                  "HTTPS_PROXY",
+                  "HTTP_PROXY",
+                  "NO_PROXY",
+                  "https_proxy",
+                  "http_proxy",
+                  "no_proxy",
+                  "SSL_CERT_FILE",
+                  "CURL_CA_BUNDLE",
+                  "GIT_SSL_CAINFO",
+                  "GH_REPO"
+                ],
+                "set_vars": {
+                  "GH_CONFIG_DIR": "$XDG_CONFIG_HOME/gh",
+                  "GH_PROMPT_DISABLED": "1",
+                  "GH_PAGER": "cat",
+                  "GH_HOST": "github.com",
+                  "GH_NO_UPDATE_NOTIFIER": "1",
+                  "GH_NO_EXTENSION_UPDATE_NOTIFIER": "1"
+                }
+              },
+              "credentials": [
+                {
+                  "name": "github-write",
+                  "endpoint_policy": {
+                    "default": "allow"
+                  }
+                }
+              ]
+            },
+            "invocation_policy": {
+              "default": "approve",
+              "allow": [
+                { "argv": { "prefix": ["issue", "list"] } },
+                { "argv": { "prefix": ["issue", "view"] } },
+                { "argv": { "prefix": ["pr", "list"] } },
+                { "argv": { "prefix": ["pr", "view"] } },
+                { "argv": { "prefix": ["pr", "diff"] } },
+                { "argv": { "prefix": ["pr", "checks"] } },
+                { "argv": { "prefix": ["repo", "view"] } },
+                { "argv": { "prefix": ["release", "list"] } },
+                { "argv": { "prefix": ["release", "view"] } },
+                { "argv": { "prefix": ["run", "list"] } },
+                { "argv": { "prefix": ["run", "view"] } },
+                { "argv": { "prefix": ["workflow", "list"] } },
+                { "argv": { "prefix": ["workflow", "view"] } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "credentials": {
+      "github-write": {
+        "type": "proxy",
+        "upstream": "https://api.github.com",
+        "credential_key": "cmd://github",
+        "env_var": "GH_TOKEN",
+        "credential_format": "token {}"
+      }
+    }
+  },
+  "network": {
+    "tls_intercept": {
+      "ca_lifecycle": "trusted"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "approvals"
+  },
+  "extends": [
+    "gh-approval",
+    "git-approval"
+  ]
+}
