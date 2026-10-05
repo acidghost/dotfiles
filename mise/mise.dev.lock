@@ -339,6 +339,10 @@ url = "https://github.com/skaji/relocatable-perl/releases/download/5.44.0.0/perl
 url_api = "https://api.github.com/repos/skaji/relocatable-perl/releases/assets/478554571"
 provenance = "github-attestations"
 
+[[tools.prettier]]
+version = "3.9.9"
+backend = "npm:prettier"
+
 [[tools.ruff]]
 version = "0.16.9"
 backend = "aqua:astral-sh/ruff"
