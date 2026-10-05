@@ -52,27 +52,6 @@
                 { "argv": { "prefix": ["status"] } }
               ]
             }
-          },
-          "gh": {
-            "sandbox": {
-              "fs_read": [
-                ".",
-                "@git:common-dir",
-                "@git:toplevel",
-                "/opt/homebrew"
-              ],
-              "fs_read_file": [
-                "@git:config-files"
-              ]
-            },
-            "invocation_policy": {
-              "default": "deny",
-              "allow": [
-                { "argv": { "prefix": ["rev-parse"] } },
-                { "argv": { "exact": ["remote", "-v"] } },
-                { "argv": { "exact": ["config", "--get-regexp", "^remote\\..*\\.gh-resolved$"] } }
-              ]
-            }
           }
         }
       },
