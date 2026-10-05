@@ -9,7 +9,8 @@
   "network": {
     "allow_domain": [
       "api.z.ai",
-      "chatgpt.com"
+      "chatgpt.com",
+      "auth.openai.com"
     ]
   }
 }
