@@ -3,9 +3,6 @@
   "meta": {
     "name": "gh-rw"
   },
-  "extends": [
-    "gh-creds"
-  ],
   "network": {
     "allow_domain": [
       "api.github.com"

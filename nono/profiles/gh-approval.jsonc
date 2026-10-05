@@ -3,9 +3,6 @@
   "meta": {
     "name": "gh-approval"
   },
-  "extends": [
-    "gh-creds"
-  ],
   "command_policies": {
     "approval_backends": {
       "nono-hitl": {

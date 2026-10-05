@@ -3,9 +3,6 @@
   "meta": {
     "name": "gh-ro"
   },
-  "extends": [
-    "gh-creds"
-  ],
   "network": {
     "allow_domain": [
       {

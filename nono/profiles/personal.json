@@ -4,7 +4,11 @@
     "name": "personal"
   },
   "extends": [
-    "base"
+    "base",
+    "gh-actions",
+    "gh-creds",
+    "gh-packages",
+    "gh-ro"
   ],
   "network": {
     "allow_domain": [
