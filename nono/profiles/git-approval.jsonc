@@ -40,8 +40,14 @@
             "invocation_policy": {
               "default": "approve",
               "allow": [
+                { "argv": { "prefix": ["branch", "--show-current"] } },
+                { "argv": { "prefix": ["check-ignore"] } },
                 { "argv": { "prefix": ["diff"] } },
                 { "argv": { "prefix": ["log"] } },
+                { "argv": { "prefix": ["ls-files"] } },
+                { "argv": { "prefix": ["remote", "-v"] } },
+                { "argv": { "prefix": ["rev-list"] } },
+                { "argv": { "prefix": ["rev-parse"] } },
                 { "argv": { "prefix": ["show"] } },
                 { "argv": { "prefix": ["status"] } }
               ]
