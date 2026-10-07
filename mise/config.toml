@@ -14,7 +14,7 @@ jq = "1.8.2"
 lsd = "1.2.0"
 ripgrep = "15.2.0"
 starship = "1.26.0"
-yq = "4.53.6"
+yq = "4.54.1"
 zoxide = "0.10.0"
 
 [tools."github:tmuxpack/tpack"]
