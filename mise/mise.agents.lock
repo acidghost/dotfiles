@@ -40,40 +40,40 @@ url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-pac
 url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353476"
 
 [[tools.pi]]
-version = "v0.99.2"
+version = "v1.0.4"
 backend = "aqua:earendil-works/pi"
 
 [tools.pi."platforms.linux-arm64"]
-checksum = "sha256:61fc3cd9a854cabb8554e353ff324701c952d2fdd0b1a96aa16ac44cf5357360"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628126"
+checksum = "sha256:6a6bc66a6ac2750bd7ccd7f2109090463f564d447feefb10a5965f6b6aed2211"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707171"
 
 [tools.pi."platforms.linux-arm64-musl"]
-checksum = "sha256:61fc3cd9a854cabb8554e353ff324701c952d2fdd0b1a96aa16ac44cf5357360"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628126"
+checksum = "sha256:6a6bc66a6ac2750bd7ccd7f2109090463f564d447feefb10a5965f6b6aed2211"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707171"
 
 [tools.pi."platforms.linux-x64"]
-checksum = "sha256:f998cc1232733eab240526d74acdce429d650b9e01f5804636d7aa96eb629846"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628119"
+checksum = "sha256:284c45dd28cf975a13cff6af34741dd0a0cdca6634e8bdfc0083ae7d452e86d6"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707163"
 
 [tools.pi."platforms.linux-x64-musl"]
-checksum = "sha256:f998cc1232733eab240526d74acdce429d650b9e01f5804636d7aa96eb629846"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628119"
+checksum = "sha256:284c45dd28cf975a13cff6af34741dd0a0cdca6634e8bdfc0083ae7d452e86d6"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707163"
 
 [tools.pi."platforms.macos-arm64"]
-checksum = "sha256:564707a7378dae4cce29d92693b45b49d3a3a25187dddcc6d8c2e4aca4fb3719"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-darwin-arm64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628127"
+checksum = "sha256:717dcd38a03849e919f9dec9daa96f5ca102e15ea33d804e5db57b1d47e513bc"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707162"
 
 [tools.pi."platforms.macos-x64"]
-checksum = "sha256:afa8bda5c77b7ae1a14afe2c7a206925e89ea703a8479b4b7a743b1b52c0fd90"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-darwin-x64.tar.gz"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628125"
+checksum = "sha256:665022918678542dd7c87fe7b0da70d2a3dcd926bc6ff4cc712308f2ca313358"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-darwin-x64.tar.gz"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707174"
 
 [tools.pi."platforms.windows-x64"]
-checksum = "sha256:6f0bd9869d5cf45d5adde79ebedb54357e0c26cb4c64bd4a256f7ae548995f22"
-url = "https://github.com/earendil-works/pi/releases/download/v0.99.2/pi-windows-x64.zip"
-url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/601628165"
+checksum = "sha256:6bdbfb7bac252eea36a0095e4b741c9d5784d5ba99146e2d76e9246dee409b58"
+url = "https://github.com/earendil-works/pi/releases/download/v1.0.4/pi-windows-x64.zip"
+url_api = "https://api.github.com/repos/earendil-works/pi/releases/assets/613707217"
