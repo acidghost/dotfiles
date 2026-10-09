@@ -69,6 +69,12 @@
     },
     {
       "matchFileNames": [
+        "/^skills/.+$/"
+      ],
+      "commitMessagePrefix": "[skills]"
+    },
+    {
+      "matchFileNames": [
         "zsh/plugins.txt"
       ],
       "commitMessagePrefix": "[zsh]"
