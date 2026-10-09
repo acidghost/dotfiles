@@ -10,7 +10,7 @@ ohmyzsh/ohmyzsh path:plugins/vagrant pin:9f9b28a13df35af968f0117cb142f0eba9cc6c4
 ohmyzsh/ohmyzsh path:plugins/vi-mode pin:9f9b28a13df35af968f0117cb142f0eba9cc6c41 # HEAD
 ohmyzsh/ohmyzsh path:plugins/web-search pin:9f9b28a13df35af968f0117cb142f0eba9cc6c41 # HEAD
 
-tinted-theming/base16-shell pin:62c20480f861c623a20ed119c630bb4f7e44a99e # HEAD
+tinted-theming/base16-shell pin:9359c5da5adec80f374a6ef62178ab3e5613c800 # HEAD
 tinted-theming/base16-fzf kind:clone pin:badd6a4275c977c32f0ba8e1b69e9bf5586cebc1 # HEAD
 
 wfxr/forgit pin:3cd8dd081f988046dd2148e5002fedd08da514e3 # 26.10.0
