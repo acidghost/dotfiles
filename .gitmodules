@@ -16,3 +16,6 @@
 [submodule "skills/pstack"]
 	path = skills/pstack
 	url = https://github.com/acidghost/pstack-mirror.git
+[submodule "skills/diagram-design"]
+	path = skills/diagram-design
+	url = https://github.com/cathrynlavery/diagram-design.git
