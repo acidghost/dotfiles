@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@earendil-works/pi-coding-agent": "1.0.4",
+    "@earendil-works/pi-coding-agent": "1.1.0",
     "@types/bun": "1.4.2"
   }
 }
