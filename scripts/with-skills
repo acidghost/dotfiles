@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Temporarily link skill dirs into ~/.agents/skills/, run a command, then clean up."""
+"""Link skills permanently or for the lifecycle of a wrapped command."""
 
 import fnmatch
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 SCRIPT_DIR = Path(os.path.realpath(__file__)).parent
 SRC_ROOT = Path(os.environ.get("WITH_SKILLS_SRC", SCRIPT_DIR / "../skills")).resolve()
-DEST_ROOT = Path(os.environ.get("WITH_SKILLS_DEST", os.path.expanduser("~/.agents/skills")))
+DEST_ROOT = Path(
+    os.environ.get("WITH_SKILLS_DEST", os.path.expanduser("~/.agents/skills"))
+)
 
 
 def short_path(d: Path) -> str:
@@ -39,74 +40,129 @@ def resolve_patterns(patterns: list[str]) -> list[Path]:
     return matched
 
 
-def link(src: Path) -> tuple[str, Path | None]:
-    """Link a directory into DEST_ROOT. Returns (name, backed_up_path_or_None)."""
+def link(src: Path, *, replace_symlink: bool = False) -> bool:
+    """Link a directory, backing up displaced entries. Return whether a link was made."""
     name = src.name
     dest = DEST_ROOT / name
-    backup = None
+    backup = dest.with_name(f".{name}.bak")
 
     if dest.is_symlink():
         if dest.resolve() == src.resolve():
-            return name, None
-        dest.unlink()
-    elif dest.exists():
-        backup = dest.with_name(f".{name}.bak")
-        shutil.move(str(dest), str(backup))
+            return False
+        if not replace_symlink:
+            raise FileExistsError(f"refusing to replace unrelated symlink: {dest}")
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    backed_up = False
+    if dest.exists() or dest.is_symlink():
+        if backup.exists() or backup.is_symlink():
+            raise FileExistsError(f"backup already exists: {backup}")
+        dest.rename(backup)
+        backed_up = True
 
     try:
-        dest.parent.mkdir(parents=True, exist_ok=True)
         dest.symlink_to(src)
-    except OSError as e:
-        print(f"error linking {name}: {e}", file=sys.stderr)
-        if backup:
-            shutil.move(str(backup), str(dest))
-        return name, None
+    except OSError:
+        if backed_up:
+            backup.rename(dest)
+        raise
 
     print(f"linked: {name}")
-    return name, backup
+    return True
 
 
-def unlink(name: str, backup: Path | None) -> None:
-    """Remove a linked dir, restoring any backup."""
+def unlink(src: Path, *, restore_backup: bool = True) -> None:
+    """Remove this source's link and restore its on-disk backup, if any."""
+    name = src.name
     dest = DEST_ROOT / name
-    if dest.is_symlink():
-        dest.unlink()
-        print(f"unlinked: {name}")
-    if backup and backup.exists():
-        shutil.move(str(backup), str(DEST_ROOT / name))
+    backup = dest.with_name(f".{name}.bak")
+    if not dest.is_symlink():
+        return
+    if dest.resolve() != src.resolve():
+        raise FileExistsError(f"refusing to remove unrelated symlink: {dest}")
+
+    dest.unlink()
+    print(f"unlinked: {name}")
+    if restore_backup and (backup.exists() or backup.is_symlink()):
+        backup.rename(dest)
         print(f"restored: {name}")
 
 
-def main() -> None:
-    args = sys.argv[1:]
-    if not args or args[0] in ("-h", "--help"):
-        print("usage: with-skills <pattern>... -- <command> [args...]")
-        print()
-        print("Temporarily links dirs into ~/.agents/skills/, runs the command,")
-        print("then reverts all links (restores any backups).")
-        print()
-        print("  pattern   glob matched against dir names or paths after 'skills/'")
-        print("  --        separator between patterns and command")
-        print()
-        print("examples:")
-        print("  with-skills grill-me -- pi")
-        print("  with-skills engineering -- pi")
-        print("  with-skills mattpocock -- pi")
-        print("  with-skills engineering/* productivity/* -- pi")
-        sys.exit(0 if args else 1)
-
+def run_wrapped(skills: list[Path], command: list[str]) -> int:
+    """Run with temporary links, undoing only changes made by this invocation."""
+    linked: list[tuple[Path, bool]] = []
+    exit_code = 0
     try:
-        sep = args.index("--")
-    except ValueError:
-        print("error: missing -- separator before command", file=sys.stderr)
-        sys.exit(1)
+        for skill in skills:
+            dest = DEST_ROOT / skill.name
+            displaced = dest.exists() or dest.is_symlink()
+            if link(skill, replace_symlink=True):
+                linked.append((skill, displaced))
+        exit_code = subprocess.call(command)
+    except OSError as e:
+        print(f"error: {e}", file=sys.stderr)
+        exit_code = 1
+    except KeyboardInterrupt:
+        exit_code = 130
+    finally:
+        for skill, displaced in reversed(linked):
+            try:
+                unlink(skill, restore_backup=displaced)
+            except OSError as e:
+                print(f"error unlinking {skill.name}: {e}", file=sys.stderr)
+                exit_code = exit_code or 1
+    return exit_code
 
-    patterns, command = args[:sep], args[sep + 1 :]
+
+def print_help() -> None:
+    print("""\
+usage: with-skills <pattern>... -- <command> [args...]
+       with-skills {link,unlink} <pattern>...
+
+Link skills for a command's lifecycle, or permanently link/unlink dirs in ~/.agents/skills/.
+
+  pattern   glob matched against dir names or paths after 'skills/'
+  --        separator between patterns and command
+  -h, --help  show this help message
+
+Examples:
+    with-skills grill-me -- pi
+    with-skills 'engineering/*' 'productivity/*' -- pi
+    with-skills link grill-me
+    with-skills unlink grill-me
+
+Existing entries are backed up as .<name>.bak and restored on unlink.
+WITH_SKILLS_SRC and WITH_SKILLS_DEST override the source and destination.
+""")
+
+
+def main() -> None:
+    argv = sys.argv[1:]
+    # Only interpret help flags before the separator, not in the wrapped command.
+    option_args = argv[: argv.index("--")] if "--" in argv else argv
+    if not argv or any(arg in ("-h", "--help") for arg in option_args):
+        print_help()
+        sys.exit(0 if argv else 1)
+
+    command = None
+    if "--" in argv:
+        # The separator takes precedence: even 'link'/'unlink' can be skill names.
+        sep = argv.index("--")
+        patterns, command = argv[:sep], argv[sep + 1 :]
+        action = "run"
+    elif argv[0] in ("link", "unlink"):
+        action, patterns = argv[0], argv[1:]
+    else:
+        print(
+            "error: missing -- separator before command (or use link/unlink)",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     if not patterns:
         print("error: no patterns specified", file=sys.stderr)
         sys.exit(1)
-    if not command:
+    if command is not None and not command:
         print("error: no command specified after --", file=sys.stderr)
         sys.exit(1)
 
@@ -115,20 +171,17 @@ def main() -> None:
         print("error: no dirs matched", file=sys.stderr)
         sys.exit(1)
 
-    linked: list[tuple[str, Path | None]] = []
-    for skill in skills:
-        name, backup = link(skill)
-        if backup is not None or (DEST_ROOT / name).is_symlink():
-            linked.append((name, backup))
+    if command is not None:
+        sys.exit(run_wrapped(skills, command))
 
+    operation = link if action == "link" else unlink
     exit_code = 0
-    try:
-        exit_code = subprocess.call(command)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        for name, backup in reversed(linked):
-            unlink(name, backup)
+    for skill in skills:
+        try:
+            operation(skill)
+        except OSError as e:
+            print(f"error {action}ing {skill.name}: {e}", file=sys.stderr)
+            exit_code = 1
 
     sys.exit(exit_code)
 
