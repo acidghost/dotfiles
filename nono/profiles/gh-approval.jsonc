@@ -111,7 +111,17 @@
               "allow": [
                 { "argv": { "prefix": ["rev-parse"] } },
                 { "argv": { "exact": ["remote", "-v"] } },
-                { "argv": { "exact": ["config", "--get-regexp", "^remote\\..*\\.gh-resolved$"] } }
+                { "argv": { "exact": ["symbolic-ref", "--quiet", "HEAD"] } },
+                { "argv": { "exact": ["status", "--porcelain"] } },
+                { "argv": { "prefix": ["config", "--get-regexp"] } },
+                { "argv": { "exact": ["config", "push.default"] } },
+                { "argv": { "exact": ["config", "remote.pushDefault"] } },
+                { "argv": { "prefix": ["show-ref", "--verify", "--"] } },
+                {
+                  "argv": {
+                    "prefix": ["-c", "log.ShowSignature=false", "log", "--pretty=format:%H%x00%s%x00%b%x00", "--cherry"]
+                  }
+                }
               ]
             }
           }
