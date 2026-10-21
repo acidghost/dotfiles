@@ -2,6 +2,7 @@
 """Link skills permanently or for the lifecycle of a wrapped command."""
 
 import fnmatch
+import glob
 import os
 import subprocess
 import sys
@@ -23,18 +24,34 @@ def short_path(d: Path) -> str:
     return str(Path(*parts))
 
 
+def resolve_path(pattern: str) -> list[Path]:
+    """Expand an absolute path (possibly a glob) into existing dirs, anywhere on disk."""
+    return sorted(
+        Path(p).resolve() for p in glob.glob(os.path.expanduser(pattern)) if Path(p).is_dir()
+    )
+
+
 def resolve_patterns(patterns: list[str]) -> list[Path]:
-    """Match glob patterns against dirs under SRC_ROOT by basename or short path."""
+    """Match glob patterns against dirs under SRC_ROOT by basename or short path.
+
+    A pattern that looks like an absolute path (or ~-prefixed) is taken literally
+    instead, so skills living outside the dotfiles clone can be linked too.
+    """
     dirs = sorted(d for d in SRC_ROOT.rglob("*") if d.is_dir())
     matched: list[Path] = []
     for pattern in patterns:
-        found = False
-        for d in dirs:
-            sp = short_path(d)
-            if fnmatch.fnmatch(d.name, pattern) or fnmatch.fnmatch(sp, pattern):
-                if d not in matched:
-                    matched.append(d)
-                found = True
+        expanded = os.path.expanduser(pattern)
+        if os.path.isabs(expanded):
+            found = resolve_path(pattern)
+            matched.extend(d for d in found if d not in matched)
+        else:
+            found = []
+            for d in dirs:
+                sp = short_path(d)
+                if fnmatch.fnmatch(d.name, pattern) or fnmatch.fnmatch(sp, pattern):
+                    if d not in matched:
+                        matched.append(d)
+                    found.append(d)
         if not found:
             print(f"warning: no match for '{pattern}'", file=sys.stderr)
     return matched
@@ -121,13 +138,15 @@ usage: with-skills <pattern>... -- <command> [args...]
 
 Link skills for a command's lifecycle, or permanently link/unlink dirs in ~/.agents/skills/.
 
-  pattern   glob matched against dir names or paths after 'skills/'
+  pattern   glob matched against dir names or paths after 'skills/',
+            or an absolute path (globs and ~ allowed) to any dir
   --        separator between patterns and command
   -h, --help  show this help message
 
 Examples:
     with-skills grill-me -- pi
     with-skills 'engineering/*' 'productivity/*' -- pi
+    with-skills '~/wa/oss/mattpocock-skills/skills/*' -- pi
     with-skills link grill-me
     with-skills unlink grill-me
 
