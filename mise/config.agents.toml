@@ -3,5 +3,5 @@ version = "0.159.3"
 minimum_release_age = "1d"
 
 [tools.pi]
-version = "v1.3.0"
+version = "v1.4.0"
 minimum_release_age = "1d"
