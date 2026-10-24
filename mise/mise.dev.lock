@@ -128,6 +128,56 @@ aube = { path = ".mise/locks/mise.dev/devcontainer-cli/0.89.0", digest = "sha256
 backend = "npm:@devcontainers/cli"
 specifiers = ["0.89.0"]
 
+[[tools."github:acidghost/a555pq"]]
+version = "0.2.0"
+backend = "github:acidghost/a555pq"
+specifiers = [
+    "0.2.0",
+    "latest",
+]
+
+[tools."github:acidghost/a555pq"."platforms.linux-arm64"]
+checksum = "sha256:6b77c2a51073c354b24f4369304af049831a30c5e6b30b78bbaa5fff2fad6e07"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266775"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.linux-arm64-musl"]
+checksum = "sha256:6b77c2a51073c354b24f4369304af049831a30c5e6b30b78bbaa5fff2fad6e07"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266775"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.linux-x64"]
+checksum = "sha256:b27cb0ee15e47ffad4d3baf37930c1461837e1965ce199b7c3f364276b6f560e"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266774"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.linux-x64-baseline"]
+checksum = "sha256:b27cb0ee15e47ffad4d3baf37930c1461837e1965ce199b7c3f364276b6f560e"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266774"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.linux-x64-musl"]
+checksum = "sha256:b27cb0ee15e47ffad4d3baf37930c1461837e1965ce199b7c3f364276b6f560e"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266774"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:b27cb0ee15e47ffad4d3baf37930c1461837e1965ce199b7c3f364276b6f560e"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266774"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555pq"."platforms.macos-arm64"]
+checksum = "sha256:9c73afa3accdf6441f64d2ba395b1a5496e4dc2c5091e8928513de1ac47123f3"
+url = "https://github.com/acidghost/a555pq/releases/download/v0.2.0/a555pq_0.2.0_darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/668266777"
+provenance = "github-attestations"
+
 [[tools.go]]
 version = "1.27.3"
 backend = "core:go"
