@@ -278,6 +278,65 @@ url = "https://github.com/acidghost/a555less/releases/download/v0.1.0/a555less_0
 url_api = "https://api.github.com/repos/acidghost/a555less/releases/assets/672447979"
 provenance = "github-attestations"
 
+[[tools."github:acidghost/a555watch"]]
+version = "1.0.1"
+backend = "github:acidghost/a555watch"
+specifiers = ["1.0.1"]
+
+[tools."github:acidghost/a555watch"."platforms.linux-arm64"]
+checksum = "sha256:cdfdb110ec84fe63147af04eed6ee20a86a6b801b7f52eeaaafb2bfc32ba1154"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411059"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.linux-arm64-musl"]
+checksum = "sha256:cdfdb110ec84fe63147af04eed6ee20a86a6b801b7f52eeaaafb2bfc32ba1154"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411059"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.linux-x64"]
+checksum = "sha256:4762527af41f3b2e3e4c81c08b1234ca01f7641ac1ceaf87c5275ecf9636dc40"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411065"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.linux-x64-baseline"]
+checksum = "sha256:4762527af41f3b2e3e4c81c08b1234ca01f7641ac1ceaf87c5275ecf9636dc40"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411065"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.linux-x64-musl"]
+checksum = "sha256:4762527af41f3b2e3e4c81c08b1234ca01f7641ac1ceaf87c5275ecf9636dc40"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411065"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:4762527af41f3b2e3e4c81c08b1234ca01f7641ac1ceaf87c5275ecf9636dc40"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411065"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.macos-arm64"]
+checksum = "sha256:0ade18e4e9563bf9742baec83be89eb1e32e2c85bfc831907ff54495dbedd4bf"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411064"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.macos-x64"]
+checksum = "sha256:142bfecbfe3bc4f4057f4999ebabc6b6d92dee6611648d78303d3681a89f3734"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411063"
+provenance = "github-attestations"
+
+[tools."github:acidghost/a555watch"."platforms.macos-x64-baseline"]
+checksum = "sha256:142bfecbfe3bc4f4057f4999ebabc6b6d92dee6611648d78303d3681a89f3734"
+url = "https://github.com/acidghost/a555watch/releases/download/v1.0.1/a555watch_1.0.1_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/a555watch/releases/assets/679411063"
+provenance = "github-attestations"
+
 [[tools."github:tmuxpack/tpack"]]
 version = "2.0.4"
 backend = "github:tmuxpack/tpack"
