@@ -11,6 +11,9 @@
     "ble.sh",
     "dotbot"
   ],
+  "ignorePaths": [
+    "mise/.mise/locks/**/package.json"
+  ],
   "git-submodules": {
     "enabled": true
   },
