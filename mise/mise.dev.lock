@@ -131,10 +131,7 @@ specifiers = ["0.89.0"]
 [[tools."github:acidghost/a555pq"]]
 version = "0.2.0"
 backend = "github:acidghost/a555pq"
-specifiers = [
-    "0.2.0",
-    "latest",
-]
+specifiers = ["0.2.0"]
 
 [tools."github:acidghost/a555pq"."platforms.linux-arm64"]
 checksum = "sha256:6b77c2a51073c354b24f4369304af049831a30c5e6b30b78bbaa5fff2fad6e07"
