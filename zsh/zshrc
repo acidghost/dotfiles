@@ -158,6 +158,7 @@ bindkey '^Xx' widget-expand-cmd-name
 
 bindkey '^w' forward-word
 bindkey '^b' backward-word
+bindkey -M viins '^[f' emacs-forward-word       # Alt-f
 
 # Remove "forward-char" widgets from "ACCEPT".
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#forward-char}")
