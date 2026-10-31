@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       igir:
-        specifier: 5.7.2
-        version: 5.7.2
+        specifier: 5.8.0
+        version: 5.8.0
 
 packages:
 
@@ -44,6 +44,9 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@openpgp/unbzip2-stream@2.1.0':
+    resolution: {integrity: sha512-LU/0tGMM5B2rszFsgl3mD5Vb0TAg+dOTYOvgXz95RWCtlItF9yoA5fkJVcjkMd9Q0Jx0m6Gs1hZv6XXdQxVKkQ==}
 
   '@sindresorhus/df@1.0.1':
     resolution: {integrity: sha512-1Hyp7NQnD/u4DSxR2DGW78TF9k7R0wZ8ev0BpMAIzA6yTQSHqNb5wTuvtcPYf4FWbVse2rW7RgDsyL8ua2vXHw==}
@@ -181,13 +184,13 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
-  igir@5.7.2:
-    resolution: {integrity: sha512-7SxJlJ53gvhp78cVyESThedH11FrGM93DlnPltK68SSUtbA8iYg4/7U9+Lw4T0cTcCfNHU/Xsk+tztIyRsSOgw==}
+  igir@5.8.0:
+    resolution: {integrity: sha512-Y0Kr2RTeTpkmcJSME07ArKDB7jwxISZHaLDaYFBsXkMbS0Zl2WwEqnbqdGoQe1sXNNSuqVaSMNC9jQFcYNctrA==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
 
-  ignore@7.0.12:
-    resolution: {integrity: sha512-/8UvqAPU9DGTI9k4mxtf49U37Isfwr8Uts96+SBHIkFxPJnHS0Ew4f00sM4Scd8V8EjM0jUNtVDdv1kPdt35lg==}
+  ignore@7.0.14:
+    resolution: {integrity: sha512-wCBiZ77u1tuWde6G/nfOtLaCTYcFDU5yCzARzK10y+rLhzYoL7a7yEemcopcc2Mzow7gZOIjnV2ym1NYmdiJOQ==}
     engines: {node: '>= 4'}
 
   is-admin@4.0.0:
@@ -554,6 +557,8 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.3
 
+  '@openpgp/unbzip2-stream@2.1.0': {}
+
   '@sindresorhus/df@1.0.1': {}
 
   '@sindresorhus/df@3.1.1':
@@ -686,7 +691,7 @@ snapshots:
     dependencies:
       '@sindresorhus/merge-streams': 2.3.0
       fast-glob: 3.3.3
-      ignore: 7.0.12
+      ignore: 7.0.14
       path-type: 6.0.0
       slash: 5.1.0
       unicorn-magic: 0.3.0
@@ -695,12 +700,13 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  igir@5.7.2:
+  igir@5.8.0:
     dependencies:
       '@emnapi/runtime': 1.11.3
       '@fast-csv/format': 5.0.7
       '@fast-csv/parse': 5.0.7
       '@gplane/cue': 0.2.0
+      '@openpgp/unbzip2-stream': 2.1.0
       async: 3.2.6
       async-mutex: 0.5.0
       chalk: 6.0.0
@@ -726,7 +732,7 @@ snapshots:
       xml2js: 0.6.2
       yargs: 18.2.0
 
-  ignore@7.0.12: {}
+  ignore@7.0.14: {}
 
   is-admin@4.0.0:
     dependencies:

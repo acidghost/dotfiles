@@ -2,6 +2,6 @@
   "name": "mise-npm-install",
   "private": true,
   "dependencies": {
-    "igir": "5.7.2"
+    "igir": "5.8.0"
   }
 }
