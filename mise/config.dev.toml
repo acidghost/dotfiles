@@ -12,7 +12,7 @@ ruff = "0.16.10"
 shellcheck = "0.11.0"
 shfmt = "3.14.1"
 stylua = "2.6.0"
-ty = "0.0.84"
+ty = "0.0.91"
 
 [tools."github:acidghost/a555pq"]
 version = "0.2.0"
