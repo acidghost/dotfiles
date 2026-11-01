@@ -23,6 +23,8 @@
             "sandbox": {
               "fs_read": [
                 ".",
+                "$TMPDIR",
+                "/tmp",
                 "$XDG_CONFIG_HOME/gh"
               ],
               "network": {
