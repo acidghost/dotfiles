@@ -40,16 +40,21 @@
             "invocation_policy": {
               "default": "approve",
               "allow": [
+                { "argv": { "prefix": ["add"] } },
                 { "argv": { "prefix": ["branch", "--show-current"] } },
                 { "argv": { "prefix": ["check-ignore"] } },
                 { "argv": { "prefix": ["diff"] } },
                 { "argv": { "prefix": ["log"] } },
                 { "argv": { "prefix": ["ls-files"] } },
-                { "argv": { "prefix": ["remote", "-v"] } },
+                { "argv": { "prefix": ["ls-tree"] } },
+                { "argv": { "prefix": ["merge-tree"] } },
+                { "argv": { "prefix": ["mv"] } },
+                { "argv": { "exact": ["remote", "-v"] } },
                 { "argv": { "prefix": ["rev-list"] } },
                 { "argv": { "prefix": ["rev-parse"] } },
                 { "argv": { "prefix": ["show"] } },
-                { "argv": { "prefix": ["status"] } }
+                { "argv": { "prefix": ["status"] } },
+                { "argv": { "prefix": ["switch"] } }
               ]
             }
           }
@@ -59,6 +64,9 @@
         "from": {
           "git": {
             "sandbox": {
+              // Disable connection multiplexing so one git-over-ssh run cannot
+              // reuse or plant a shared control socket for a later connection.
+              "argv_prepend": ["-o", "ControlMaster=no", "-o", "ControlPath=none"],
               "environment": {
                 "allow_vars": [
                   "PATH",
@@ -77,6 +85,8 @@
                 "~/.ssh/"
               ],
               "credentials": ["secretive-signing-agent"],
+              // LIMITATION: macOS cannot scope raw TCP/22 by host, so this stays
+              // open. The signing agent is reachable to any host ssh connects to.
               "network": {
                 "allow_all": true
               }
