@@ -78,13 +78,31 @@ return {
         ---@type lspconfig.options
         servers = {
           bashls = {},
-          biome = {},
+          biome = {
+            -- TODO: remove once a new release of nvim-lspconfig comes out
+            filetypes = {
+              "astro",
+              "css",
+              "graphql",
+              "html",
+              "javascript",
+              "javascriptreact",
+              "json",
+              "jsonc",
+              "markdown",
+              "svelte",
+              "typescript",
+              "typescriptreact",
+              "vue",
+              "yaml",
+            },
+          },
           clangd = {},
           gopls = {},
           helm_ls = {},
           jsonls = {
             init_options = {
-              -- since we use prettier to format json
+              -- since we use biome to format json
               provideFormatter = false,
             },
             schemas = require("schemastore").json.schemas(),
@@ -151,10 +169,14 @@ return {
                   -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
                   url = "",
                 },
-                schemas = vim.tbl_deep_extend("force",
+                schemas = vim.tbl_deep_extend(
+                  "force",
                   { ["kubernetes"] = { "**/*.yaml" } },
                   require("schemastore").yaml.schemas()
                 ),
+                format = {
+                  enable = false,
+                },
               },
             },
           },
@@ -358,9 +380,6 @@ return {
         )
       opts.sources = vim.list_extend(opts.sources or {}, {
         nls.builtins.formatting.clang_format,
-        nls.builtins.formatting.prettier.with({
-          filetypes = { "html", "yaml", "markdown" },
-        }),
         nls.builtins.formatting.stylua,
         nls.builtins.formatting.shfmt.with({
           extra_args = { "-s", "-bn", "-i=4" },
