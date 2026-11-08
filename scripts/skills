@@ -1,0 +1,783 @@
+#!/usr/bin/env python3
+"""Local skill discovery, permanent links, and isolated agent launches (stdlib only)."""
+
+import argparse
+import errno
+import fnmatch
+import glob
+import json
+import os
+import re
+import shlex
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SRC_ROOT = (
+    Path(
+        os.environ.get(
+            "SKILLS_SRC", os.environ.get("WITH_SKILLS_SRC", SCRIPT_DIR / "../skills")
+        )
+    )
+    .expanduser()
+    .resolve()
+)
+SKIP_DIRS = {".git", "node_modules", "dist", "build", "__pycache__", ".venv"}
+ENV_DEFAULTS = {"CLAUDE_CONFIG_DIR": "~/.claude"}
+AGENTS = {
+    "claude": (".claude/skills", "$CLAUDE_CONFIG_DIR/skills"),
+    "codex": (".agents/skills", "~/.agents/skills"),
+    "pi": (".agents/skills", "~/.agents/skills"),
+}
+ALIASES = {
+    "ls": "list",
+    "search": "find",
+    "add": "link",
+    "remove": "unlink",
+    "rm": "unlink",
+}
+ACTIONS = {"list", "find", "show", "agents", "link", "unlink", "use", "init"}
+
+
+@dataclass
+class CLI:
+    patterns: list[str]
+    source: list[str] | None
+    agent: list[str] | None
+    project: bool
+    dest: str | None
+    linked: bool
+    full_depth: bool
+    interactive: bool
+    only: bool
+    prompt: bool
+    force: bool
+    dry_run: bool
+    json: bool
+    description: str | None
+
+
+def expand(path: str) -> Path:
+    for name, default in ENV_DEFAULTS.items():
+        path = path.replace(f"${name}", os.environ.get(name, "").strip() or default)
+    return Path(os.path.expandvars(path)).expanduser().absolute()
+
+
+def short_path(path: Path) -> str:
+    """Keep the old category/skill selectors as well as repo-qualified selectors."""
+    parts = path.parts
+    for index in range(len(parts) - 2, -1, -1):
+        if parts[index] == "skills":
+            return Path(*parts[index + 1 :]).as_posix()
+    return path.name
+
+
+def matches(path: Path, pattern: str, roots: list[Path]) -> bool:
+    names = [path.name, short_path(path), str(path)]
+    for root in roots:
+        if path.is_relative_to(root):
+            names.append(path.relative_to(root).as_posix())
+    return any(fnmatch.fnmatchcase(name, pattern) for name in names)
+
+
+def local_path(base: Path, value: object) -> Path:
+    """Manifest references must stay inside their repository, including symlinks."""
+    if not isinstance(value, str) or not value.startswith("./") or "\\" in value:
+        raise ValueError(f"expected a local ./path in {base}: {value!r}")
+    path = (base / value).resolve()
+    if not path.is_relative_to(base.resolve()):
+        raise ValueError(f"manifest path escapes {base}: {value}")
+    return path
+
+
+def manifest_paths(base: Path) -> list[Path]:
+    result = []
+    for filename in (
+        "skills.sh.json",
+        ".claude-plugin/plugin.json",
+        ".claude-plugin/marketplace.json",
+    ):
+        manifest = base / filename
+        if not manifest.is_file():
+            continue
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise TypeError(f"expected a JSON object: {manifest}")
+        for key in ("paths", "skills", "plugins"):
+            if key in data and not isinstance(data[key], list):
+                raise TypeError(f"expected a list for {key!r}: {manifest}")
+        if filename == "skills.sh.json":
+            result.extend(local_path(base, value) for value in data.get("paths", []))
+        elif filename.endswith("/plugin.json"):
+            result.extend(local_path(base, value) for value in data.get("skills", []))
+        else:
+            metadata = data.get("metadata", {})
+            if not isinstance(metadata, dict):
+                raise TypeError(f"expected metadata object: {manifest}")
+            plugin_root = local_path(base, metadata.get("pluginRoot", "./"))
+            for plugin in data.get("plugins", []):
+                if not isinstance(plugin, dict):
+                    raise TypeError(f"expected plugin object: {manifest}")
+                if "skills" in plugin and not isinstance(plugin["skills"], list):
+                    raise TypeError(f"expected plugin skills list: {manifest}")
+                source = plugin.get("source", "./")
+                # A marketplace can also advertise remote plugins. Never fetch them.
+                if not isinstance(source, str) or not source.startswith("./"):
+                    continue
+                plugin_base = local_path(plugin_root, source)
+                paths = plugin.get("skills") or ["./skills"]
+                result.extend(local_path(plugin_base, value) for value in paths)
+    return result
+
+
+def discover(roots: list[Path], *, full_depth: bool = False) -> list[Path]:
+    found: set[Path] = set()
+    visited: set[Path] = set()
+
+    def walk(path: Path) -> None:
+        path = path.resolve()
+        if path in visited or not path.is_dir():
+            return
+        visited.add(path)
+        is_skill = (path / "SKILL.md").is_file()
+        if is_skill:
+            found.add(path)
+        # Explicit manifest paths are honored even when the root is itself a skill.
+        for declared in manifest_paths(path):
+            walk(declared)
+        if is_skill and not full_depth:
+            return
+        for child in sorted(path.iterdir()):
+            if (
+                child.name not in SKIP_DIRS
+                and not child.is_symlink()
+                and child.is_dir()
+            ):
+                walk(child)
+
+    for root in roots:
+        walk(root)
+    return sorted(found)
+
+
+def sources(values: list[str] | None, *, require_exists: bool = True) -> list[Path]:
+    roots: list[Path] = []
+    for value in values or [str(SRC_ROOT)]:
+        expanded = os.path.expanduser(value)
+        paths = glob.glob(expanded)
+        if not paths:
+            if require_exists:
+                raise ValueError(f"source does not exist: {value}")
+            paths = [expanded]
+        for path in paths:
+            root = Path(path).resolve()
+            if require_exists and not root.is_dir():
+                raise ValueError(f"source is not a directory: {root}")
+            if root not in roots:
+                roots.append(root)
+    return roots
+
+
+def select(
+    patterns: list[str], source_values: list[str] | None, *, full_depth: bool
+) -> list[Path]:
+    # Explicit paths must not depend on a missing or malformed default catalog.
+    catalog: list[Path] | None = None
+    roots: list[Path] = []
+    selected: set[Path] = set()
+    for pattern in patterns:
+        explicit = pattern.startswith(("/", "~", "./", "../"))
+        if explicit:
+            paths = [
+                Path(path).resolve() for path in glob.glob(os.path.expanduser(pattern))
+            ]
+            paths = [path.parent if path.name == "SKILL.md" else path for path in paths]
+            found = discover(paths, full_depth=full_depth)
+        else:
+            if catalog is None:
+                roots = sources(source_values)
+                catalog = discover(roots, full_depth=full_depth)
+            found = [path for path in catalog if matches(path, pattern, roots)]
+        if not found:
+            raise ValueError(f"no skills match {pattern!r}")
+        selected.update(found)
+    return sorted(selected)
+
+
+def unique_names(skills: list[Path]) -> None:
+    seen: dict[str, Path] = {}
+    for skill in skills:
+        if skill.name in seen:
+            raise ValueError(
+                f"duplicate directory name {skill.name!r}: {seen[skill.name]} and {skill}"
+            )
+        seen[skill.name] = skill
+
+
+def interactive(skills: list[Path]) -> list[Path]:
+    if not sys.stdin.isatty():
+        raise ValueError("--interactive requires a terminal")
+    for number, path in enumerate(skills, 1):
+        print(f"{number:3}  {path}", file=sys.stderr)
+    value = input("Select numbers (space-separated, * for all): ").strip()
+    if value == "*":
+        return skills
+    numbers = value.split()
+    if not numbers or any(
+        not n.isdigit() or not 1 <= int(n) <= len(skills) for n in numbers
+    ):
+        raise ValueError("invalid selection")
+    return list(dict.fromkeys(skills[int(number) - 1] for number in numbers))
+
+
+def agent_names(values: list[str] | None) -> list[str]:
+    names: list[str] = []
+    for value in values or []:
+        for name in value.split(","):
+            normalized = "claude" if name == "claude-code" else name
+            if normalized not in names:
+                names.append(normalized)
+    if "*" in names:
+        return sorted(AGENTS)
+    unknown = set(names) - AGENTS.keys()
+    if unknown:
+        raise ValueError(
+            f"unknown agents: {', '.join(sorted(unknown))}; see 'skills agents'"
+        )
+    return names
+
+
+def destinations(args: CLI) -> list[Path]:
+    if args.dest:
+        if args.agent or args.project:
+            raise ValueError("--dest cannot be combined with --agent or --project")
+        return [expand(args.dest)]
+    names = args.agent or []
+    if not names:
+        return [
+            Path.cwd() / ".agents/skills"
+            if args.project
+            else expand(
+                os.environ.get(
+                    "SKILLS_DEST",
+                    os.environ.get("WITH_SKILLS_DEST", "~/.agents/skills"),
+                )
+            )
+        ]
+    result = []
+    for name in names:
+        project, home = AGENTS[name]
+        dest = Path.cwd() / project if args.project else expand(home)
+        if all(dest.resolve() != existing.resolve() for existing in result):
+            result.append(dest)
+    return result
+
+
+def emit(records: list[dict], *, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(records, indent=2))
+    else:
+        for record in records:
+            print("\t".join(str(value) for value in record.values()))
+
+
+def link(
+    skills: list[Path],
+    targets: list[Path],
+    *,
+    force: bool,
+    dry_run: bool,
+    as_json: bool,
+) -> None:
+    unique_names(skills)
+    changes = []
+    # Preflight every destination before changing any of them.
+    for target in targets:
+        for skill in skills:
+            dest = target / skill.name
+            backup = dest.with_name(f".{dest.name}.bak")
+            if dest.is_symlink() and dest.resolve() == skill:
+                changes.append((skill, dest, backup, "unchanged"))
+                continue
+            if (
+                dest == skill
+                or dest.resolve().is_relative_to(skill)
+                or skill.is_relative_to(dest.resolve())
+            ):
+                raise ValueError(f"source and destination overlap: {dest}")
+            exists = os.path.lexists(dest)
+            if exists and not force:
+                raise FileExistsError(
+                    f"destination exists: {dest}; use --force to back it up"
+                )
+            if os.path.lexists(backup):
+                raise FileExistsError(f"backup already exists: {backup}")
+            changes.append((skill, dest, backup, "replace" if exists else "link"))
+    records = []
+    for skill, dest, backup, action in changes:
+        if not dry_run and action != "unchanged":
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            backed_up = action == "replace"
+            if backed_up:
+                dest.rename(backup)
+            try:
+                dest.symlink_to(skill, target_is_directory=True)
+            except OSError:
+                if backed_up:
+                    backup.rename(dest)
+                raise
+        records.append(
+            {
+                "action": action,
+                "path": str(dest),
+                "source": str(skill),
+                "dry_run": dry_run,
+            }
+        )
+    emit(records, as_json=as_json)
+
+
+def linked(targets: list[Path]) -> list[dict]:
+    records = []
+    for target in targets:
+        if target.is_dir():
+            for path in sorted(target.iterdir()):
+                if not path.name.startswith(".") and path.is_symlink():
+                    records.append(
+                        {
+                            "name": path.name,
+                            "path": str(path),
+                            "source": str(path.resolve()),
+                            "broken": not path.exists(),
+                            "valid": (path / "SKILL.md").is_file(),
+                        }
+                    )
+    return records
+
+
+def unlink(
+    patterns: list[str],
+    targets: list[Path],
+    roots: list[Path],
+    *,
+    dry_run: bool,
+    as_json: bool,
+) -> None:
+    records = linked(targets)
+    selected = []
+    for pattern in patterns:
+        found = [
+            record
+            for record in records
+            if matches(Path(record["source"]), pattern, roots)
+            or fnmatch.fnmatchcase(record["name"], pattern)
+            or fnmatch.fnmatchcase(record["path"], str(Path(pattern).expanduser()))
+        ]
+        if not found:
+            raise ValueError(
+                f"no linked skills match {pattern!r}; regular directories are never removed"
+            )
+        for record in found:
+            if record not in selected:
+                selected.append(record)
+    for record in selected:
+        path = Path(record["path"])
+        backup = path.with_name(f".{path.name}.bak")
+        restore_backup = os.path.lexists(backup)
+        if not dry_run:
+            # Check that another process has not replaced the link since selection.
+            if not path.is_symlink() or str(path.resolve()) != record["source"]:
+                raise ValueError(f"link changed during removal: {path}")
+            path.unlink()
+            if os.path.lexists(backup):
+                backup.rename(path)
+        record.update(action="unlink", restore_backup=restore_backup, dry_run=dry_run)
+    emit(selected, as_json=as_json)
+
+
+def build_prompt(skills: list[Path]) -> str:
+    sections = ["Use the following skills for the user's next request."]
+    for skill in skills:
+        content = (skill / "SKILL.md").read_text(encoding="utf-8")
+        sections.append(
+            f"Skill directory: {skill}\n"
+            "Resolve relative references and supporting files from this directory.\n\n"
+            f"<SKILL.md>\n{content}\n</SKILL.md>"
+        )
+    return "\n\n".join(sections) + "\n"
+
+
+def build_command(
+    skills: list[Path], command: list[str], *, inject_prompt: bool, only: bool
+) -> list[str]:
+    agent = Path(command[0]).name
+    if agent not in AGENTS:
+        raise ValueError(
+            f"unsupported launcher {command[0]!r}; use pi, claude or codex, "
+            "or generate a prompt with 'skills use'"
+        )
+    if only and (agent != "pi" or inject_prompt):
+        raise ValueError("--only is supported only for Pi's native skill loading")
+    if agent == "pi" and not inject_prompt:
+        flags = ["--no-skills"] if only else []
+        for skill in skills:
+            flags.extend(["--skill", str(skill)])
+        return [command[0], *flags, *command[1:]]
+    # Keep agent options before the prompt and prevent prompt-as-option parsing.
+    prompt_text = build_prompt(skills)
+    separator = [] if "--" in command else ["--"]
+    return [*command, *separator, prompt_text]
+
+
+def launch(command: list[str], *, dry_run: bool, as_json: bool) -> None:
+    if dry_run:
+        if as_json:
+            print(json.dumps({"command": command}, indent=2))
+        else:
+            print(shlex.join(command))
+        return
+    # No parent process or cleanup/signal forwarding: replace this process.
+    sys.stdout.flush()
+    sys.stderr.flush()
+    try:
+        os.execvp(command[0], command)
+    except OSError as error:
+        if error.errno == errno.E2BIG:
+            raise ValueError(
+                "agent launch exceeds the OS argument-size limit; select fewer skills "
+                "or print the prompt with 'skills use <patterns> > prompt.md' and "
+                "load it through your agent's file-input workflow. "
+                "Pi's native skill loading avoids passing skill contents as arguments."
+            ) from error
+        raise
+
+
+def init_skill(args: CLI) -> None:
+    if len(args.patterns) > 1:
+        raise ValueError("init accepts one directory")
+    directory = Path(args.patterns[0] if args.patterns else ".").expanduser().absolute()
+    name = directory.name
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name) or len(name) > 64:
+        raise ValueError(
+            "skill directory name must use lowercase letters, digits and single hyphens (max 64)"
+        )
+    path = directory / "SKILL.md"
+    if os.path.lexists(path):
+        raise FileExistsError(f"skill already exists: {path}")
+    # JSON string quoting is also valid YAML; no YAML dependency is needed to write a template.
+    description = (
+        args.description or "Describe the task this skill handles and when to use it."
+    )
+    content = (
+        f"---\nname: {name}\ndescription: {json.dumps(description)}\n---\n\n"
+        f"# {name}\n\n"
+        "1. Describe the first action and its completion criterion.\n"
+    )
+    if not args.dry_run:
+        directory.mkdir(parents=True, exist_ok=True)
+        with path.open("x", encoding="utf-8") as file:
+            file.write(content)
+    emit([{"path": str(path), "dry_run": args.dry_run}], as_json=args.json)
+
+
+def parse_cli(args: list[str]) -> CLI:
+    parser = argparse.ArgumentParser(
+        prog="skills",
+        allow_abbrev=False,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Work with local skills; Git manages their sources. No dependencies or network calls.",
+        epilog="""Commands:
+  list, ls        List available skills (or --linked permanent links)
+  find, search    Search directory paths and raw SKILL.md content
+  show            Print selected SKILL.md files and their source paths
+  agents          List known agents and their skill directories
+  link, add       Permanently link selected skills (global by default)
+  unlink, remove  Remove selected symlinks and restore backups
+  use             Use skills for one session (--agent / -- <command>), or print a prompt
+  init [dir]      Create dir/SKILL.md without overwriting an existing skill
+
+Examples:
+  skills use 'engineering/*' -- pi --continue
+  skills use --only code-review -- pi
+  skills list --json
+  skills find 'code review' --interactive
+  skills link code-review -a claude -a pi --project
+  skills unlink code-review
+  skills use code-review -a codex
+  skills init my-skill --description 'Review X when Y'
+
+Selectors match directory names, category/skill paths, and repo-qualified paths.
+Explicit ./paths, ~/paths and absolute globs also work, including external repos.
+Only directories containing SKILL.md are skills; YAML metadata is left to agents.
+Pi use loads native --skill paths; --prompt forces prompt injection.
+Claude/Codex use prompt injection. Without an agent, use prints a prompt.
+Nothing is temporarily installed. SKILLS_SRC and SKILLS_DEST set defaults.
+""",
+    )
+    parser.add_argument(
+        "patterns", nargs="*", help="skill patterns (find: literal search terms)"
+    )
+    parser.add_argument(
+        "--source",
+        action="append",
+        help="local source directory/glob; replaces default (repeatable)",
+    )
+    parser.add_argument(
+        "-a",
+        "--agent",
+        action="append",
+        help="agent name; repeat or comma-separate; '*' for all link targets",
+    )
+    scope = parser.add_mutually_exclusive_group()
+    scope.add_argument(
+        "-p",
+        "--project",
+        action="store_true",
+        help="link/list in current project instead of home",
+    )
+    scope.add_argument(
+        "-g",
+        "--global",
+        dest="project",
+        action="store_false",
+        help="use home skill directories (default)",
+    )
+    parser.add_argument(
+        "--dest", help="explicit link directory (overrides SKILLS_DEST)"
+    )
+    parser.add_argument(
+        "--linked",
+        "--installed",
+        action="store_true",
+        help="list permanent symlinks, including broken links",
+    )
+    parser.add_argument(
+        "--full-depth",
+        action="store_true",
+        help="also discover skills nested inside other skills",
+    )
+    parser.add_argument(
+        "-i",
+        "--interactive",
+        action="store_true",
+        help="select skills by number in a terminal",
+    )
+    parser.add_argument(
+        "--only",
+        action="store_true",
+        help="disable other discovered/configured skills for Pi use",
+    )
+    parser.add_argument(
+        "--prompt",
+        action="store_true",
+        help="use: inject full skill instructions, including with Pi",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="back up existing destinations as .name.bak before linking",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="show changes or launch command without executing",
+    )
+    parser.add_argument("--json", action="store_true", help="machine-readable output")
+    parser.add_argument("--description", help="description for init")
+    return CLI(**vars(parser.parse_intermixed_args(args)))
+
+
+def validate_cli(
+    action: str, args: CLI, command: list[str] | None, argv: list[str]
+) -> None:
+    if command == []:
+        raise ValueError("no command specified after --")
+    if command is not None and action != "use":
+        raise ValueError("temporary use requires 'skills use <patterns> -- <agent>'")
+    if args.linked and action != "list":
+        raise ValueError("--linked requires list")
+    target_action = "list-linked" if action == "list" and args.linked else action
+    link_actions = {"link", "unlink", "list-linked"}
+    catalog_actions = {"list", "find", "show", "link", "use"}
+    allowed = {
+        "--source": catalog_actions | {"unlink", "list-linked"},
+        "--agent": link_actions | {"use"},
+        "--scope": link_actions,
+        "--dest": link_actions,
+        "--full-depth": catalog_actions,
+        "--interactive": catalog_actions,
+        "--only": {"use"},
+        "--prompt": {"use"},
+        "--force": {"link"},
+        "--dry-run": {"link", "unlink", "use", "init"},
+        "--description": {"init"},
+    }
+    aliases = {
+        "-a": "--agent",
+        "-p": "--scope",
+        "-g": "--scope",
+        "--project": "--scope",
+        "--global": "--scope",
+        "-i": "--interactive",
+    }
+    for token in argv:
+        option = token.partition("=")[0]
+        # argparse accepts attached short values such as -api and -aclaude.
+        if token.startswith("-a") and not token.startswith("--"):
+            option = "-a"
+        canonical = aliases.get(option, option)
+        if canonical in allowed and target_action not in allowed[canonical]:
+            raise ValueError(f"{option} is not supported by {action}")
+    if action == "agents" and args.patterns:
+        raise ValueError("agents does not accept skill patterns")
+    if action == "use":
+        has_agent = command is not None or bool(args.agent)
+        if args.dry_run and not has_agent:
+            raise ValueError("--dry-run requires an agent to launch")
+        if args.json and has_agent and not args.dry_run:
+            raise ValueError("--json with an agent requires --dry-run")
+
+
+def list_linked(args: CLI) -> None:
+    records = linked(destinations(args))
+    roots = sources(args.source, require_exists=False)
+    if args.patterns:
+        for pattern in args.patterns:
+            if not any(
+                matches(Path(record["source"]), pattern, roots) for record in records
+            ):
+                raise ValueError(f"no linked skills match {pattern!r}")
+        records = [
+            record
+            for record in records
+            if any(
+                matches(Path(record["source"]), pattern, roots)
+                for pattern in args.patterns
+            )
+        ]
+    emit(records, as_json=args.json)
+
+
+def browse(action: str, args: CLI) -> None:
+    if action == "find" or not args.patterns:
+        skills = discover(sources(args.source), full_depth=args.full_depth)
+    else:
+        skills = select(args.patterns, args.source, full_depth=args.full_depth)
+    if action == "find":
+        terms = [term.casefold() for term in args.patterns]
+        matched = []
+        for skill in skills:
+            content = (skill / "SKILL.md").read_text(encoding="utf-8")
+            searchable = f"{skill}\n{content}".casefold()
+            if all(term in searchable for term in terms):
+                matched.append(skill)
+        skills = matched
+    if args.interactive:
+        skills = interactive(skills)
+    records = []
+    for skill in skills:
+        record = {"name": skill.name, "selector": short_path(skill), "path": str(skill)}
+        if action == "show":
+            content = (skill / "SKILL.md").read_text(encoding="utf-8")
+            if args.json:
+                record["content"] = content
+            else:
+                print(f"# {skill / 'SKILL.md'}\n\n{content}")
+        records.append(record)
+    if action != "show" or args.json:
+        emit(records, as_json=args.json)
+
+
+def use(skills: list[Path], args: CLI, command: list[str] | None) -> None:
+    names = args.agent or []
+    if command is not None and names:
+        raise ValueError("use either --agent or -- <command>, not both")
+    if command is None and names:
+        if len(names) != 1:
+            raise ValueError("launch requires one supported agent: pi, claude, codex")
+        command = [names[0]]
+    if command is None:
+        if args.only:
+            raise ValueError(
+                "--only requires a Pi launch: skills use --only <patterns> -- pi"
+            )
+        prompt_text = build_prompt(skills)
+        print(
+            json.dumps({"prompt": prompt_text}) if args.json else prompt_text,
+            end="\n" if args.json else "",
+        )
+        return
+    unique_names(skills)
+    command = build_command(skills, command, inject_prompt=args.prompt, only=args.only)
+    launch(command, dry_run=args.dry_run, as_json=args.json)
+
+
+def main() -> None:
+    argv = sys.argv[1:]
+    command = None
+    if "--" in argv:
+        sep = argv.index("--")
+        argv, command = argv[:sep], argv[sep + 1 :]
+    action = "list"
+    if argv and ALIASES.get(argv[0], argv[0]) in ACTIONS:
+        action = ALIASES.get(argv[0], argv[0])
+        argv = argv[1:]
+    args = parse_cli(argv)
+    try:
+        validate_cli(action, args, command, argv)
+        args.agent = agent_names(args.agent)
+        if action == "init":
+            init_skill(args)
+        elif action == "agents":
+            records = [
+                {
+                    "name": name,
+                    "project": project,
+                    "global": str(expand(home)),
+                    "launch": "native" if name == "pi" else "prompt",
+                }
+                for name, (project, home) in sorted(AGENTS.items())
+            ]
+            emit(records, as_json=args.json)
+        elif action == "unlink":
+            if not args.patterns:
+                raise ValueError("specify skills to unlink (use '*' for all)")
+            unlink(
+                args.patterns,
+                destinations(args),
+                sources(args.source, require_exists=False),
+                dry_run=args.dry_run,
+                as_json=args.json,
+            )
+        elif action == "list" and args.linked:
+            list_linked(args)
+        elif action in {"list", "find", "show"}:
+            browse(action, args)
+        else:
+            if not args.patterns:
+                raise ValueError(
+                    "specify skills (use '*' for all, or 'list' to browse)"
+                )
+            skills = select(args.patterns, args.source, full_depth=args.full_depth)
+            if args.interactive:
+                skills = interactive(skills)
+            if action == "link":
+                link(
+                    skills,
+                    destinations(args),
+                    force=args.force,
+                    dry_run=args.dry_run,
+                    as_json=args.json,
+                )
+            elif action == "use":
+                use(skills, args, command)
+    except (OSError, ValueError, TypeError) as error:
+        print(f"error: {error}", file=sys.stderr)
+        sys.exit(1)
+    except (KeyboardInterrupt, EOFError):
+        sys.exit(130)
+
+
+if __name__ == "__main__":
+    main()
