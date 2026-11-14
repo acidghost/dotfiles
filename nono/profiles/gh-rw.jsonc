@@ -5,18 +5,50 @@
   },
   "network": {
     "allow_domain": [
-      "api.github.com"
+      {
+        // L7 entry is needed to be composable with gh-ro profile
+        "domain": "api.github.com",
+        "endpoints": [
+          {
+            "method": "*",
+            "path": "**"
+          }
+        ]
+      },
+      "github.com"
     ],
     "credentials": [
-      "github"
+      "github",
+      "github-git"
     ],
     "custom_credentials": {
-      "github": {
-        "upstream": "https://api.github.com",
+      "github-git": {
+        "upstream": "https://github.com",
         "credential_key": "cmd://github",
-        "env_var": "GH_TOKEN",
-        "credential_format": "token {}"
+        "inject_mode": "basic_auth",
+        "env_var": "GH_GOH",
+        "credential_format": "x-access-token:{}",
+        "endpoint_rules": [
+          {
+            "method": "GET",
+            "path": "/acidghost/**"
+          },
+          {
+            "method": "POST",
+            "path": "/acidghost/**"
+          }
+        ]
       }
+    },
+    "tls_intercept": {
+      "ca_lifecycle": "trusted"
     }
+  },
+  "filesystem": {
+    "read": [
+      "$XDG_CONFIG_HOME/gh",
+      "$XDG_SHARE_HOME/gh",
+      "$XDG_STATE_HOME/gh"
+    ]
   }
 }
