@@ -12,7 +12,7 @@
     "dotbot"
   ],
   "ignorePaths": [
-    "mise/.mise/locks/**/package.json"
+    "mise/locks/**/package.json"
   ],
   "git-submodules": {
     "enabled": true
