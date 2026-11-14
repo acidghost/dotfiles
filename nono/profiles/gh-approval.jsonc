@@ -109,7 +109,7 @@
               ]
             },
             "invocation_policy": {
-              "default": "deny",
+              "default": "approve",
               "allow": [
                 { "argv": { "prefix": ["rev-parse"] } },
                 { "argv": { "exact": ["remote", "-v"] } },
