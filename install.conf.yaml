@@ -109,7 +109,7 @@
     ~/.config/git:
     ~/.config/helix:
     ~/.config/lsd:
-    ~/.config/mise:
+    ~/.config/mise: .config/mise
     ~/.config/mpv:
       if: '[ "$DOTFILES_WITH_APPS" = 1 ]'
     ~/.config/nnn/plugins:
