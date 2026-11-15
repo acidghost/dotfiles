@@ -1,10 +1,10 @@
 __pycache__
 node_modules/
 
+.config/mise/config.local.toml
+.config/mise/mise.local.lock
 agents/AGENTS.local.md
 btop/btop.log
-mise/config.local.toml
-mise/mise.local.lock
 mpv/watch_later
 shell/env_local.sh
 vifm/vifm-help.txt
