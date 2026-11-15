@@ -403,6 +403,12 @@ aube = { path = "locks/mise.dev/npm-bash-language-server/5.8.1", digest = "sha25
 backend = "npm:bash-language-server"
 specifiers = ["5.8.1"]
 
+[[tools."npm:typescript-language-server"]]
+version = "6.0.3"
+aube = { path = "locks/mise.dev/npm-typescript-language-server/6.0.3", digest = "sha256:e4cdcc07515542ffa6a9a4f6a23faa66433e1c1b54b110d71fc149e9894775c9" }
+backend = "npm:typescript-language-server"
+specifiers = ["6.0.3"]
+
 [[tools."npm:yaml-language-server"]]
 version = "2.0.0"
 aube = { path = "locks/mise.dev/npm-yaml-language-server/2.0.0", digest = "sha256:f14f9558f1769c0512641de8d5616c039d5428aa64c46fdf60f0082e960a60b8" }
