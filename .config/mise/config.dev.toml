@@ -1,18 +1,20 @@
 [tools]
-biome = "2.6.5"
 bun = "1.4.4"
-devcontainer-cli = "0.90.0"
 go = "1.27.3"
-"go:golang.org/x/tools/gopls" = "v0.24.0"
-lua-language-server = "3.19.2"
 node = "26.13.0"
-"npm:yaml-language-server" = "2.0.0"
 perl = "5.44.0"
+
+biome = "2.6.5"
+devcontainer-cli = "0.90.0"
 ruff = "0.17.2"
 shellcheck = "0.11.0"
 shfmt = "3.14.1"
 stylua = "2.6.0"
 ty = "0.0.91"
+
+"go:golang.org/x/tools/gopls" = "v0.24.0"
+lua-language-server = "3.19.2"
+"npm:yaml-language-server" = "2.0.0"
 
 [tools."github:acidghost/a555pq"]
 version = "0.2.0"
