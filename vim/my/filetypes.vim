@@ -8,18 +8,3 @@ autocmd BufRead,BufNewFile Brewfile,Vagrantfile setf ruby
 autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
 autocmd BufRead,BufNewFile devcontainer.json set ft=jsonc
 au VimEnter,BufWinEnter,BufRead,BufNewFile {.,}justfile\c,*.just setlocal filetype=just | setlocal commentstring=#\ %s
-
-if has('nvim')
-lua <<EOF
-vim.filetype.add({
-  extension = {
-    gotmpl = 'gotmpl',
-  },
-  pattern = {
-    [".*/templates/.*%.tpl"] = "helm",
-    [".*/templates/.*%.ya?ml"] = "helm",
-    ["helmfile.*%.ya?ml"] = "helm",
-  },
-})
-EOF
-endif
