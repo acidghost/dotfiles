@@ -39,6 +39,7 @@
       "~/.npmrc"
     ],
     "bypass_protection": [
+      // IMPORTANT: never store credentials in these!
       "~/.bunfig.toml",
       "~/.npmrc"
     ]
