@@ -1,6 +1,5 @@
 set nocompatible   " Disable vi compatibilty
 set encoding=utf-8 " Use UTF-8
-syntax enable      " Turn on syntax highlighting
 set showmatch      " Show matching brackets
 set ignorecase     " Do case insensitive matching
 set number         " Show numbers
