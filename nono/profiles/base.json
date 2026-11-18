@@ -34,7 +34,11 @@
       "~/wa"
     ],
     "read_file": [
+      "~/.bunfig.toml",
       "~/.gitconfig.private"
+    ],
+    "bypass_protection": [
+      "~/.bunfig.toml"
     ]
   },
   "network": {
