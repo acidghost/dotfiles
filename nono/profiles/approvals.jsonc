@@ -4,6 +4,7 @@
     "name": "approvals"
   },
   "extends": [
+    "docker-approval",
     "gh-approval",
     "git-approval"
   ]

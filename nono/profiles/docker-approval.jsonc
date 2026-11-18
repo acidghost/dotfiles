@@ -1,0 +1,135 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "docker-approval"
+  },
+  "command_policies": {
+    "approval_backends": {
+      "nono-hitl": {
+        "type": "webhook",
+        "url": "http://127.0.0.1:8765/hooks/nono",
+        "timeout_secs": 60
+      }
+    },
+    "approval_defaults": {
+      "backend": "nono-hitl",
+      "timeout_secs": 60
+    },
+    "commands": {
+      "docker": {
+        "can_use": [
+          "docker-credential-desktop",
+          "docker-credential-osxkeychain"
+        ],
+        "from": {
+          "session": {
+            "sandbox": {
+              "fs_read": [
+                ".",
+                "/tmp",
+                "/private/tmp",
+                "$TMPDIR",
+                "/Applications/Docker.app/Contents/Resources/cli-plugins",
+                "/opt/homebrew/lib/docker/cli-plugins"
+              ],
+              // config.json (written by `docker login`), contexts, buildx state.
+              "fs_write": [
+                ".",
+                "/tmp",
+                "/private/tmp",
+                "$TMPDIR",
+                "$HOME/.docker"
+              ],
+              "credentials": ["docker-socket"],
+              "environment": {
+                "allow_vars": [
+                  "USER",
+                  "LOGNAME",
+                  "SHELL",
+                  "TERM",
+                  "COLORTERM",
+                  "LANG",
+                  "LC_*",
+                  "TZ",
+                  "DOCKER_BUILDKIT",
+                  "DOCKER_DEFAULT_PLATFORM",
+                  "COMPOSE_*"
+                ],
+                "set_vars": {
+                  "DOCKER_CLI_HINTS": "false"
+                }
+              },
+              // CLI plugins (buildx, compose) are exec'd by absolute path, not
+              // through a shim, so the exec gate needs them listed.
+              "unsafe_macos_seatbelt_rules": [
+                "(allow process-exec* (regex #\"^/Applications/Docker\\.app/Contents/Resources/cli-plugins/docker-[a-z-]+$\") (regex #\"^/opt/homebrew/lib/docker/cli-plugins/docker-[a-z-]+$\"))"
+              ]
+            },
+            "invocation_policy": {
+              "default": "approve"
+            }
+          }
+        }
+      },
+      "docker-credential-desktop": {
+        "from": {
+          "session": "deny",
+          "docker": {
+            "sandbox": {
+              "keychain_access": "readwrite",
+              "environment": {
+                "allow_vars": [
+                  "LANG",
+                  "LC_*",
+                  "TZ"
+                ]
+              }
+            },
+            "invocation_policy": {
+              "default": "deny",
+              "allow": [
+                { "argv": { "exact": ["get"] } },
+                { "argv": { "exact": ["list"] } },
+                { "argv": { "exact": ["store"] } },
+                { "argv": { "exact": ["erase"] } }
+              ]
+            }
+          }
+        }
+      },
+      "docker-credential-osxkeychain": {
+        "from": {
+          "session": "deny",
+          "docker": {
+            "sandbox": {
+              "keychain_access": "readwrite",
+              "environment": {
+                "allow_vars": [
+                  "LANG",
+                  "LC_*",
+                  "TZ"
+                ]
+              }
+            },
+            "invocation_policy": {
+              "default": "deny",
+              "allow": [
+                { "argv": { "exact": ["get"] } },
+                { "argv": { "exact": ["list"] } },
+                { "argv": { "exact": ["store"] } },
+                { "argv": { "exact": ["erase"] } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "credentials": {
+      "docker-socket": {
+        "type": "local-socket",
+        "path": "$HOME/.docker/run/docker.sock",
+        "mode": "connect"
+      }
+    }
+  }
+}
