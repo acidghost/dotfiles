@@ -157,8 +157,9 @@
       path: tmux/scripts/*
       exclude:
         - tmux/scripts/tmux-*
-    ~/.vim/my: vim/my
-    ~/.vim/vimrc: vim/vimrc
+    ~/.vim:
+      glob: true
+      path: vim/*
     ~/vusec.ascii:
     ~/.zsh_plugins.txt: zsh/plugins.txt
     ~/.zprofile: zsh/zprofile

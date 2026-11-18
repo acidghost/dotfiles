@@ -9,18 +9,6 @@ autocmd BufRead,BufNewFile *.vifm,vifmrc setf vim
 autocmd BufRead,BufNewFile devcontainer.json set ft=jsonc
 au VimEnter,BufWinEnter,BufRead,BufNewFile {.,}justfile\c,*.just setlocal filetype=just | setlocal commentstring=#\ %s
 
-autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
-autocmd FileType cpp setlocal shiftwidth=2 tabstop=2
-autocmd FileType cmake setlocal shiftwidth=2 tabstop=2
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType json setlocal shiftwidth=2 tabstop=2
-autocmd FileType lua setlocal shiftwidth=2 tabstop=2
-autocmd FileType markdown,text setlocal linebreak
-autocmd FileType nu setlocal shiftwidth=2 tabstop=2
-autocmd FileType org setlocal shiftwidth=2 tabstop=2
-autocmd FileType templ setlocal shiftwidth=4 tabstop=4 noexpandtab
-autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
-
 if has('nvim')
 lua <<EOF
 vim.filetype.add({

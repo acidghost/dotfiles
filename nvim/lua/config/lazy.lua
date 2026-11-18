@@ -40,4 +40,6 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "sorbet" } },
   change_detection = { enabled = false },
+  -- Share ftplugin settings with Vim
+  performance = { rtp = { paths = { vim.fn.expand("~/.vim/after") } } },
 })
