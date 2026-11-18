@@ -30,8 +30,7 @@
       "~/.agents",
       "~/.config/nono/packages",
       "~/.config/nono/profiles",
-      "~/.dotfiles/agents",
-      "~/.dotfiles/skills",
+      "~/.dotfiles",
       "~/wa"
     ],
     "read_file": [
