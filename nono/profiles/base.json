@@ -35,10 +35,12 @@
     ],
     "read_file": [
       "~/.bunfig.toml",
-      "~/.gitconfig.private"
+      "~/.gitconfig.private",
+      "~/.npmrc"
     ],
     "bypass_protection": [
-      "~/.bunfig.toml"
+      "~/.bunfig.toml",
+      "~/.npmrc"
     ]
   },
   "network": {
