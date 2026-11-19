@@ -4,6 +4,6 @@ lockfile_version = 3
 
 [[tools."npm:igir"]]
 version = "5.8.0"
-aube = { path = "locks/mise.personal/npm-igir/5.8.0", digest = "sha256:39466795b3f7963c80de25060abe91a18a71e560376d96da9bb9629be00d0bf3" }
+aube = { path = "locks/mise.personal/npm-igir/5.8.0", digest = "sha256:1937aa0ee0517b3cad0ccacb13b17fefec1bb6f16d35e24c6aa836756ebccb29" }
 backend = "npm:igir"
 specifiers = ["5.8.0"]
