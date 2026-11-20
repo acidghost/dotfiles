@@ -1,0 +1,27 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "meta": {
+    "name": "net-approval"
+  },
+  "network": {
+    // A CONNECT to a host outside allow_domain asks for approval instead of failing.
+    "approval_backends": {
+      "nono-hitl": {
+        "type": "webhook",
+        "url": "http://127.0.0.1:8765/hooks/nono"
+      }
+    },
+    "approval_defaults": {
+      "backend": "nono-hitl",
+      "timeout_secs": 60
+    },
+    // Approval can reach loopback: keep nono-hitl and the Ollama behind its
+    // classifiers unreachable even if a request is approved by mistake.
+    "deny_domain": [
+      "127.0.0.1:8765",
+      "localhost:8765",
+      "127.0.0.1:11434",
+      "localhost:11434"
+    ]
+  }
+}

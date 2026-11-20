@@ -6,6 +6,7 @@
   "extends": [
     "docker-approval",
     "gh-approval",
-    "git-approval"
+    "git-approval",
+    "net-approval"
   ]
 }
