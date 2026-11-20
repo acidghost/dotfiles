@@ -57,9 +57,10 @@ you the available capabilities. Sources cloned at `~/wa/oss/nono`.
 
 Under `nono`, network access is mediated by a proxy. Some quirks:
 - GitHub:
-  - use REST APIs directly via `curl` instead of `gh`
   - often read-only (`HEAD`, `GET`)
-  - proxy authenticates for us, no need for `Authorization` header
+  - for read operations, use REST APIs directly via `curl` instead of `gh`
+      - proxy authenticates for us, no need for `Authorization` header
+  - if I ask you to POST things it means we should be running with a profile that allows `gh`
 
 ## Plans
 
