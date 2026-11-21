@@ -15,7 +15,7 @@ ty = "0.0.91"
 "go:golang.org/x/tools/gopls" = "v0.24.0"
 lua-language-server = "3.19.2"
 "npm:bash-language-server" = "5.8.1"
-"npm:typescript-language-server" = "6.0.3"
+"npm:typescript-language-server" = "6.1.0"
 "npm:yaml-language-server" = "2.0.0"
 
 [tools."github:acidghost/a555pq"]
