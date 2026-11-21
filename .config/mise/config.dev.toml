@@ -10,7 +10,7 @@ ruff = "0.17.2"
 shellcheck = "0.11.0"
 shfmt = "3.14.1"
 stylua = "2.6.0"
-ty = "0.0.91"
+ty = "0.0.104"
 
 "go:golang.org/x/tools/gopls" = "v0.24.0"
 lua-language-server = "3.19.2"
