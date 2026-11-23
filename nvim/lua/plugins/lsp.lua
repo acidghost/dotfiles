@@ -158,6 +158,7 @@ return {
           ruff = {},
           shellcheck = {},
           ts_ls = {},
+          tsc = {},
           ty = {},
           yamlls = {
             settings = {
