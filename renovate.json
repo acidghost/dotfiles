@@ -65,6 +65,13 @@
     },
     {
       "matchDepNames": [
+        "bun",
+        "@types/bun"
+      ],
+      "commitMessagePrefix": "[mise]"
+    },
+    {
+      "matchDepNames": [
         "@earendil-works/pi-coding-agent",
         "pi"
       ],
@@ -90,12 +97,6 @@
         "perl"
       ],
       "allowedVersions": "/^5\\.[0-9]*[02468](\\.[0-9]+)?$/"
-    },
-    {
-      "matchFileNames": [
-        "/^\\.config/mise/"
-      ],
-      "commitMessagePrefix": "[mise]"
     },
     {
       "description": "Merge once smoke CI is green",
