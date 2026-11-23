@@ -16,9 +16,13 @@ def main():
     flags = args[:separator]
     agent_args = args[separator + 1 :]
     names = {flag.split("=", 1)[0] for flag in flags}
-    has_config = "--config" in names or any(re.match(r"^-[sv]*c", flag) for flag in flags)
-    has_profile = "--profile" in names or any(re.match(r"^-[sv]*p", flag) for flag in flags)
-    has_silent = "--silent" in names or any(re.match(r"^-v*s", flag) for flag in flags)
+
+    def has_flag(name: str, short_re: str) -> bool:
+        return f"--{name}" in names or any(re.match(short_re, flag) for flag in flags)
+
+    has_config = has_flag("config", r"^-[sv]*c")
+    has_profile = has_flag("profile", r"^-[sv]*p")
+    has_silent = has_flag("silent", r"^-v*s")
 
     nono_args = []
     if not has_config and not has_profile:
@@ -27,9 +31,13 @@ def main():
         nono_args.append("--allow-cwd")
     if not has_silent and "--no-silent" not in flags:
         nono_args.append("--silent")
-    nono_args.extend(flag for flag in flags if flag not in ("--no-allow-cwd", "--no-silent"))
+
+    nono_args.extend(
+        flag for flag in flags if flag not in ("--no-allow-cwd", "--no-silent")
+    )
 
     env = {**os.environ, "NONOW_NONO_ARGS": json.dumps(nono_args)}
+
     try:
         os.execvpe("nono", ["nono", "run", *nono_args, "--", agent, *agent_args], env)
     except OSError as error:
