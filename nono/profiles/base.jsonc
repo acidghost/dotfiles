@@ -11,6 +11,7 @@
       "git_config",
       "go_runtime",
       "mise_manager",
+      "python_runtime",
       {
         "name": "user_caches_macos",
         "when": "macos"
