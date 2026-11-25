@@ -54,13 +54,20 @@ visualizations, wrappers, debuggers, alternative UIs (web or terminal), etc.
 I often run agents under a `nono` sandbox. It uses Seatbelt on macOS and
 Landlock on Linux. If running in a sandbox, env variable `NONO_CAP_FILE` gives
 you the available capabilities. Sources cloned at `~/wa/oss/nono`.
+The profile schema docs are often stale: the source code is the source of truth.
 
 Under `nono`, network access is mediated by a proxy. Some quirks:
 - GitHub:
-  - often read-only (`HEAD`, `GET`)
-  - for read operations, use REST APIs directly via `curl` instead of `gh`
-      - proxy authenticates for us, no need for `Authorization` header
+  - the proxy injects a token into REST requests, so `curl` needs no `Authorization` header
+  - whether `gh` works depends on the profile; without a `gh` profile, access is read-only
+    (`HEAD`, `GET`) through `curl`
   - if I ask you to POST things it means we should be running with a profile that allows `gh`
+
+Approval profiles match on command prefixes to pre-approve command patterns. When using
+CLI guarded by approval profiles, use the format `cli <verb> [flags]`, such as in `gh pr
+create [flags]` or `kubectl <verb> [flags]`. No flag may come before the verb, so
+`git -C` and `git -c` fail to match too. The profiles under `~/.config/nono/profiles/`
+decide what runs, what needs approval and what is denied: read them instead of guessing.
 
 ## Plans
 
@@ -73,6 +80,24 @@ it and replace the placeholder content. It is a standalone file with inline CSS,
 optimized for reading — single column, serif body text, light/dark aware, with
 a slider to widen the page for large tables.
 Markdown plans are fine when no formatting is needed.
+
+## Documentation
+
+Documentation must remain current for the longest time possible, without introducing maintenance
+overhead. To this extent, avoid references that would become stale easily and convey concepts at an
+higher-level.
+
+Comments are documentation.
+
+## Commits, PRs and comments
+
+Keep commit messages and PR bodies short and to the point. The same also holds for every comment.
+Commit messages need to only describe what they implement. A bad commit message describes the whole
+history of the implementation. Commit messages don't need to explain the motivation behind the
+implementation. Commit messages don't need to reference the issue it refers to mainly. It should
+refer other PRs and issues if they're not strictly related to the work we are doing. PR bodies can
+contain a bit of history of implementation if they justified implementation itself. Comments in code
+need to state what is not obvious to the reader. Let the code speak for itself.
 
 ## Additional resources
 
