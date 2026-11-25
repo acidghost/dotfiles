@@ -247,6 +247,15 @@ return {
         -- vim.keymap.set("n", "<leader>lx", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "<leader>lx", "<cmd>Telescope lsp_references<cr>", opts)
         vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
+        vim.keymap.set("v", "<leader>lf", function()
+          vim.lsp.buf.format({
+            async = true,
+            range = {
+              ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+              ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+            }
+          })
+        end, opts)
       end
 
       vim.api.nvim_create_autocmd("LspAttach", {
