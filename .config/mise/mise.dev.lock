@@ -176,62 +176,66 @@ url_api = "https://api.github.com/repos/acidghost/a555pq/releases/assets/6682667
 provenance = "github-attestations"
 
 [[tools."github:acidghost/gh-auth-cli"]]
-version = "0.1.0"
+version = "0.1.1"
 backend = "github:acidghost/gh-auth-cli"
-specifiers = ["0.1.0"]
+specifiers = ["v0.1.1"]
+unsupported_platforms = [
+    "windows-x64",
+    "windows-x64-baseline",
+]
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-arm64"]
-checksum = "sha256:323562c0fe992c2070dc8324a70d77af337d3dff0bc59b393b1c962ac4bb345b"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202460"
+checksum = "sha256:c7d42c950701f70d70cbf1e886677b355c64fb6f62e05b7521d3bd3a916949f9"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137896"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-arm64-musl"]
-checksum = "sha256:323562c0fe992c2070dc8324a70d77af337d3dff0bc59b393b1c962ac4bb345b"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202460"
+checksum = "sha256:c7d42c950701f70d70cbf1e886677b355c64fb6f62e05b7521d3bd3a916949f9"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137896"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-x64"]
-checksum = "sha256:b0c8f7b8eb2486385adbc8982d3e9794881b0934245f170475237fc511e7f678"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202461"
+checksum = "sha256:331b594d855c2bb8fc973d2e683cd586c2a3d2b931d2e6957270b64bcc169b87"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137897"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-x64-baseline"]
-checksum = "sha256:b0c8f7b8eb2486385adbc8982d3e9794881b0934245f170475237fc511e7f678"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202461"
+checksum = "sha256:331b594d855c2bb8fc973d2e683cd586c2a3d2b931d2e6957270b64bcc169b87"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137897"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-x64-musl"]
-checksum = "sha256:b0c8f7b8eb2486385adbc8982d3e9794881b0934245f170475237fc511e7f678"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202461"
+checksum = "sha256:331b594d855c2bb8fc973d2e683cd586c2a3d2b931d2e6957270b64bcc169b87"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137897"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:b0c8f7b8eb2486385adbc8982d3e9794881b0934245f170475237fc511e7f678"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202461"
+checksum = "sha256:331b594d855c2bb8fc973d2e683cd586c2a3d2b931d2e6957270b64bcc169b87"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137897"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.macos-arm64"]
-checksum = "sha256:9b6260308be8170810628d5bd6a151f3e460da0e9e31913fadb234b95913e5aa"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202458"
+checksum = "sha256:7f6445a007ee559a355b74ded0b4201579271d97744d44a476072055542c30c5"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137895"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.macos-x64"]
-checksum = "sha256:d36202567f71bf60d7d3c94264a0e2cfdc45d3a3a3a5fb6d1de479867d1901a7"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202463"
+checksum = "sha256:13d78523662f9d74b67a1606edb5f50d1ac9bc16f91b05acac33ea5c7ff746cf"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137893"
 provenance = "github-attestations"
 
 [tools."github:acidghost/gh-auth-cli"."platforms.macos-x64-baseline"]
-checksum = "sha256:d36202567f71bf60d7d3c94264a0e2cfdc45d3a3a3a5fb6d1de479867d1901a7"
-url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.0/gh-auth-cli_0.1.0_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/747202463"
+checksum = "sha256:13d78523662f9d74b67a1606edb5f50d1ac9bc16f91b05acac33ea5c7ff746cf"
+url = "https://github.com/acidghost/gh-auth-cli/releases/download/v0.1.1/gh-auth-cli_0.1.1_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/gh-auth-cli/releases/assets/786137893"
 provenance = "github-attestations"
 
 [[tools.go]]
