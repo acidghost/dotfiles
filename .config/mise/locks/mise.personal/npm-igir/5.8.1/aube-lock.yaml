@@ -9,19 +9,19 @@ importers:
   .:
     dependencies:
       igir:
-        specifier: 5.8.0
-        version: 5.8.0
+        specifier: 5.8.1
+        version: 5.8.1
 
 packages:
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
 
-  '@fast-csv/format@5.0.7':
-    resolution: {integrity: sha512-VdypoRxv7PF+LsyPouTMKdB0d76hync+gLpgdNqfqVK44MsgW4oiCJSdrki2FisWT7v2QGUYDHjp4L7w5oO6gw==}
+  '@fast-csv/format@5.0.8':
+    resolution: {integrity: sha512-ipZW+PF3T/28gpHMkgy1j24aQO3ZHCai5LzxotrECw7csd0+6GAA24q7zS6fqeQMzHsCNDyzAE1AdXodqn5Gzw==}
 
-  '@fast-csv/parse@5.0.7':
-    resolution: {integrity: sha512-MeuDeQj0DVmIGWky8STaKtvj232Gpq8kjrOGplHJ99Os7OO5CetVfXvUGqX/3GHYFOUsz6FK8isWtDY2XTFNWw==}
+  '@fast-csv/parse@5.0.8':
+    resolution: {integrity: sha512-i2R1TWa2tgRn9YEsNplzdCv0z8J1O85nUIqPdAQtQOheZ+Pw/3AhekI27Yp095r7qSJK0l8KwphK8WzB3aCtog==}
 
   '@gplane/cue@0.2.0':
     resolution: {integrity: sha512-X5OzPA/Y2NG6IJUbIXLiGSCev0L4AwbOLUoO+dhrLzw70Qcd9S5QeC0SDAjtZZ3jVxvrtO5mRgCSAwpQMHPmhg==}
@@ -89,8 +89,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  chalk@6.0.0:
-    resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
+  chalk@6.0.1:
+    resolution: {integrity: sha512-/Ce6KNm3vIbWdMlNna6RVIZ/ICQxnJxCicet5LBKK9ZffBkqzDw0xh9EiKSljdRtiIQ1S1z4YgcscUUGzNCWrA==}
     engines: {node: '>=22'}
 
   chownr@3.0.0:
@@ -138,11 +138,11 @@ packages:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
 
-  fast-xml-builder@1.3.1:
-    resolution: {integrity: sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==}
+  fast-xml-builder@1.3.2:
+    resolution: {integrity: sha512-OX91VSlShLPDgRZV7tk/YQ4l8tT75QziF5Ixg8g4PFbCVPjuTWwN+yQfAxLJ0dufJpprdOd6HlM74Jhd39TcBQ==}
 
-  fast-xml-parser@5.11.1:
-    resolution: {integrity: sha512-TBw6K/fxoQGGjCmZDw9w/ZwP3uDcnTM4YH/g+PFRWr8sbe5idXtxNN6vITh4+1ruCZaho6uBFurElsA7F0zzgw==}
+  fast-xml-parser@5.12.0:
+    resolution: {integrity: sha512-/pXxRBtwxY9w8z7YbgsvIPPcPvFDsTbIkWwTQJhzNJPokj+TbN6ftmcv4j/pEQDvOCNnKGDzuk5Bo2oogIOiFg==}
     hasBin: true
 
   fastq@1.20.3:
@@ -184,13 +184,13 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
-  igir@5.8.0:
-    resolution: {integrity: sha512-Y0Kr2RTeTpkmcJSME07ArKDB7jwxISZHaLDaYFBsXkMbS0Zl2WwEqnbqdGoQe1sXNNSuqVaSMNC9jQFcYNctrA==}
+  igir@5.8.1:
+    resolution: {integrity: sha512-wDYV3v7qQ1idztj6QBI99Gs+L3Xl5KQzM/36wdmx+BOipRCBsvbCvwUOwkH7lX67S3j/lpaQz2sfCnGJI3TOjw==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
 
-  ignore@7.0.14:
-    resolution: {integrity: sha512-wCBiZ77u1tuWde6G/nfOtLaCTYcFDU5yCzARzK10y+rLhzYoL7a7yEemcopcc2Mzow7gZOIjnV2ym1NYmdiJOQ==}
+  ignore@7.0.16:
+    resolution: {integrity: sha512-52N+Y4HRMOJmbLmr+DqO4iSRyyB7N52gm7PWCT6h0p978+oKbqHCB7gIJIwZvBUsjlSdWbrBFqUSmIFNZMpn0A==}
     engines: {node: '>= 4'}
 
   is-admin@4.0.0:
@@ -248,15 +248,6 @@ packages:
   junk@4.0.1:
     resolution: {integrity: sha512-Qush0uP+G8ZScpGMZvHUiRfI0YBWuB3gVBYlI0v0vvOJt5FLicco+IkP0a50LqTTQhmts/m6tP5SWE+USyIvcQ==}
     engines: {node: '>=12.20'}
-
-  lodash.escaperegexp@4.1.2:
-    resolution: {integrity: sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==}
-
-  lodash.groupby@4.6.0:
-    resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
-
-  lodash.uniq@4.5.0:
-    resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -392,8 +383,8 @@ packages:
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
-  simple-statistics@7.12.0:
-    resolution: {integrity: sha512-ESS3eJRxeQe8+p8R67nMGtl+vSziJLTqdnPcd+psKi2Xn/TX5PW5z0YwBxa8P3nSzgZzBI5sf7SvUdK8imL79Q==}
+  simple-statistics@8.0.0:
+    resolution: {integrity: sha512-LiiSF7yROeA/ppntYUT4u1BiSgRPyDktmuNXX6fWFGKMgD69BM7lTwfA8IYProO9BBXlNJNxtm++dIYdrO09Uw==}
 
   slash@5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
@@ -527,15 +518,9 @@ snapshots:
     dependencies:
       tslib: 2.9.1
 
-  '@fast-csv/format@5.0.7':
-    dependencies:
-      lodash.escaperegexp: 4.1.2
+  '@fast-csv/format@5.0.8': {}
 
-  '@fast-csv/parse@5.0.7':
-    dependencies:
-      lodash.escaperegexp: 4.1.2
-      lodash.groupby: 4.6.0
-      lodash.uniq: 4.5.0
+  '@fast-csv/parse@5.0.8': {}
 
   '@gplane/cue@0.2.0': {}
 
@@ -589,7 +574,7 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  chalk@6.0.0: {}
+  chalk@6.0.1: {}
 
   chownr@3.0.0: {}
 
@@ -651,15 +636,15 @@ snapshots:
       merge2: 1.4.1
       micromatch: 4.0.8
 
-  fast-xml-builder@1.3.1:
+  fast-xml-builder@1.3.2:
     dependencies:
       path-expression-matcher: 1.6.2
       xml-naming: 0.3.0
 
-  fast-xml-parser@5.11.1:
+  fast-xml-parser@5.12.0:
     dependencies:
       '@nodable/entities': 3.1.0
-      fast-xml-builder: 1.3.1
+      fast-xml-builder: 1.3.2
       is-unsafe: 2.0.3
       path-expression-matcher: 1.6.2
       strnum: 2.5.1
@@ -691,7 +676,7 @@ snapshots:
     dependencies:
       '@sindresorhus/merge-streams': 2.3.0
       fast-glob: 3.3.3
-      ignore: 7.0.14
+      ignore: 7.0.16
       path-type: 6.0.0
       slash: 5.1.0
       unicorn-magic: 0.3.0
@@ -700,19 +685,19 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  igir@5.8.0:
+  igir@5.8.1:
     dependencies:
       '@emnapi/runtime': 1.11.3
-      '@fast-csv/format': 5.0.7
-      '@fast-csv/parse': 5.0.7
+      '@fast-csv/format': 5.0.8
+      '@fast-csv/parse': 5.0.8
       '@gplane/cue': 0.2.0
       '@openpgp/unbzip2-stream': 2.1.0
       async: 3.2.6
       async-mutex: 0.5.0
-      chalk: 6.0.0
+      chalk: 6.0.1
       class-transformer: 0.5.1
       fast-glob: 3.3.3
-      fast-xml-parser: 5.11.1
+      fast-xml-parser: 5.12.0
       is-admin: 4.0.0
       is-unicode-supported: 2.1.0
       junk: 4.0.1
@@ -720,7 +705,7 @@ snapshots:
       node-unrar-js: 2.0.2
       reflect-metadata: 0.2.2
       semver: 7.8.5
-      simple-statistics: 7.12.0
+      simple-statistics: 8.0.0
       strip-ansi: 7.2.0
       tar: 7.5.22
       terminal-link: 5.0.0
@@ -732,7 +717,7 @@ snapshots:
       xml2js: 0.6.2
       yargs: 18.2.0
 
-  ignore@7.0.14: {}
+  ignore@7.0.16: {}
 
   is-admin@4.0.0:
     dependencies:
@@ -769,12 +754,6 @@ snapshots:
   isexe@4.0.0: {}
 
   junk@4.0.1: {}
-
-  lodash.escaperegexp@4.1.2: {}
-
-  lodash.groupby@4.6.0: {}
-
-  lodash.uniq@4.5.0: {}
 
   merge-stream@2.0.0: {}
 
@@ -872,7 +851,7 @@ snapshots:
 
   signal-exit@3.0.7: {}
 
-  simple-statistics@7.12.0: {}
+  simple-statistics@8.0.0: {}
 
   slash@5.1.0: {}
 
