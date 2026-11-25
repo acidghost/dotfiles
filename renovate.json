@@ -36,6 +36,15 @@
   ],
   "packageRules": [
     {
+      "matchDatasources": [
+        "github-releases"
+      ],
+      "matchPackageNames": [
+        "/^acidghost/.+$/i"
+      ],
+      "minimumReleaseAge": "2 hours"
+    },
+    {
       "matchDepNames": [
         "biome"
       ],
