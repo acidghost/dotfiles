@@ -5,3 +5,18 @@ minimum_release_age = "1d"
 [tools.pi]
 version = "v1.6.0"
 minimum_release_age = "1d"
+
+[tools.nono]
+version = "0.82.0"
+minimum_release_age = "1d"
+
+[tools."github:acidghost/nono-hitl"]
+version = "0.1.0"
+minimum_release_age = "2h"
+
+[bootstrap.services.nono-hitl]
+scope = "user"
+command = "~/.local/bin/mise --env agents exec -- nono-hitl serve"
+working_directory = "~"
+requires_tools = true
+restart = "always"

@@ -49,6 +49,87 @@ checksum_source = "mise-versions"
 url = "https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-package-x86_64-pc-windows-msvc.tar.gz"
 url_api = "https://api.github.com/repos/openai/codex/releases/assets/689710836"
 
+[[tools."github:acidghost/nono-hitl"]]
+version = "0.1.0"
+backend = "github:acidghost/nono-hitl"
+specifiers = ["0.1.0"]
+unsupported_platforms = [
+    "macos-x64",
+    "windows-x64",
+]
+
+[tools."github:acidghost/nono-hitl"."platforms.linux-arm64"]
+checksum = "sha256:b6a2e511098a8e1b8fa6d0ec8d990981f13ab9834b223fc0f440be57df700832"
+url = "https://github.com/acidghost/nono-hitl/releases/download/v0.1.0/nono-hitl_0.1.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/nono-hitl/releases/assets/797813222"
+provenance = "github-attestations"
+
+[tools."github:acidghost/nono-hitl"."platforms.linux-arm64-musl"]
+checksum = "sha256:b6a2e511098a8e1b8fa6d0ec8d990981f13ab9834b223fc0f440be57df700832"
+url = "https://github.com/acidghost/nono-hitl/releases/download/v0.1.0/nono-hitl_0.1.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/nono-hitl/releases/assets/797813222"
+provenance = "github-attestations"
+
+[tools."github:acidghost/nono-hitl"."platforms.linux-x64"]
+checksum = "sha256:4d5ecc89b38b91994e58bfd4a4d05007117e6cb1ddb099bfb890a1179888ee6d"
+url = "https://github.com/acidghost/nono-hitl/releases/download/v0.1.0/nono-hitl_0.1.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/nono-hitl/releases/assets/797813223"
+provenance = "github-attestations"
+
+[tools."github:acidghost/nono-hitl"."platforms.linux-x64-musl"]
+checksum = "sha256:4d5ecc89b38b91994e58bfd4a4d05007117e6cb1ddb099bfb890a1179888ee6d"
+url = "https://github.com/acidghost/nono-hitl/releases/download/v0.1.0/nono-hitl_0.1.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/nono-hitl/releases/assets/797813223"
+provenance = "github-attestations"
+
+[tools."github:acidghost/nono-hitl"."platforms.macos-arm64"]
+checksum = "sha256:dac9c6fb151b8b4a0c5397901e3ea7bef31971571dd751fdcb7a4f2de4d1078c"
+url = "https://github.com/acidghost/nono-hitl/releases/download/v0.1.0/nono-hitl_0.1.0_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/acidghost/nono-hitl/releases/assets/797813219"
+provenance = "github-attestations"
+
+[[tools.nono]]
+version = "0.82.0"
+backend = "github:nolabs-ai/nono"
+specifiers = ["0.82.0"]
+unsupported_platforms = ["windows-x64"]
+
+[tools.nono."platforms.linux-arm64"]
+checksum = "sha256:de16b663f1941b4ff8500f75f34d10a497ef1d1934281573888fb9e808dab53e"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568292"
+provenance = "github-attestations"
+
+[tools.nono."platforms.linux-arm64-musl"]
+checksum = "sha256:de16b663f1941b4ff8500f75f34d10a497ef1d1934281573888fb9e808dab53e"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568292"
+provenance = "github-attestations"
+
+[tools.nono."platforms.linux-x64"]
+checksum = "sha256:81d7a5616622dcf68ca0ed2b7e6b3af08c1216fb0c42dc6d7ecfbd2bbf2d3f50"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568293"
+provenance = "github-attestations"
+
+[tools.nono."platforms.linux-x64-musl"]
+checksum = "sha256:2d81384d9025c7ff9c9e29b8f5e83d39cc6739ba37ba8a0c50fe50ceea4653de"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568291"
+provenance = "github-attestations"
+
+[tools.nono."platforms.macos-arm64"]
+checksum = "sha256:a11760b1d5e947152d1fdc6497b2aba2e4185061a56390b2f1137c83cef3b5a4"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568303"
+provenance = "github-attestations"
+
+[tools.nono."platforms.macos-x64"]
+checksum = "sha256:e3bfed8b5eb7e6332ffc9fc5e88ef72338ea7a9bc8a7f0700479aab395bcf635"
+url = "https://github.com/nolabs-ai/nono/releases/download/v0.82.0/nono-v0.82.0-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/nolabs-ai/nono/releases/assets/748568294"
+provenance = "github-attestations"
+
 [[tools.pi]]
 version = "v1.6.0"
 backend = "aqua:earendil-works/pi"
