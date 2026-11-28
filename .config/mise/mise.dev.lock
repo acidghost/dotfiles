@@ -132,6 +132,12 @@ specifiers = ["0.90.0"]
 version = "0.2.0"
 backend = "github:acidghost/a555pq"
 specifiers = ["0.2.0"]
+unsupported_platforms = [
+    "macos-x64",
+    "macos-x64-baseline",
+    "windows-x64",
+    "windows-x64-baseline",
+]
 
 [tools."github:acidghost/a555pq"."platforms.linux-arm64"]
 checksum = "sha256:6b77c2a51073c354b24f4369304af049831a30c5e6b30b78bbaa5fff2fad6e07"
@@ -415,7 +421,7 @@ specifiers = ["6.1.0"]
 
 [[tools."npm:yaml-language-server"]]
 version = "2.0.0"
-aube = { path = "locks/mise.dev/npm-yaml-language-server/2.0.0", digest = "sha256:d02e1ea379d5d5dd4489ae6f5a60e7f7148856c223ce22a1748a0b1ad7e75eaf" }
+aube = { path = "locks/mise.dev/npm-yaml-language-server/2.0.0", digest = "sha256:535c3c99cef18e2c589ccec0cb0c3d0b26fe315e023f67300449353670588bca" }
 backend = "npm:yaml-language-server"
 specifiers = ["2.0.0"]
 
@@ -423,6 +429,10 @@ specifiers = ["2.0.0"]
 version = "5.44.0.0"
 backend = "aqua:skaji/relocatable-perl"
 specifiers = ["5.44.0"]
+unsupported_platforms = [
+    "windows-x64",
+    "windows-x64-baseline",
+]
 
 [tools.perl."platforms.linux-arm64"]
 checksum = "sha256:b1a3aa7be1ea0239a29e503b63a52a694371670d4dc535c716d9a16ea2aaa453"
