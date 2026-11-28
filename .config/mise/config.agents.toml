@@ -3,7 +3,7 @@ version = "0.166.0"
 minimum_release_age = "1d"
 
 [tools.pi]
-version = "v1.6.0"
+version = "v1.6.1"
 minimum_release_age = "1d"
 
 [tools.nono]
