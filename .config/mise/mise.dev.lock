@@ -123,10 +123,10 @@ checksum = "sha256:3c081c73865e7a3453a9d514cc2ba3d699880621bcf67bb17241ff5194cb1
 url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.5/bun-windows-x64-baseline.zip"
 
 [[tools.devcontainer-cli]]
-version = "0.90.0"
-aube = { path = "locks/mise.dev/devcontainer-cli/0.90.0", digest = "sha256:8a8a9e59feed6f3c786e90fcb8b436fec9cf4fa84a33211fc5998570a65501e2" }
+version = "0.91.0"
+aube = { path = "locks/mise.dev/devcontainer-cli/0.91.0", digest = "sha256:95766e5b4b0ce6661ee04aa534e4a549d82b312723ca778b5e98968d398f0741" }
 backend = "npm:@devcontainers/cli"
-specifiers = ["0.90.0"]
+specifiers = ["0.91.0"]
 
 [[tools."github:acidghost/a555pq"]]
 version = "0.2.0"
